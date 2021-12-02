@@ -1,14 +1,38 @@
-# advent-of-code-2021-kotlin
+# Advent of Code 2021 in Kotlin
+![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
+![](https://img.shields.io/badge/⭐%20stars-4-yellow)
+![](https://img.shields.io/badge/📅%20days-2-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
-In this repository, tchojnacki is about to provide solutions for the puzzles using [Kotlin][kotlin] language.
-
-If you're stuck with Kotlin-specific questions or anything related to this template, check out the following resources:
-
-- [Kotlin docs][docs]
-- [Kotlin Slack][slack]
-- Template [issue tracker][issues]
+## Progress
+| Day                | Part 1 | Part 2 |
+|--------------------|--------|--------|
+| Day 1: Sonar Sweep | 🌟     | 🌟     |
+| Day 2: Dive!       | 🌟     | 🌟     |
+| Day 3: ???         |        |        |
+| Day 4: ???         |        |        |
+| Day 5: ???         |        |        |
+| Day 6: ???         |        |        |
+| Day 7: ???         |        |        |
+| Day 8: ???         |        |        |
+| Day 9: ???         |        |        |
+| Day 10: ???        |        |        |
+| Day 11: ???        |        |        |
+| Day 12: ???        |        |        |
+| Day 13: ???        |        |        |
+| Day 14: ???        |        |        |
+| Day 15: ???        |        |        |
+| Day 16: ???        |        |        |
+| Day 17: ???        |        |        |
+| Day 18: ???        |        |        |
+| Day 19: ???        |        |        |
+| Day 20: ???        |        |        |
+| Day 21: ???        |        |        |
+| Day 22: ???        |        |        |
+| Day 23: ???        |        |        |
+| Day 24: ???        |        |        |
+| Day 25: ???        |        |        |
 
 
 [^aoc]:
@@ -17,9 +41,5 @@ If you're stuck with Kotlin-specific questions or anything related to this templ
     You can solve the puzzle and provide an answer using the language of your choice.
 
 [aoc]: https://adventofcode.com
-[docs]: https://kotlinlang.org/docs/home.html
 [github]: https://github.com/tchojnacki
-[issues]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template/issues
-[kotlin]: https://kotlinlang.org
-[slack]: https://surveys.jetbrains.com/s3/kotlin-slack-sign-up
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
