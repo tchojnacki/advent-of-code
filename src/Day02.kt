@@ -1,14 +1,19 @@
-fun main() {
-    fun dispatchCommands(commands: List<String>, action: (command: String, argument: Int) -> Unit) {
-        for (line in commands) {
-            val parts = line.split(" ")
-            val command = parts[0]
-            val argument = parts[1].toInt()
+/**
+ * Given a list of correct command strings, dispatch [action] taking command name and argument on each of them.
+ * @param commands list of valid command strings
+ * @param action function taking a string (command name) and integer (argument) that gets called for each command
+ */
+fun dispatchCommands(commands: List<String>, action: (command: String, argument: Int) -> Unit) {
+    for (line in commands) {
+        val parts = line.split(" ")
+        val command = parts[0]
+        val argument = parts[1].toInt()
 
-            action(command, argument)
-        }
+        action(command, argument)
     }
+}
 
+fun main() {
     fun part1(input: List<String>): Int {
         var horizontal = 0
         var depth = 0
