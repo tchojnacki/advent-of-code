@@ -10,6 +10,13 @@ import java.security.MessageDigest
 fun readInputAsLines(name: String): List<String> = File("src", "$name.txt").readLines()
 
 /**
+ * Returns a string of contents of the given input txt file.
+ * @param name name of the file
+ * @return contents of file as string
+ */
+fun readInputAsString(name: String): String = File("src", "$name.txt").readText()
+
+/**
  * Read lines from the given input txt file and convert them to decimal numbers.
  * @param name name of the file
  * @return list of ints containing numbers from each of file's lines
