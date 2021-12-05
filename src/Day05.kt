@@ -1,105 +1,55 @@
 import kotlin.math.absoluteValue
+import kotlin.math.max
 import kotlin.math.sign
 
-class Line(val start: Pair<Int, Int>, val end: Pair<Int, Int>) {
+data class Pos(val x: Int, val y: Int)
+
+data class Line(val start: Pos, val end: Pos) {
     companion object {
         fun fromString(input: String): Line {
-            val parts = input.split(" -> ").map { part ->
-                val coordinates = part.split(",").map { it.toInt() }
-                coordinates[0] to coordinates[1]
+            val (start, end) = input.split(" -> ").map { coordinateString ->
+                val (x, y) = coordinateString.split(",").map { it.toInt() }
+                Pos(x, y)
             }
 
-            return Line(parts[0], parts[1])
+            return Line(start, end)
         }
     }
+
+    val isHorizontalOrVertical: Boolean
+        get() = start.x == end.x || start.y == end.y
+
+    val isDiagonal: Boolean
+        get() = (end.x - start.x).absoluteValue == (end.y - start.y).absoluteValue
+
+    val pointSequence: Sequence<Pos>
+        get() = sequence {
+            val xOffset = end.x - start.x
+            val yOffset = end.y - start.y
+
+            for (s in 0..max(xOffset.absoluteValue, yOffset.absoluteValue)) {
+                val x = start.x + s * xOffset.sign
+                val y = start.y + s * yOffset.sign
+
+                yield(Pos(x, y))
+            }
+        }
 }
 
 fun main() {
-    fun part1(input: List<String>): Int {
-        val lines = input.map(Line::fromString)
+    fun helper(input: List<String>, linePredicate: (line: Line) -> Boolean) = input
+        .asSequence()
+        .map(Line::fromString)
+        .filter(linePredicate)
+        .flatMap(Line::pointSequence)
+        .groupingBy { it }
+        .eachCount()
+        .values
+        .count { it >= 2 }
 
-        val positions = mutableMapOf<Pair<Int, Int>, Int>()
-        lines.forEach {
-            when {
-                it.start.first == it.end.first -> {
-                    if (it.start.second <= it.end.second) {
-                        for (y in it.start.second..it.end.second) {
-                            positions[it.start.first to y] = 1 + positions.getOrDefault(it.start.first to y, 0)
-                        }
-                    } else {
-                        for (y in it.end.second..it.start.second) {
-                            positions[it.start.first to y] = 1 + positions.getOrDefault(it.start.first to y, 0)
-                        }
-                    }
-                }
-                it.start.second == it.end.second -> {
-                    if (it.start.first<= it.end.first) {
-                        for (x in it.start.first..it.end.first) {
-                            positions[x to it.start.second] = 1 + positions.getOrDefault(x to it.start.second, 0)
-                        }
-                    } else {
-                        for (x in it.end.first..it.start.first) {
-                            positions[x to it.start.second] = 1 + positions.getOrDefault(x to it.start.second, 0)
-                        }
-                    }
-                }
+    fun part1(input: List<String>): Int = helper(input, Line::isHorizontalOrVertical)
 
-            }
-        }
-
-        return positions.values.count { it >= 2 }
-    }
-
-
-    fun part2(input: List<String>): Int {
-        val lines = input.map(Line::fromString)
-
-        val positions = mutableMapOf<Pair<Int, Int>, Int>()
-        lines.forEach {
-            when {
-                it.start.first == it.end.first -> {
-                    if (it.start.second <= it.end.second) {
-                        for (y in it.start.second..it.end.second) {
-                            positions[it.start.first to y] = 1 + positions.getOrDefault(it.start.first to y, 0)
-                        }
-                    } else {
-                        for (y in it.end.second..it.start.second) {
-                            positions[it.start.first to y] = 1 + positions.getOrDefault(it.start.first to y, 0)
-                        }
-                    }
-                }
-                it.start.second == it.end.second -> {
-                    if (it.start.first<= it.end.first) {
-                        for (x in it.start.first..it.end.first) {
-                            positions[x to it.start.second] = 1 + positions.getOrDefault(x to it.start.second, 0)
-                        }
-                    } else {
-                        for (x in it.end.first..it.start.first) {
-                            positions[x to it.start.second] = 1 + positions.getOrDefault(x to it.start.second, 0)
-                        }
-                    }
-                }
-                (it.end.first - it.start.first).absoluteValue == (it.end.second - it.start.second).absoluteValue -> {
-                    val xOffset = it.end.first - it.start.first
-                    val yOffset = it.end.second - it.start.second
-
-                    val xSign = xOffset.sign
-                    val ySign = yOffset.sign
-
-                    val length = xOffset.absoluteValue
-
-                    for (i in 0..length) {
-                        val x = it.start.first + xSign * i
-                        val y = it.start.second + ySign * i
-                        positions[x to y] = 1 + positions.getOrDefault(x to y, 0)
-                    }
-
-                }
-            }
-        }
-
-        return positions.values.count { it >= 2 }
-    }
+    fun part2(input: List<String>): Int = helper(input) { it.isHorizontalOrVertical || it.isDiagonal }
 
     val testInput = readInputAsLines("Day05_test")
     check(part1(testInput) == 5)
