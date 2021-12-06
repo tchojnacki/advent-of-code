@@ -4,7 +4,7 @@ class Bingo(private val revealQueue: ArrayDeque<Int>, private val boards: List<B
             val sections = input.trim().split("(\\r?\\n){2}".toRegex())
 
             val revealQueueString = sections.first()
-            val revealQueue = ArrayDeque(revealQueueString.split(",").map { it.toInt() })
+            val revealQueue = ArrayDeque(revealQueueString.split(",").map(String::toInt))
 
             val boards = sections.drop(1).map { Board.fromMatrixString(it) }
 

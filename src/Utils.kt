@@ -21,7 +21,7 @@ fun readInputAsString(name: String): String = File("src", "$name.txt").readText(
  * @param name name of the file
  * @return list of ints containing numbers from each of file's lines
  */
-fun readInputAsNumbers(name: String): List<Int> = readInputAsLines(name).map { it.toInt() }
+fun readInputAsNumbers(name: String): List<Int> = readInputAsLines(name).map(String::toInt)
 
 /**
  * Read lines from the given input txt file containing binary numbers and convert them to lists of bits.

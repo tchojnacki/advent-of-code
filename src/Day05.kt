@@ -8,7 +8,7 @@ data class Line(val start: Pos, val end: Pos) {
     companion object {
         fun fromString(input: String): Line {
             val (start, end) = input.split(" -> ").map { coordinateString ->
-                val (x, y) = coordinateString.split(",").map { it.toInt() }
+                val (x, y) = coordinateString.split(",").map(String::toInt)
                 Pos(x, y)
             }
 
