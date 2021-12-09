@@ -32,6 +32,14 @@ fun readInputAsBitLists(name: String): List<List<Int>> =
     readInputAsLines(name)
         .map { binaryString -> binaryString.toList().map { bit -> bit.toString().toInt() } }
 
+data class Pos2D(val x: Int, val y: Int) {
+    companion object {
+        val directions = listOf(Pos2D(0, 1), Pos2D(1, 0), Pos2D(0, -1), Pos2D(-1, 0))
+    }
+
+    operator fun plus(other: Pos2D) = Pos2D(x + other.x, y + other.y)
+}
+
 /**
  * Converts string to md5 hash.
  * @receiver a string

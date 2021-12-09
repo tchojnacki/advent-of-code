@@ -2,14 +2,12 @@ import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.sign
 
-data class Pos(val x: Int, val y: Int)
-
-data class Line(val start: Pos, val end: Pos) {
+data class Line(val start: Pos2D, val end: Pos2D) {
     companion object {
         fun fromString(input: String): Line {
             val (start, end) = input.split(" -> ").map { coordinateString ->
                 val (x, y) = coordinateString.split(",").map(String::toInt)
-                Pos(x, y)
+                Pos2D(x, y)
             }
 
             return Line(start, end)
@@ -22,7 +20,7 @@ data class Line(val start: Pos, val end: Pos) {
     val isDiagonal: Boolean
         get() = (end.x - start.x).absoluteValue == (end.y - start.y).absoluteValue
 
-    val pointSequence: Sequence<Pos>
+    val pointSequence: Sequence<Pos2D>
         get() = sequence {
             val xOffset = end.x - start.x
             val yOffset = end.y - start.y
@@ -31,7 +29,7 @@ data class Line(val start: Pos, val end: Pos) {
                 val x = start.x + s * xOffset.sign
                 val y = start.y + s * yOffset.sign
 
-                yield(Pos(x, y))
+                yield(Pos2D(x, y))
             }
         }
 }
