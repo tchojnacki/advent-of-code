@@ -1,7 +1,7 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-18-yellow)
-![](https://img.shields.io/badge/📅%20days-9-blue)
+![](https://img.shields.io/badge/⭐%20stars-20-yellow)
+![](https://img.shields.io/badge/📅%20days-10-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
@@ -17,7 +17,7 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 7: The Treachery of Whales |   🌟   |   🌟   |
 | Day 8: Seven Segment Search    |   🌟   |   🌟   |
 | Day 9: Smoke Basin             |   🌟   |   🌟   |
-| Day 10: ???                    |        |        |
+| Day 10: Syntax Scoring         |   🌟   |   🌟   |
 | Day 11: ???                    |        |        |
 | Day 12: ???                    |        |        |
 | Day 13: ???                    |        |        |
