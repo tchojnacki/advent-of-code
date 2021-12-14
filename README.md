@@ -1,7 +1,7 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-22-yellow)
-![](https://img.shields.io/badge/📅%20days-11-blue)
+![](https://img.shields.io/badge/⭐%20stars-24-yellow)
+![](https://img.shields.io/badge/📅%20days-12-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
@@ -19,7 +19,7 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 9: Smoke Basin             |   🌟   |   🌟   |
 | Day 10: Syntax Scoring         |   🌟   |   🌟   |
 | Day 11: Dumbo Octopus          |   🌟   |   🌟   |
-| Day 12: ???                    |        |        |
+| Day 12: Passage Pathing        |   🌟   |   🌟   |
 | Day 13: ???                    |        |        |
 | Day 14: ???                    |        |        |
 | Day 15: ???                    |        |        |
