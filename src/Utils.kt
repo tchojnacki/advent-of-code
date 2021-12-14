@@ -34,11 +34,24 @@ fun readInputAsBitLists(name: String): List<List<Int>> =
 
 data class Pos2D(val x: Int, val y: Int) {
     companion object {
-        val directions = listOf(Pos2D(0, 1), Pos2D(1, 0), Pos2D(0, -1), Pos2D(-1, 0))
+        val directions4 = listOf(Pos2D(0, 1), Pos2D(1, 0), Pos2D(0, -1), Pos2D(-1, 0))
+        val directions8 = directions4 + listOf(
+            Pos2D(1, 1),
+            Pos2D(1, -1),
+            Pos2D(-1, -1),
+            Pos2D(-1, 1),
+        )
     }
 
     operator fun plus(other: Pos2D) = Pos2D(x + other.x, y + other.y)
 }
+
+fun parseToMap(input: List<String>): Map<Pos2D, Int> =
+    input.flatMapIndexed { y, line ->
+        line.mapIndexed { x, char ->
+            Pos2D(x, y) to char.toString().toInt()
+        }
+    }.toMap()
 
 /**
  * Converts string to md5 hash.

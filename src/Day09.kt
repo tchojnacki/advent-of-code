@@ -1,12 +1,5 @@
-fun parseToMap(input: List<String>): Map<Pos2D, Int> =
-    input.flatMapIndexed { y, line ->
-        line.mapIndexed { x, char ->
-            Pos2D(x, y) to char.toString().toInt()
-        }
-    }.toMap()
-
 fun Map<Pos2D, Int>.getLowPoints(): Map<Pos2D, Int> =
-    filter { (pos, num) -> Pos2D.directions.all { num < getOrDefault(pos + it, 9) } }
+    filter { (pos, num) -> Pos2D.directions4.all { num < getOrDefault(pos + it, 9) } }
 
 fun main() {
     fun part1(input: List<String>): Int =
@@ -17,7 +10,7 @@ fun main() {
 
         fun traverseBasin(pos: Pos2D, acc: MutableSet<Pos2D>) {
             acc.add(pos)
-            Pos2D.directions
+            Pos2D.directions4
                 .map { pos + it }
                 .filter { !acc.contains(it) && map.getOrDefault(it, 9) < 9 }
                 .forEach { traverseBasin(it, acc) }
