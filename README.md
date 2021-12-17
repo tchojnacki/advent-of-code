@@ -1,7 +1,7 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-26-yellow)
-![](https://img.shields.io/badge/📅%20days-13-blue)
+![](https://img.shields.io/badge/⭐%20stars-28-yellow)
+![](https://img.shields.io/badge/📅%20days-14-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
@@ -22,9 +22,9 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 12: Passage Pathing         |   🌟   |   🌟   |
 | Day 13: Transparent Origami     |        |        |
 | Day 14: Extended Polymerization |   🌟   |   🌟   |
-| Day 15: ???                     |        |        |
-| Day 16: ???                     |        |        |
-| Day 17: ???                     |        |        |
+| Day 15: Chiton                  |   🌟   |   🌟   |
+| Day 16: Packet Decoder          |        |        |
+| Day 17: Trick Shot              |        |        |
 | Day 18: ???                     |        |        |
 | Day 19: ???                     |        |        |
 | Day 20: ???                     |        |        |
