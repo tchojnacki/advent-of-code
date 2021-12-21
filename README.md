@@ -1,7 +1,7 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-30-yellow)
-![](https://img.shields.io/badge/📅%20days-15-blue)
+![](https://img.shields.io/badge/⭐%20stars-32-yellow)
+![](https://img.shields.io/badge/📅%20days-16-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
@@ -25,10 +25,10 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 15: Chiton                  |   🌟   |   🌟   |
 | Day 16: Packet Decoder          |        |        |
 | Day 17: Trick Shot              |        |        |
-| Day 18: ???                     |        |        |
-| Day 19: ???                     |        |        |
-| Day 20: ???                     |        |        |
-| Day 21: ???                     |        |        |
+| Day 18: Snailfish               |   🌟   |   🌟   |
+| Day 19: Beacon Scanner          |        |        |
+| Day 20: Trench Map              |        |        |
+| Day 21: Dirac Dice              |        |        |
 | Day 22: ???                     |        |        |
 | Day 23: ???                     |        |        |
 | Day 24: ???                     |        |        |
