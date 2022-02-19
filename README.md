@@ -29,10 +29,10 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 19: Beacon Scanner          |        |        |
 | Day 20: Trench Map              |        |        |
 | Day 21: Dirac Dice              |        |        |
-| Day 22: ???                     |        |        |
-| Day 23: ???                     |        |        |
-| Day 24: ???                     |        |        |
-| Day 25: ???                     |        |        |
+| Day 22: Reactor Reboot          |        |        |
+| Day 23: Amphipod                |        |        |
+| Day 24: Arithmetic Logic Unit   |        |        |
+| Day 25: Sea Cucumber            |        |        |
 
 
 [^aoc]:
