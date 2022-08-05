@@ -1,11 +1,14 @@
 # Advent of Code 2021 in Kotlin
-![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-34-yellow)
-![](https://img.shields.io/badge/📅%20days-17-blue)
 
-Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using the [Advent of Code Kotlin Template][template] delivered by JetBrains.
+![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
+![](https://img.shields.io/badge/⭐%20stars-36-yellow)
+![](https://img.shields.io/badge/📅%20days-18-blue)
+
+Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using
+the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other solutions [here][awesome].
 
 ## Progress
+
 | Day                             | Part 1 | Part 2 |
 |---------------------------------|:------:|:------:|
 | Day 1: Sonar Sweep              |   🌟   |   🌟   |
@@ -24,7 +27,7 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 14: Extended Polymerization |   🌟   |   🌟   |
 | Day 15: Chiton                  |   🌟   |   🌟   |
 | Day 16: Packet Decoder          |   🌟   |   🌟   |
-| Day 17: Trick Shot              |        |        |
+| Day 17: Trick Shot              |   🌟   |   🌟   |
 | Day 18: Snailfish               |   🌟   |   🌟   |
 | Day 19: Beacon Scanner          |        |        |
 | Day 20: Trench Map              |        |        |
@@ -34,12 +37,16 @@ Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][githu
 | Day 24: Arithmetic Logic Unit   |        |        |
 | Day 25: Sea Cucumber            |        |        |
 
-
 [^aoc]:
-    [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
-    Every year since then, beginning on the first day of December, a programming puzzle is published every day for twenty-four days.
-    You can solve the puzzle and provide an answer using the language of your choice.
+[Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
+Every year since then, beginning on the first day of December, a programming puzzle is published every day for
+twenty-four days.
+You can solve the puzzle and provide an answer using the language of your choice.
 
 [aoc]: https://adventofcode.com
+
 [github]: https://github.com/tchojnacki
+
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
+
+[awesome]: https://github.com/Bogdanp/awesome-advent-of-code
