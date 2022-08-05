@@ -9,7 +9,7 @@ class CustomPriorityQueue<T>(private val array: Array<T>, private val comparator
 
     private fun indexOfStartingFrom(elem: T, start: Int): Int {
         for (i in (start until array.size)) {
-            if (i == elem) {
+            if (array[i] == elem) {
                 return i
             }
         }

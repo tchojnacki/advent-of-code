@@ -1,4 +1,4 @@
-enum class ChunkDelimeter(val open: Char, val close: Char) {
+enum class ChunkDelimiter(val open: Char, val close: Char) {
     Parentheses('(', ')'),
     Brackets('[', ']'),
     Braces('{', '}'),
@@ -7,48 +7,48 @@ enum class ChunkDelimeter(val open: Char, val close: Char) {
     companion object {
         fun isOpening(character: Char): Boolean = values().any { it.open == character }
         fun isClosing(character: Char): Boolean = values().any { it.close == character }
-        fun from(character: Char): ChunkDelimeter = values().find { it.open == character || it.close == character }!!
+        fun from(character: Char): ChunkDelimiter = values().find { it.open == character || it.close == character }!!
     }
 }
 
 sealed class SyntaxError {
     object None : SyntaxError()
-    class IncompleteLine(private val stack: ArrayDeque<ChunkDelimeter>) : SyntaxError() {
+    class IncompleteLine(private val stack: ArrayDeque<ChunkDelimiter>) : SyntaxError() {
         val score: Long
             get() {
-                fun delimeterValue(delimeter: ChunkDelimeter): Int = when (delimeter) {
-                    ChunkDelimeter.Parentheses -> 1
-                    ChunkDelimeter.Brackets -> 2
-                    ChunkDelimeter.Braces -> 3
-                    ChunkDelimeter.Angled -> 4
+                fun delimiterValue(delimiter: ChunkDelimiter): Int = when (delimiter) {
+                    ChunkDelimiter.Parentheses -> 1
+                    ChunkDelimiter.Brackets -> 2
+                    ChunkDelimiter.Braces -> 3
+                    ChunkDelimiter.Angled -> 4
                 }
 
-                return stack.fold(0) { acc, elem -> acc * 5 + delimeterValue(elem) }
+                return stack.fold(0) { acc, elem -> acc * 5 + delimiterValue(elem) }
             }
     }
-    class CorruptedLine(private val invalidDelimeter: ChunkDelimeter) : SyntaxError() {
+    class CorruptedLine(private val invalidDelimiter: ChunkDelimiter) : SyntaxError() {
         val score: Int
-            get() = when (invalidDelimeter) {
-                ChunkDelimeter.Parentheses -> 3
-                ChunkDelimeter.Brackets -> 57
-                ChunkDelimeter.Braces -> 1197
-                ChunkDelimeter.Angled -> 25137
+            get() = when (invalidDelimiter) {
+                ChunkDelimiter.Parentheses -> 3
+                ChunkDelimiter.Brackets -> 57
+                ChunkDelimiter.Braces -> 1197
+                ChunkDelimiter.Angled -> 25137
             }
     }
 }
 
 fun parse(line: String): SyntaxError {
-    val stack = ArrayDeque<ChunkDelimeter>()
+    val stack = ArrayDeque<ChunkDelimiter>()
 
     for (char in line) {
         when {
-            ChunkDelimeter.isOpening(char) -> stack.addFirst(ChunkDelimeter.from(char))
-            ChunkDelimeter.isClosing(char) -> {
-                val closingDelimeter = ChunkDelimeter.from(char)
-                if (stack.first() == closingDelimeter) {
+            ChunkDelimiter.isOpening(char) -> stack.addFirst(ChunkDelimiter.from(char))
+            ChunkDelimiter.isClosing(char) -> {
+                val closingDelimiter = ChunkDelimiter.from(char)
+                if (stack.first() == closingDelimiter) {
                     stack.removeFirst()
                 } else {
-                    return SyntaxError.CorruptedLine(closingDelimeter)
+                    return SyntaxError.CorruptedLine(closingDelimiter)
                 }
             }
         }

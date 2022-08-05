@@ -16,7 +16,7 @@ sealed class FoldCommand {
             .toSet()
     }
 
-    class AlongY(val y: Int) : FoldCommand() {
+    class AlongY(private val y: Int) : FoldCommand() {
         override fun dispatch(dots: Set<Pos2D>): Set<Pos2D> = dots
             .filter { it.y != y }
             .map {
@@ -62,9 +62,7 @@ fun main() {
     fun part1(input: List<String>): Int {
         val (dots, commands) = parseOrigami(input)
 
-        val res = commands.first().dispatch(dots).size
-
-        return res
+        return commands.first().dispatch(dots).size
     }
 
     fun part2(input: List<String>): String {
