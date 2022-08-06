@@ -1,8 +1,8 @@
 # Advent of Code 2021 in Kotlin
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-36-yellow)
-![](https://img.shields.io/badge/📅%20days-18-blue)
+![](https://img.shields.io/badge/⭐%20stars-37-yellow)
+![](https://img.shields.io/badge/📅%20days-19-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using
 the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other solutions [here][awesome].
@@ -35,7 +35,7 @@ the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other
 | Day 22: Reactor Reboot          |        |        |
 | Day 23: Amphipod                |        |        |
 | Day 24: Arithmetic Logic Unit   |        |        |
-| Day 25: Sea Cucumber            |        |        |
+| Day 25: Sea Cucumber            |   🌟   |        |
 
 [^aoc]:
 [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
