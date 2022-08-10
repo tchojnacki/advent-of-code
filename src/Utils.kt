@@ -1,6 +1,4 @@
 import java.io.File
-import java.math.BigInteger
-import java.security.MessageDigest
 
 /**
  * Reads lines from the given input txt file.
@@ -52,10 +50,3 @@ fun parseToMap(input: List<String>): Map<Pos2D, Int> =
             Pos2D(x, y) to char.toString().toInt()
         }
     }.toMap()
-
-/**
- * Converts string to md5 hash.
- * @receiver a string
- * @return md5 hash of receiver
- */
-fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray())).toString(16)
