@@ -121,16 +121,16 @@ object Day24 {
                 val currentStep = mutableListOf<Instruction.Binary>()
                 var currentInput: Instruction.Input? = null
 
-                for (instruction in instructionQueue) {
-                    when (instruction) {
+                instructionQueue.forEach {
+                    when (it) {
                         is Instruction.Input -> {
                             parts.add(Part(currentInput, currentStep.toList()))
 
                             currentStep.clear()
-                            currentInput = instruction
+                            currentInput = it
                         }
 
-                        is Instruction.Binary -> currentStep.add(instruction)
+                        is Instruction.Binary -> currentStep.add(it)
                     }
                 }
 
@@ -142,10 +142,7 @@ object Day24 {
 
         private data class Part(val input: Instruction.Input?, val instructionBatch: List<Instruction.Binary>)
 
-        private data class Checkpoint(
-            val partNumber: Int,
-            val alu: ALU,
-        )
+        private data class Checkpoint(val partNumber: Int, val alu: ALU)
 
         fun findInputDigits(
             digitRange: IntProgression = 0..9,
@@ -168,14 +165,14 @@ object Day24 {
                     return@sequence
                 }
 
-                for (digit in digitRange) {
+                digitRange.forEach {
                     yieldAll(
                         solveRecursively(
                             Checkpoint(
                                 checkpoint.partNumber + 1,
-                                executePart(checkpoint.partNumber, checkpoint.alu, digit.toLong()),
+                                executePart(checkpoint.partNumber, checkpoint.alu, it.toLong()),
                             ),
-                            accumulator * 10 + digit,
+                            accumulator * 10 + it,
                         )
                     )
                 }
@@ -197,10 +194,10 @@ object Day24 {
             var checkpoint = Checkpoint(1, executePart(0))
             yield(checkpoint)
 
-            for (digit in input.toString().toCharArray().map { it.toString().toInt() }) {
+            input.toString().toCharArray().map { it.toString().toInt() }.forEach {
                 checkpoint = Checkpoint(
                     checkpoint.partNumber + 1,
-                    executePart(checkpoint.partNumber, checkpoint.alu, digit.toLong())
+                    executePart(checkpoint.partNumber, checkpoint.alu, it.toLong())
                 )
                 yield(checkpoint)
             }

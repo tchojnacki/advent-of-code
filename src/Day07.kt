@@ -1,6 +1,6 @@
 import kotlin.math.absoluteValue
 
-fun main() {
+object Day07 {
     fun part1(input: String): Int {
         val numbers = input.trim().split(",").map(String::toInt)
         val range = numbers.minOrNull()!!..numbers.maxOrNull()!!
@@ -14,12 +14,14 @@ fun main() {
 
         return range.minOf { n -> numbers.map { (it - n).absoluteValue }.sumOf { (it * (it + 1)) / 2 } }
     }
+}
 
+fun main() {
     val testInput = readInputAsString("Day07_test")
-    check(part1(testInput) == 37)
-    check(part2(testInput) == 168)
+    check(Day07.part1(testInput) == 37)
+    check(Day07.part2(testInput) == 168)
 
     val input = readInputAsString("Day07")
-    println(part1(input))
-    println(part2(input))
+    println(Day07.part1(input))
+    println(Day07.part2(input))
 }

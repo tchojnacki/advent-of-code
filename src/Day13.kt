@@ -1,64 +1,62 @@
-import java.lang.IllegalStateException
+object Day13 {
+    private sealed class FoldCommand {
+        abstract fun dispatch(dots: Set<Pos2D>): Set<Pos2D>
 
-sealed class FoldCommand {
-    abstract fun dispatch(dots: Set<Pos2D>): Set<Pos2D>
-
-    class AlongX(private val x: Int) : FoldCommand() {
-        override fun dispatch(dots: Set<Pos2D>): Set<Pos2D> = dots
-            .filter { it.x != x }
-            .map {
-                if (it.x < x) {
-                    it
-                } else {
-                    Pos2D(2 * x - it.x, it.y)
+        class AlongX(private val x: Int) : FoldCommand() {
+            override fun dispatch(dots: Set<Pos2D>): Set<Pos2D> = dots
+                .filter { it.x != x }
+                .map {
+                    if (it.x < x) {
+                        it
+                    } else {
+                        Pos2D(2 * x - it.x, it.y)
+                    }
                 }
-            }
-            .toSet()
-    }
-
-    class AlongY(private val y: Int) : FoldCommand() {
-        override fun dispatch(dots: Set<Pos2D>): Set<Pos2D> = dots
-            .filter { it.y != y }
-            .map {
-                if (it.y < y) {
-                    it
-                } else {
-                    Pos2D(it.x, 2 * y - it.y)
-                }
-            }
-            .toSet()
-    }
-}
-
-fun parseOrigami(input: List<String>): Pair<Set<Pos2D>, Sequence<FoldCommand>> {
-    val dots = mutableSetOf<Pos2D>()
-    val commands = mutableListOf<FoldCommand>()
-
-    for (line in input) {
-        if (line.matches("\\d+,\\d+".toRegex())) {
-            val (x, y) = line.split(",").map(String::toInt)
-            dots.add(Pos2D(x, y))
+                .toSet()
         }
 
-        if (line.matches("fold along [xy]=\\d+".toRegex())) {
-            val equation = line.substring(11)
-            val (axis, valueString) = equation.split("=")
-            val value = valueString.toInt()
-
-            commands.add(
-                when (axis) {
-                    "x" -> FoldCommand.AlongX(value)
-                    "y" -> FoldCommand.AlongY(value)
-                    else -> throw IllegalStateException("Illegal axis given!")
+        class AlongY(private val y: Int) : FoldCommand() {
+            override fun dispatch(dots: Set<Pos2D>): Set<Pos2D> = dots
+                .filter { it.y != y }
+                .map {
+                    if (it.y < y) {
+                        it
+                    } else {
+                        Pos2D(it.x, 2 * y - it.y)
+                    }
                 }
-            )
+                .toSet()
         }
     }
 
-    return dots to commands.asSequence()
-}
+    private fun parseOrigami(input: List<String>): Pair<Set<Pos2D>, Sequence<FoldCommand>> {
+        val dots = mutableSetOf<Pos2D>()
+        val commands = mutableListOf<FoldCommand>()
 
-fun main() {
+        for (line in input) {
+            if (line.matches("\\d+,\\d+".toRegex())) {
+                val (x, y) = line.split(",").map(String::toInt)
+                dots.add(Pos2D(x, y))
+            }
+
+            if (line.matches("fold along [xy]=\\d+".toRegex())) {
+                val equation = line.substring(11)
+                val (axis, valueString) = equation.split("=")
+                val value = valueString.toInt()
+
+                commands.add(
+                    when (axis) {
+                        "x" -> FoldCommand.AlongX(value)
+                        "y" -> FoldCommand.AlongY(value)
+                        else -> throw IllegalStateException("Illegal axis given!")
+                    }
+                )
+            }
+        }
+
+        return dots to commands.asSequence()
+    }
+
     fun part1(input: List<String>): Int {
         val (dots, commands) = parseOrigami(input)
 
@@ -89,12 +87,13 @@ fun main() {
 
         return lines.joinToString("\n") { it.joinToString("") }
     }
+}
 
-
+fun main() {
     val testInput = readInputAsLines("Day13_test")
-    check(part1(testInput) == 17)
+    check(Day13.part1(testInput) == 17)
 
     val input = readInputAsLines("Day13")
-    println(part1(input))
-    println(part2(input))
+    println(Day13.part1(input))
+    println(Day13.part2(input))
 }

@@ -1,4 +1,4 @@
-fun main() {
+object Day08 {
     fun part1(input: List<String>): Int =
         input.sumOf {
             it
@@ -38,13 +38,14 @@ fun main() {
             .joinToString("") { encodings.indexOf(it.toSet()).toString() }
             .toLong()
     }
+}
 
-
+fun main() {
     val testInput = readInputAsLines("Day08_test")
-    check(part1(testInput) == 26)
-    check(part2(testInput) == 61229L)
+    check(Day08.part1(testInput) == 26)
+    check(Day08.part2(testInput) == 61229L)
 
     val input = readInputAsLines("Day08")
-    println(part1(input))
-    println(part2(input))
+    println(Day08.part1(input))
+    println(Day08.part2(input))
 }

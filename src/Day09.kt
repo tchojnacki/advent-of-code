@@ -1,8 +1,8 @@
-fun Map<Pos2D, Int>.getLowPoints(): Map<Pos2D, Int> =
-    filter { (pos, num) -> Pos2D.directions4.all { num < getOrDefault(pos + it, 9) } }
+object Day09 {
+    private fun Map<Pos2D, Int>.getLowPoints() =
+        filter { (pos, num) -> Pos2D.directions4.all { num < getOrDefault(pos + it, 9) } }
 
-fun main() {
-    fun part1(input: List<String>): Int =
+    fun part1(input: List<String>) =
         parseToMap(input).getLowPoints().values.sumOf { it + 1 }
 
     fun part2(input: List<String>): Int {
@@ -27,13 +27,14 @@ fun main() {
             .take(3)
             .sum()
     }
+}
 
-
+fun main() {
     val testInput = readInputAsLines("Day09_test")
-    check(part1(testInput) == 15)
-    check(part2(testInput) == 1134)
+    check(Day09.part1(testInput) == 15)
+    check(Day09.part2(testInput) == 1134)
 
     val input = readInputAsLines("Day09")
-    println(part1(input))
-    println(part2(input))
+    println(Day09.part1(input))
+    println(Day09.part2(input))
 }
