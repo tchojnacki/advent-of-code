@@ -6,7 +6,7 @@ Repository storing my solutions to Advent of Code. See other people's solutions 
 > prep, company training, university coursework, practice problems, or to challenge each other.
 
 ## Years 📅
-### [2021](2021-kotlin)
+### [2021](aoc-2021-kotlin)
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
 ![39/50 stars](https://img.shields.io/badge/🌟%20stars-39/50-orange)
 ![20/25 days](https://img.shields.io/badge/📅%20days-20/25-blue)
