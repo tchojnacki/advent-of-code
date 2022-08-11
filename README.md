@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/📅%20days-20-blue)
 
 Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using
-the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other solutions [here][awesome].
+the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other people's solutions [here][awesome].
 
 ## Progress
 
@@ -37,11 +37,9 @@ the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other
 | Day 24: Arithmetic Logic Unit   |   🌟   |   🌟   |
 | Day 25: Sea Cucumber            |   🌟   |        |
 
-[^aoc]:
-[Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
+[^aoc]: [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
 Every year since then, beginning on the first day of December, a programming puzzle is published every day for
-twenty-four days.
-You can solve the puzzle and provide an answer using the language of your choice.
+twenty-four days. You can solve the puzzle and provide an answer using the language of your choice.
 
 [aoc]: https://adventofcode.com
 
