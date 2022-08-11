@@ -1,11 +1,11 @@
 # Advent of Code 2021 in Kotlin
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![](https://img.shields.io/badge/⭐%20stars-39-yellow)
-![](https://img.shields.io/badge/📅%20days-20-blue)
+![39 stars](https://img.shields.io/badge/🌟%20stars-39/50-orange)
+![20 days](https://img.shields.io/badge/📅%20days-20/25-blue)
 
-Welcome to the Advent of Code[^aoc] Kotlin project created by [tchojnacki][github] using
-the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other people's solutions [here][awesome].
+Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] using the
+[Advent of Code Kotlin Template][template] delivered by JetBrains.
 
 ## Progress
 
@@ -37,14 +37,8 @@ the [Advent of Code Kotlin Template][template] delivered by JetBrains. See other
 | Day 24: Arithmetic Logic Unit   |   🌟   |   🌟   |
 | Day 25: Sea Cucumber            |   🌟   |        |
 
-[^aoc]: [Advent of Code][aoc] – An annual event of Christmas-oriented programming challenges started December 2015.
-Every year since then, beginning on the first day of December, a programming puzzle is published every day for
-twenty-four days. You can solve the puzzle and provide an answer using the language of your choice.
-
 [aoc]: https://adventofcode.com
 
 [github]: https://github.com/tchojnacki
 
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template
-
-[awesome]: https://github.com/Bogdanp/awesome-advent-of-code
