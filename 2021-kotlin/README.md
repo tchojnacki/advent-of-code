@@ -1,8 +1,7 @@
 # Advent of Code 2021 in Kotlin
-
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![39 stars](https://img.shields.io/badge/🌟%20stars-39/50-orange)
-![20 days](https://img.shields.io/badge/📅%20days-20/25-blue)
+![39/50 stars](https://img.shields.io/badge/🌟%20stars-39/50-orange)
+![20/25 days](https://img.shields.io/badge/📅%20days-20/25-blue)
 
 Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] using the
 [Advent of Code Kotlin Template][template] delivered by JetBrains.
