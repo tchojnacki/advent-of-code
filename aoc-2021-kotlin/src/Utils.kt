@@ -1,8 +1,8 @@
 import java.io.File
 
-fun readInputAsLines(name: String): List<String> = File("src", "$name.txt").readLines()
+fun readInputAsLines(name: String): List<String> = File("aoc-2021-kotlin/src", "$name.txt").readLines()
 
-fun readInputAsString(name: String): String = File("src", "$name.txt").readText()
+fun readInputAsString(name: String): String = File("aoc-2021-kotlin/src", "$name.txt").readText()
 
 fun readInputAsNumbers(name: String): List<Int> = readInputAsLines(name).map(String::toInt)
 
