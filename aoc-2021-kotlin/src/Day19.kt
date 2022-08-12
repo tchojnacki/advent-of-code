@@ -3,9 +3,9 @@ import kotlin.math.absoluteValue
 object Day19 {
     private class Scanner private constructor(val beacons: Set<Pos3D>) {
         companion object {
-            private const val THRESHOLD = 12
+            private const val MIN_OVERLAP = 12
 
-            fun withCenteredBeacon() = Scanner(setOf(Pos3D(0, 0, 0)))
+            fun withCenteredBeacon() = Scanner(setOf(Pos3D.zero))
 
             fun parseScanners(lines: List<String>): List<Scanner> {
                 val strippedLines = lines.filter { it.isNotBlank() }
@@ -36,13 +36,13 @@ object Day19 {
 
             private fun findOffset(from: Scanner, to: Scanner, axis: (Pos3D) -> Int) =
                 to.beacons
-                    .flatMap { t -> from.beacons.map { f -> axis(t) - axis(f) } }
+                    .flatMap { t -> from.beacons.map { f -> axis(t - f) } }
                     .toSet()
                     .find { offset ->
                         intersection(
                             from.beacons.map { axis(it) + offset },
                             to.beacons.map(axis)
-                        ).size >= THRESHOLD
+                        ).size >= MIN_OVERLAP
                     }
 
             fun findTransform(from: Scanner, to: Scanner): Transform? {
@@ -55,7 +55,7 @@ object Day19 {
                     intersection(
                         targetOffsets,
                         uniquePairs(from.withTransform(rotation).beacons).map { (a, b) -> a - b }
-                    ).count() >= THRESHOLD * (THRESHOLD - 1) / 2
+                    ).count() >= MIN_OVERLAP * (MIN_OVERLAP - 1) / 2
                 } ?: return null
 
                 val rotatedScanner = from.withTransform(rotation)
@@ -73,39 +73,37 @@ object Day19 {
         }
 
         private fun beaconOffsetIds() = uniquePairs(beacons).map { (a, b) ->
-            (b - a).let {
-                setOf(
-                    it.x.absoluteValue,
-                    it.y.absoluteValue,
-                    it.z.absoluteValue
-                )
+            (b - a).let { (x, y, z) ->
+                sequenceOf(x, y, z).map { it.absoluteValue }.toSet()
             }
         }
 
         private fun canOverlapWith(other: Scanner) =
             intersection(beaconOffsetIds(), other.beaconOffsetIds())
-                .count() >= THRESHOLD * (THRESHOLD - 1) / 2
+                .count() >= MIN_OVERLAP * (MIN_OVERLAP - 1) / 2
 
-        fun withTransform(transform: Transform) = Scanner(beacons.map { transform.apply(it) }.toSet())
+        fun withTransform(transform: Transform) = Scanner(beacons.map { transform.applyTo(it) }.toSet())
     }
 
     private sealed class Transform {
         companion object {
-            val identity get() = Composite(listOf())
+            val identity: Transform = Composite.empty
         }
 
-        abstract fun apply(pos: Pos3D): Pos3D
+        protected val isIdentity get() = applyTo(Pos3D.unique) == Pos3D.unique
+
+        abstract fun applyTo(pos: Pos3D): Pos3D
         abstract fun inverted(): Transform
-        protected abstract val list: List<Transform>
         abstract override fun toString(): String
 
-        operator fun plus(other: Transform) = Composite(list + other.list)
+        operator fun plus(other: Transform) = Composite.wrap(this) + Composite.wrap(other)
 
         class Translation(private val offset: Pos3D) : Transform() {
-            override fun apply(pos: Pos3D) = pos + offset
+            override fun applyTo(pos: Pos3D) = pos + offset
             override fun inverted() = Translation(-offset)
-            override val list get() = listOf(this)
             override fun toString() = offset.let { (x, y, z) -> "T($x,$y,$z)" }
+
+            operator fun plus(other: Translation) = Translation(offset + other.offset)
         }
 
         class Rotation private constructor(private val index: Int) : Transform() {
@@ -113,7 +111,7 @@ object Day19 {
                 val allRotations = (0 until 24).map { Rotation(it) }
             }
 
-            override fun apply(pos: Pos3D) = pos.let { (x, y, z) ->
+            override fun applyTo(pos: Pos3D) = pos.let { (x, y, z) ->
                 listOf(
                     Pos3D(x, y, z), Pos3D(x, z, -y), Pos3D(x, -y, -z), Pos3D(x, -z, y),
                     Pos3D(-x, -y, z), Pos3D(-x, z, y), Pos3D(-x, y, -z), Pos3D(-x, -z, -y),
@@ -124,27 +122,61 @@ object Day19 {
                 )
             }[index]
 
-            override fun inverted() = Pos3D(1, 2, 3).let {
-                allRotations.find { inverse ->
-                    inverse.apply(this.apply(it)) == it
-                }!!
-            }
-
-            override val list get() = listOf(this)
+            override fun inverted() = allRotations.find { (this + it).isIdentity }!!
 
             override fun toString() = "R($index)"
+
+            operator fun plus(other: Rotation) = Pos3D.unique.let {
+                allRotations.find { combination ->
+                    other.applyTo(this.applyTo(it)) == combination.applyTo(it)
+                }!!
+            }
         }
 
-        class Composite(private val queue: List<Transform>) : Transform() {
-            override fun apply(pos: Pos3D) = queue.fold(pos) { acc, transform -> transform.apply(acc) }
+        class Composite private constructor(private val queue: List<Transform>) : Transform() {
+            companion object {
+                val empty = Composite(listOf())
+
+                fun wrap(transform: Transform) = when {
+                    transform.isIdentity -> empty
+                    transform is Composite -> transform
+                    else -> Composite(listOf(transform))
+                }
+            }
+
+            override fun applyTo(pos: Pos3D) = queue.fold(pos) { acc, transform -> transform.applyTo(acc) }
             override fun inverted() = Composite(queue.reversed().map { it.inverted() })
-            override val list get() = queue
-            override fun toString() = if (list.isEmpty()) "I" else "C(${queue.joinToString("->")})"
+            override fun toString() = if (queue.isEmpty()) "I" else "C(${queue.joinToString("->")})"
+
+            operator fun plus(other: Composite): Transform {
+                val stack = queue.toMutableList()
+
+                other.queue.forEach {
+                    if (stack.isEmpty()) {
+                        stack.add(it)
+                        return@forEach
+                    }
+
+                    val last = stack.removeLast()
+                    when {
+                        it is Rotation && last is Rotation -> stack.add(last + it)
+                        it is Translation && last is Translation -> stack.add(last + it)
+                        else -> stack.addAll(listOf(last, it))
+                    }
+
+                    while (stack.last().isIdentity) stack.removeLast()
+                }
+
+                return stack.singleOrNull() ?: Composite(stack)
+            }
         }
     }
 
     private data class Pos3D(val x: Int, val y: Int, val z: Int) {
         companion object {
+            val zero = Pos3D(0, 0, 0)
+            val unique = Pos3D(1, 2, 3)
+
             fun fromString(string: String) = string
                 .split(",")
                 .map(String::toInt)
