@@ -100,15 +100,6 @@ object Day18 {
             ).also { it.reduce() }
     }
 
-    private fun <T> combinations(items: Sequence<T>): Sequence<Pair<T, T>> =
-        sequence {
-            items.forEach { a ->
-                items.forEach { b ->
-                    yield(a to b)
-                }
-            }
-        }
-
     fun part1(input: List<String>): Int =
         input
             .asSequence()
@@ -116,14 +107,9 @@ object Day18 {
             .reduce(SnailfishNum::plus)
             .magnitude()
 
-    fun part2(input: List<String>): Int =
-        combinations(
-            input
-                .asSequence()
-                .map(SnailfishNum::parse)
-        )
-            .filter { it.first !== it.second }
-            .maxOf { (it.first + it.second).magnitude() }
+    fun part2(input: List<String>): Int = combinations(input.map(SnailfishNum::parse))
+        .filter { it.first !== it.second }
+        .maxOf { (it.first + it.second).magnitude() }
 }
 
 fun main() {

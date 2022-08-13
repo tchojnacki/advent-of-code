@@ -22,6 +22,8 @@ data class Pos2D(val x: Int, val y: Int) {
     }
 
     operator fun plus(other: Pos2D) = Pos2D(x + other.x, y + other.y)
+
+    operator fun minus(other: Pos2D) = Pos2D(x - other.x, y - other.y)
 }
 
 fun parseToMap(input: List<String>): Map<Pos2D, Int> =
@@ -30,3 +32,12 @@ fun parseToMap(input: List<String>): Map<Pos2D, Int> =
             Pos2D(x, y) to char.toString().toInt()
         }
     }.toMap()
+
+fun <T> combinations(first: Iterable<T>, second: Iterable<T> = first): Sequence<Pair<T, T>> =
+    sequence {
+        first.forEach { a ->
+            second.forEach { b ->
+                yield(a to b)
+            }
+        }
+    }
