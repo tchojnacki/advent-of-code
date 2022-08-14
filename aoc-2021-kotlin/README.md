@@ -1,7 +1,7 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![45/50 stars](https://img.shields.io/badge/🌟%20stars-45/50-orange)
-![23/25 days](https://img.shields.io/badge/📅%20days-23/25-blue)
+![47/50 stars](https://img.shields.io/badge/🌟%20stars-47/50-orange)
+![24/25 days](https://img.shields.io/badge/📅%20days-24/25-blue)
 
 Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] using the
 [Advent of Code Kotlin Template][template] delivered by JetBrains.
@@ -31,7 +31,7 @@ Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] usi
 | Day 19: Beacon Scanner          |   🌟   |   🌟   |
 | Day 20: Trench Map              |   🌟   |   🌟   |
 | Day 21: Dirac Dice              |   🌟   |   🌟   |
-| Day 22: Reactor Reboot          |        |        |
+| Day 22: Reactor Reboot          |   🌟   |   🌟   |
 | Day 23: Amphipod                |        |        |
 | Day 24: Arithmetic Logic Unit   |   🌟   |   🌟   |
 | Day 25: Sea Cucumber            |   🌟   |        |
