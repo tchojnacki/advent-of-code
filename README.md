@@ -8,8 +8,8 @@ Repository storing my solutions to Advent of Code. See other people's solutions 
 ## Years 📅
 ### [2021](aoc-2021-kotlin)
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![43/50 stars](https://img.shields.io/badge/🌟%20stars-43/50-orange)
-![22/25 days](https://img.shields.io/badge/📅%20days-22/25-blue)
+![45/50 stars](https://img.shields.io/badge/🌟%20stars-45/50-orange)
+![23/25 days](https://img.shields.io/badge/📅%20days-23/25-blue)
 
 [aoc]: https://adventofcode.com
 
