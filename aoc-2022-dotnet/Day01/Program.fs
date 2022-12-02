@@ -1,37 +1,42 @@
 ﻿open System.IO
+open FSharpPlus
 
-let parseLine = function "" -> None | l -> Some(int l)
-let readInput path = File.ReadLines path |> Seq.map parseLine
+let parseLine =
+    function
+    | "" -> -1
+    | l -> int l
 
-let splitOnNone xs =
-    let (lastGroup, result) = Seq.fold (fun (groupAcc, resultAcc) x ->
-        match x with
-        | Some(value) -> (value :: groupAcc, resultAcc)
-        | None -> (List.empty, (List.rev groupAcc) :: resultAcc)) (List.empty, List.empty) xs
-    in List.rev (if List.isEmpty lastGroup then result else lastGroup :: result)
+let caloriesPerElf data =
+    data |> Seq.split [ [ -1 ] ] |> Seq.map Seq.sum
 
-let groupCalorySums data = data |> splitOnNone |> List.map List.sum
+let topN n xs =
+    let rec insertSorted x =
+        function
+        | h :: t -> (min h x) :: (insertSorted (max h x) t)
+        | _ -> [ x ]
 
-let mostTotalCalories data = data |> groupCalorySums |> List.max
+    Seq.fold
+        (fun acc elem ->
+            if List.length acc < n then
+                insertSorted elem acc
+            elif List.head acc < elem then
+                insertSorted elem (List.tail acc)
+            else
+                acc)
+        List.empty
+        xs
 
-let rec insert x xs =
-  match xs with
-    | [] -> [x]
-    | y::ys -> if x < y then x::y::ys else y::insert x ys
+let solution n input =
+    input
+    |> Seq.map parseLine
+    |> caloriesPerElf
+    |> topN n
+    |> List.sum
 
-let topN n data =
-    Seq.fold (fun acc elem ->
-        if List.length acc < n then insert elem acc
-        elif List.head acc < elem then insert elem (List.tail acc)
-        else acc
-    ) List.empty data
+let test = File.ReadLines "test.txt"
+assert (solution 1 test = 24000)
+assert (solution 3 test = 45000)
 
-let top3TotalCaloriesSum data = data |> groupCalorySums |> topN 3 |> List.sum
-
-let test = readInput "test.txt"
-assert (mostTotalCalories test = 24000)
-assert (top3TotalCaloriesSum test = 45000)
-
-let input = readInput "input.txt"
-printfn "%d" (mostTotalCalories input)
-printfn "%d" (top3TotalCaloriesSum input)
+let input = File.ReadLines "input.txt"
+printfn "%d" (solution 1 input)
+printfn "%d" (solution 3 input)
