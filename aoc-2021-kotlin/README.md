@@ -1,13 +1,11 @@
 # Advent of Code 2021 in Kotlin
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![50/50 stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
-![25/25 days](https://img.shields.io/badge/📅%20days-25/25-blue)
+![Stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
 
 Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] using the
 [Advent of Code Kotlin Template][template] delivered by JetBrains.
 
 ## Progress
-
 | Day                             | Part 1 | Part 2 |
 |---------------------------------|:------:|:------:|
 | Day 1: Sonar Sweep              |   🌟   |   🌟   |
@@ -36,8 +34,5 @@ Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] usi
 | Day 24: Arithmetic Logic Unit   |   🌟   |   🌟   |
 | Day 25: Sea Cucumber            |   🌟   |   🌟   |
 
-[aoc]: https://adventofcode.com
-
 [github]: https://github.com/tchojnacki
-
 [template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template

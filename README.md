@@ -1,16 +1,16 @@
 # Advent of Code 🎄🌟
 Repository storing my solutions to Advent of Code. See other people's solutions [here][awesome].
 
-> [Advent of Code][aoc] is an Advent calendar of small programming puzzles for a variety of skill sets and skill
-> levels that can be solved in any programming language you like. People use them as a speed contest, interview
-> prep, company training, university coursework, practice problems, or to challenge each other.
+> [Advent of Code][aoc] is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as a speed contest, interview prep, company training, university coursework, practice problems, or to challenge each other.
 
 ## Years 📅
 ### [2021](aoc-2021-kotlin)
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
-![50/50 stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
-![25/25 days](https://img.shields.io/badge/📅%20days-25/25-blue)
+![Stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
 
-[aoc]: https://adventofcode.com
+### [2022](aoc-2022-dotnet)
+![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
+![Stars](https://img.shields.io/badge/🌟%20stars-4/50-orange)
 
 [awesome]: https://github.com/Bogdanp/awesome-advent-of-code
+[aoc]: https://adventofcode.com

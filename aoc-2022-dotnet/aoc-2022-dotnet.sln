@@ -8,9 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45FD9816-5DE7-4422-A8D5-C017F4E5BD2C}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\README.md = ..\README.md
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Day02", "Day02\Day02.fsproj", "{A5148468-D518-4678-B32C-D3C59B6290AB}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Day02", "Day02\Day02.fsproj", "{A5148468-D518-4678-B32C-D3C59B6290AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
