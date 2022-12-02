@@ -16,11 +16,11 @@ let topN n xs =
         | _ -> [ x ]
 
     Seq.fold
-        (fun acc elem ->
+        (fun acc x ->
             if List.length acc < n then
-                insertSorted elem acc
-            elif List.head acc < elem then
-                insertSorted elem (List.tail acc)
+                insertSorted x acc
+            elif List.head acc < x then
+                insertSorted x (List.tail acc)
             else
                 acc)
         List.empty

@@ -1,53 +1,87 @@
 ﻿open System.IO
 open FSharpPlus
 
-type Move = R | P | S
-type Result = Win | Draw | Lose
-exception ParseError
+type Move =
+    | Rock
+    | Paper
+    | Scissors
 
-let parseEnemyMove = function "A" -> R | "B" -> P | "C" -> S | _ -> raise ParseError
-let parseAllyMove = function "X" -> R | "Y" -> P | "Z" -> S | _ -> raise ParseError
-let parseOutcome = function "X" -> Lose | "Y" -> Draw | "Z" -> Win | _ -> raise ParseError
+    static member parse =
+        function
+        | "A" -> Rock
+        | "B" -> Paper
+        | "C" -> Scissors
+        | _ -> failwith "Invalid move string!"
 
-let roundScore round =
-    let selectionScore = function R -> 1 | P -> 2 | S -> 3
+    static member choices = [ Rock; Paper; Scissors ]
 
-    let outcomeScore = function
-        | (R, S) | (S, P) | (P, R) -> 0
-        | (R, R) | (P, P) | (S, S) -> 3
-        | (R, P) | (P, S) | (S, R) -> 6
+    member first.beats second =
+        match (first, second) with
+        | (Rock, Scissors)
+        | (Scissors, Paper)
+        | (Paper, Rock) -> true
+        | _ -> false
 
-    selectionScore (snd round) + outcomeScore round
+type Strategy =
+    | X
+    | Y
+    | Z
 
-let lineToTuple line =
-    match String.split [" "] line |> Seq.toList with
-    | [first; second] -> first, second
-    | _ -> raise ParseError
+    static member parse =
+        function
+        | "X" -> X
+        | "Y" -> Y
+        | "Z" -> Z
+        | _ -> failwith "Invalid strategy string!"
 
-let selectMove outcome enemyMove =
-    match (outcome, enemyMove) with
-    | (Win, R) -> P | (Draw, R) -> R | (Lose, R) -> S
-    | (Win, P) -> S | (Draw, P) -> P | (Lose, P) -> R
-    | (Win, S) -> R | (Draw, S) -> S | (Lose, S) -> P
+let splitToTuple sep str =
+    match String.split [ sep ] str |> Seq.toList with
+    | [ x; y ] -> x, y
+    | _ -> failwith "Invalid string format!"
 
-let parseRoundV1 roundStr =
-    let (firstStr, secondStr) = lineToTuple roundStr
-    parseEnemyMove firstStr, parseAllyMove secondStr
+let scoreRound (enemy, player) =
+    let selectionScore =
+        match player with
+        | Rock -> 1
+        | Paper -> 2
+        | Scissors -> 3
 
-let parseRoundV2 roundStr =
-    let (firstStr, secondStr) = lineToTuple roundStr
-    let enemyMove = parseEnemyMove firstStr
-    let outcome = parseOutcome secondStr
-    let allyMove = selectMove outcome enemyMove
-    enemyMove, allyMove
+    let outcomeScore =
+        if player.beats enemy then 6
+        elif player = enemy then 3
+        else 0
 
-let rateStrategyGuideV1 input = input |> Seq.map parseRoundV1 |> Seq.sumBy roundScore
-let rateStrategyGuideV2 input = input |> Seq.map parseRoundV2 |> Seq.sumBy roundScore
+    selectionScore + outcomeScore
+
+let guide1 _ =
+    function
+    | X -> Rock
+    | Y -> Paper
+    | Z -> Scissors
+
+let guide2 (enemy: Move) =
+    function
+    | X -> Seq.find (fun player -> enemy.beats player) Move.choices
+    | Y -> enemy
+    | Z -> Seq.find (fun player -> player.beats enemy) Move.choices
+
+let parseRound guide roundStr =
+    let (enemy, strategy) =
+        splitToTuple " " roundStr
+        |> mapItem1 Move.parse
+        |> mapItem2 Strategy.parse
+
+    enemy, guide enemy strategy
+
+let solution guide input =
+    input
+    |> Seq.map (parseRound guide)
+    |> Seq.sumBy scoreRound
 
 let test = File.ReadLines "test.txt"
-assert (rateStrategyGuideV1 test = 15)
-assert (rateStrategyGuideV2 test = 12)
+assert (solution guide1 test = 15)
+assert (solution guide2 test = 12)
 
 let input = File.ReadLines "input.txt"
-printfn "%d" (rateStrategyGuideV1 input)
-printfn "%d" (rateStrategyGuideV2 input)
+printfn "%d" (solution guide1 input)
+printfn "%d" (solution guide2 input)
