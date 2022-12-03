@@ -11,7 +11,7 @@ type Move =
         | "A" -> Rock
         | "B" -> Paper
         | "C" -> Scissors
-        | _ -> failwith "Invalid move string!"
+        | s -> failwithf "Invalid move: %s" s
 
     static member choices = [ Rock; Paper; Scissors ]
 
@@ -32,10 +32,10 @@ type Strategy =
         | "X" -> X
         | "Y" -> Y
         | "Z" -> Z
-        | _ -> failwith "Invalid strategy string!"
+        | s -> failwithf "Invalid strategy: %s" s
 
 let splitToTuple sep str =
-    match String.split [ sep ] str |> Seq.toList with
+    match Seq.toList <| String.split [ sep ] str with
     | [ x; y ] -> x, y
     | _ -> failwith "Invalid string format!"
 
@@ -67,21 +67,20 @@ let guide2 (enemy: Move) =
 
 let parseRound guide roundStr =
     let (enemy, strategy) =
-        splitToTuple " " roundStr
+        roundStr
+        |> splitToTuple " "
         |> mapItem1 Move.parse
         |> mapItem2 Strategy.parse
 
     enemy, guide enemy strategy
 
-let solution guide input =
-    input
-    |> Seq.map (parseRound guide)
-    |> Seq.sumBy scoreRound
+let solution guide =
+    Seq.map (parseRound guide) >> Seq.sumBy scoreRound
 
 let test = File.ReadLines "test.txt"
 assert (solution guide1 test = 15)
 assert (solution guide2 test = 12)
 
 let input = File.ReadLines "input.txt"
-printfn "%d" (solution guide1 input)
-printfn "%d" (solution guide2 input)
+printfn "%d" <| solution guide1 input
+printfn "%d" <| solution guide2 input
