@@ -12,9 +12,8 @@ let cutInHalf xs =
     let half = Seq.length xs / 2
     [ Seq.take half xs; Seq.skip half xs ]
 
-let solution1 input =
-    input
-    |> Seq.sumBy (
+let solution1 =
+    Seq.sumBy (
         cutInHalf
         >> Seq.map Set
         >> Set.intersectMany
@@ -22,10 +21,9 @@ let solution1 input =
         >> priority
     )
 
-let solution2 input =
-    input
-    |> Seq.chunkBySize 3
-    |> Seq.sumBy (
+let solution2 =
+    Seq.chunkBySize 3
+    >> Seq.sumBy (
         Seq.map Set
         >> Set.intersectMany
         >> Seq.exactlyOne
