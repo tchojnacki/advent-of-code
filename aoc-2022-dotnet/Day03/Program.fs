@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module Day03
+
+open System.IO
 
 let priority item =
     if 'a' <= item && item <= 'z' then

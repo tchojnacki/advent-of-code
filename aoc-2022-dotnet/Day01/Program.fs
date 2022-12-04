@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module Day01
+
+open System.IO
 open FSharpPlus
 
 let parseLine =

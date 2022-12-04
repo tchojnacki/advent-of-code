@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module Day02
+
+open System.IO
 open FSharpPlus
 
 type Move =
