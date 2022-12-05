@@ -1,6 +1,6 @@
 # Advent of Code 2022 in .NET
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-8/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-10/50-orange)
 
 ## Progress
 | Day                            | Part 1 | Part 2 |
@@ -8,8 +8,8 @@
 | Day 1: Calorie Counting        |   🌟   |   🌟   |
 | Day 2: Rock Paper Scissors     |   🌟   |   🌟   |
 | Day 3: Rucksack Reorganization |   🌟   |   🌟   |
-| Day 4: ???                     |   🌟   |   🌟   |
-| Day 5: ???                     |        |        |
+| Day 4: Camp Cleanup            |   🌟   |   🌟   |
+| Day 5: Supply Stacks           |   🌟   |   🌟   |
 | Day 6: ???                     |        |        |
 | Day 7: ???                     |        |        |
 | Day 8: ???                     |        |        |
