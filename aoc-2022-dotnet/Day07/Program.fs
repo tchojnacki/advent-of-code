@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module Day07
+
+open System.IO
 open FParsec
 
 let fileSizeThreshold = 100_000
@@ -26,9 +28,7 @@ let parseCommands input =
     let pcmd = pcd <|> pls
     let pinput = many pcmd
 
-    match run pinput input with
-    | Success (result, _, _) -> result
-    | _ -> failwith "Invalid input format!"
+    Common.parse pinput input
 
 let combine =
     function

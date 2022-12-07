@@ -6,10 +6,7 @@ open FParsec
 let parseLine line =
     let prange = pint32 .>> pstring "-" .>>. pint32
     let ppair = prange .>> pstring "," .>>. prange .>> eof
-
-    match run ppair line with
-    | Success (result, _, _) -> result
-    | _ -> failwith "Invalid line format!"
+    Common.parse ppair line
 
 let fullyOverlap ((a, b), (c, d)) =
     (a <= c && d <= b) || (c <= a && b <= d)

@@ -1,4 +1,6 @@
-﻿open System.IO
+﻿module Day06
+
+open System.IO
 
 let solution n =
     Seq.windowed n

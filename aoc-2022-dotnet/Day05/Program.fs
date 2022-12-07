@@ -1,4 +1,6 @@
-﻿open System
+﻿module Day05
+
+open System
 open System.IO
 open FParsec
 
@@ -9,10 +11,7 @@ type Move =
         let dec n = n - 1
         let pPart str = pstring str >>. pint32
         let pMove = tuple3 (pPart "move ") (pPart " from " |>> dec) (pPart " to " |>> dec)
-
-        match run pMove str with
-        | Success (result, _, _) -> Move result
-        | _ -> failwith "Invalid move format!"
+        Common.parse pMove str |> Move
 
     static member execute order stacks (Move (n, fi, ti)) =
         List.mapi
@@ -33,12 +32,8 @@ let parseStacks str =
     let pCrateLine = sepBy pCrate (pchar ' ') .>> skipNewline
     let pHeader = many pCrateLine
 
-    let parsed =
-        match run pHeader str with
-        | Success (result, _, _) -> result
-        | _ -> failwith "Invalid header format!"
-
-    parsed
+    str
+    |> Common.parse pHeader
     |> List.transpose
     |> List.map (List.choose id)
 
