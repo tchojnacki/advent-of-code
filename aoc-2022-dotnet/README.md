@@ -1,6 +1,6 @@
 # Advent of Code 2022 in .NET
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-12/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-14/50-orange)
 
 ## Progress
 | Day                            | Part 1 | Part 2 |
@@ -11,7 +11,7 @@
 | Day 4: Camp Cleanup            |   🌟   |   🌟   |
 | Day 5: Supply Stacks           |   🌟   |   🌟   |
 | Day 6: Tuning Trouble          |   🌟   |   🌟   |
-| Day 7: ???                     |        |        |
+| Day 7: ???                     |   🌟   |   🌟   |
 | Day 8: ???                     |        |        |
 | Day 9: ???                     |        |        |
 | Day 10: ???                    |        |        |
