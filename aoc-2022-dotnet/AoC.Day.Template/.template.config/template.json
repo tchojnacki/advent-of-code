@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Tomasz Chojnacki",
+    "classifications": ["Common", "Console"],
+    "defaultName": "Day00",
+    "identity": "AoC.Day.Template",
+    "name": "AoC Day in F#",
+    "shortName": "aocdayinfsharp",
+    "sourceName": "AoC.Day.Template",
+    "tags": {
+      "language": "F#",
+      "type": "project"
+    },
+    "description": "Project containing solution to a single day of Advent of Code in F#."
+}

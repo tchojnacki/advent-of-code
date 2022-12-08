@@ -1,9 +1,10 @@
+*.txt
+
 # 2021
 .idea
 *.iml
 .gradle
 build
-*.txt
 
 # 2022
 .vs/
@@ -17,3 +18,4 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+!aoc-2022-dotnet/AoC.Day.Template/*.txt
