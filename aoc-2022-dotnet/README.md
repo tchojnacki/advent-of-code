@@ -1,6 +1,6 @@
 # Advent of Code 2022 in .NET
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-16/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-18/50-orange)
 
 ## Progress
 | Day                            | Part 1 | Part 2 |
@@ -13,7 +13,7 @@
 | Day 6: Tuning Trouble          |   🌟   |   🌟   |
 | Day 7: No Space Left On Device |   🌟   |   🌟   |
 | Day 8: Treetop Tree House      |   🌟   |   🌟   |
-| Day 9: ???                     |        |        |
+| Day 9: Rope Bridge             |   🌟   |   🌟   |
 | Day 10: ???                    |        |        |
 | Day 11: ???                    |        |        |
 | Day 12: ???                    |        |        |
