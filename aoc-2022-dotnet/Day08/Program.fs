@@ -1,11 +1,9 @@
 ﻿module Day08
 
 open System.IO
-open System.Globalization
+open Common
 
-let parseMatrix =
-    array2D
-    >> Array2D.map CharUnicodeInfo.GetDigitValue
+let parseMatrix = array2D >> Array2D.map Util.charToInt
 
 let mapEachToSeq mapping m =
     seq {
@@ -35,8 +33,7 @@ let scenicScore (m: 'a [,]) r c =
 let solution1 =
     parseMatrix
     >> mapEachToSeq isVisible
-    >> Seq.filter id
-    >> Seq.length
+    >> Util.countWhere id
 
 let solution2 = parseMatrix >> mapEachToSeq scenicScore >> Seq.max
 

@@ -1,10 +1,11 @@
 ﻿module Day06
 
 open System.IO
+open Common
 
 let solution n =
     Seq.windowed n
-    >> Seq.findIndex (Set >> Set.count >> (=) n)
+    >> Seq.findIndex (Util.countDistinct >> (=) n)
     >> (+) n
 
 assert

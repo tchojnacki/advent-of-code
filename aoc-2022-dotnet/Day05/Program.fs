@@ -3,6 +3,7 @@
 open System
 open System.IO
 open FParsec
+open Common
 
 type Move =
     | Move of int * int * int
@@ -11,7 +12,7 @@ type Move =
         let dec n = n - 1
         let pPart str = pstring str >>. pint32
         let pMove = tuple3 (pPart "move ") (pPart " from " |>> dec) (pPart " to " |>> dec)
-        Common.parse pMove str |> Move
+        Util.parse pMove str |> Move
 
     static member execute order stacks (Move (n, fi, ti)) =
         List.mapi
@@ -33,7 +34,7 @@ let parseStacks str =
     let pHeader = many pCrateLine
 
     str
-    |> Common.parse pHeader
+    |> Util.parse pHeader
     |> List.transpose
     |> List.map (List.choose id)
 

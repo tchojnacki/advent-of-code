@@ -2,19 +2,20 @@
 
 open System.IO
 open FParsec
+open Common
 
 let parseLine line =
     let prange = pint32 .>> pstring "-" .>>. pint32
     let ppair = prange .>> pstring "," .>>. prange .>> eof
-    Common.parse ppair line
+    Util.parse ppair line
 
 let fullyOverlap ((a, b), (c, d)) =
     (a <= c && d <= b) || (c <= a && b <= d)
 
 let overlapAtAll ((a, b), (c, d)) = a <= d && b >= c
 
-let solution pred =
-    Seq.map parseLine >> Seq.filter pred >> Seq.length
+let solution predicate =
+    Seq.map parseLine >> Util.countWhere predicate
 
 let test = File.ReadLines "test.txt"
 assert (solution fullyOverlap test = 2)

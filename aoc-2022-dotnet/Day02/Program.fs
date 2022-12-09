@@ -2,6 +2,7 @@
 
 open System.IO
 open FSharpPlus
+open Common
 
 type Move =
     | Rock
@@ -36,11 +37,6 @@ type Strategy =
         | "Z" -> Z
         | s -> failwithf "Invalid strategy: %s" s
 
-let splitToTuple sep str =
-    match Seq.toList <| String.split [ sep ] str with
-    | [ x; y ] -> x, y
-    | _ -> failwith "Invalid string format!"
-
 let scoreRound (enemy, player) =
     let selectionScore =
         match player with
@@ -70,7 +66,7 @@ let guide2 (enemy: Move) =
 let parseRound guide roundStr =
     let (enemy, strategy) =
         roundStr
-        |> splitToTuple " "
+        |> Util.splitStringToTuple " "
         |> mapItem1 Move.parse
         |> mapItem2 Strategy.parse
 

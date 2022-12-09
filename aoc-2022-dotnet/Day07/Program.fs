@@ -2,6 +2,7 @@
 
 open System.IO
 open FParsec
+open Common
 
 let fileSizeThreshold = 100_000
 let totalDiskSpace = 70_000_000
@@ -28,7 +29,7 @@ let parseCommands input =
     let pcmd = pcd <|> pls
     let pinput = many pcmd
 
-    Common.parse pinput input
+    Util.parse pinput input
 
 let combine =
     function
@@ -46,11 +47,11 @@ let buildFilesystem commands =
 
     commands |> helper [] |> Map.ofList
 
-let rec directorySize fileSystem path =
-    fileSystem
+let rec dirSize filesystem path =
+    filesystem
     |> Map.find path
     |> List.sumBy (function
-        | Dir dir -> directorySize fileSystem <| combine (path, dir)
+        | Dir dir -> dirSize filesystem <| combine (path, dir)
         | File size -> size)
 
 let part1 = Seq.filter ((>=) fileSizeThreshold) >> Seq.sum
@@ -62,11 +63,11 @@ let part2 sizes =
     sizes |> Seq.filter ((<=) missingSpace) |> Seq.min
 
 let solution reduceSizes input =
-    let fileSystem = input |> parseCommands |> buildFilesystem
+    let filesystem = input |> parseCommands |> buildFilesystem
 
-    fileSystem
+    filesystem
     |> Map.keys
-    |> Seq.map (directorySize fileSystem)
+    |> Seq.map (dirSize filesystem)
     |> reduceSizes
 
 let test = File.ReadAllText("test.txt")

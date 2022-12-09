@@ -1,6 +1,7 @@
 ﻿module Day03
 
 open System.IO
+open Common
 
 let priority item =
     if 'a' <= item && item <= 'z' then
@@ -10,13 +11,9 @@ let priority item =
     else
         failwithf "Invalid item: %c" item
 
-let cutInHalf xs =
-    let half = Seq.length xs / 2
-    [ Seq.take half xs; Seq.skip half xs ]
-
 let solution1 =
     Seq.sumBy (
-        cutInHalf
+        Util.cutInHalf
         >> Seq.map Set
         >> Set.intersectMany
         >> Seq.exactlyOne
