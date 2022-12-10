@@ -25,6 +25,11 @@ module Util =
         | [ x; y ] -> x, y
         | _ -> failwith "Invalid string format!"
 
+    let matrixToString m =
+        m
+        |> Seq.map (Seq.map string >> String.concat "")
+        |> String.concat "\n"
+
     let topN n xs =
         let rec insertSorted x =
             function
