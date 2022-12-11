@@ -1,6 +1,6 @@
 # Advent of Code 2022 in .NET
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-20/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-22/50-orange)
 
 ## Progress
 | Day                            | Part 1 | Part 2 |
@@ -15,7 +15,7 @@
 | Day 8: Treetop Tree House      |   🌟   |   🌟   |
 | Day 9: Rope Bridge             |   🌟   |   🌟   |
 | Day 10: Cathode-Ray Tube       |   🌟   |   🌟   |
-| Day 11: ???                    |        |        |
+| Day 11: Monkey in the Middle   |   🌟   |   🌟   |
 | Day 12: ???                    |        |        |
 | Day 13: ???                    |        |        |
 | Day 14: ???                    |        |        |

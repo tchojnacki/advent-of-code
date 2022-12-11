@@ -30,6 +30,8 @@ module Util =
         |> Seq.map (Seq.map string >> String.concat "")
         |> String.concat "\n"
 
+    let composition n f = List.replicate n f |> List.reduce (>>)
+
     let topN n xs =
         let rec insertSorted x =
             function

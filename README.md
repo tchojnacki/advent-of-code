@@ -10,7 +10,7 @@ Repository storing my solutions to Advent of Code. See other people's solutions 
 
 ### [2022](aoc-2022-dotnet)
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-20/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-22/50-orange)
 
 [awesome]: https://github.com/Bogdanp/awesome-advent-of-code
 [aoc]: https://adventofcode.com
