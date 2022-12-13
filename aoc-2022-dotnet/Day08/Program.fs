@@ -5,37 +5,34 @@ open Common
 
 let parseMatrix = array2D >> Array2D.map Util.charToInt
 
-let mapEachToSeq mapping m =
-    seq {
-        for r in 0 .. Array2D.length1 m - 1 do
-            for c in 0 .. Array2D.length2 m - 1 -> mapping m r c
-    }
-
-let sideViews (m: 'a [,]) r c =
+let sideViews (m: 'a [,]) (Vec2 (c, r)) =
     [ m[0 .. r - 1, c] |> Array.rev
       m[r, c + 1 ..]
       m[r + 1 .., c]
       m[r, 0 .. c - 1] |> Array.rev ]
 
-let isVisible (m: 'a [,]) r c =
+let isVisible (matrix: 'a [,]) pos height =
     not
-    <| List.forall (Array.exists ((<=) m[r, c])) (sideViews m r c)
+    <| List.forall (Array.exists ((<=) height)) (sideViews matrix pos)
 
-let scenicScore (m: 'a [,]) r c =
-    sideViews m r c
+let scenicScore (matrix: 'a [,]) pos height =
+    sideViews matrix pos
     |> List.map (fun s ->
         s
-        |> Seq.tryFindIndex ((<=) m[r, c])
+        |> Seq.tryFindIndex ((<=) height)
         |> Option.map ((+) 1)
         |> Option.defaultValue (Array.length s))
     |> List.reduce (*)
 
 let solution1 =
     parseMatrix
-    >> mapEachToSeq isVisible
+    >> Util.mapEachToSeq isVisible
     >> Util.countWhere id
 
-let solution2 = parseMatrix >> mapEachToSeq scenicScore >> Seq.max
+let solution2 =
+    parseMatrix
+    >> Util.mapEachToSeq scenicScore
+    >> Seq.max
 
 let test = File.ReadLines("test.txt")
 assert (solution1 test = 21)

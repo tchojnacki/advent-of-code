@@ -10,7 +10,7 @@ module Util =
         | Success (result, _, _) -> result
         | _ -> failwith "Invalid input format!"
 
-    let countDistinct seq = seq |> Set |> Set.count
+    let countDistinct xs = xs |> Set |> Set.count
 
     let countWhere pred = Seq.filter pred >> Seq.length
 
@@ -20,15 +20,23 @@ module Util =
         let half = Seq.length xs / 2
         [ Seq.take half xs; Seq.skip half xs ]
 
-    let splitStringToTuple sep str =
-        match Seq.toList <| String.split [ sep ] str with
+    let splitStringToTuple sep string =
+        match Seq.toList <| String.split [ sep ] string with
         | [ x; y ] -> x, y
         | _ -> failwith "Invalid string format!"
 
-    let matrixToString m =
-        m
+    let matrixToString matrix =
+        matrix
         |> Seq.map (Seq.map string >> String.concat "")
         |> String.concat "\n"
+
+    let mapEachToSeq mapping matrix =
+        seq {
+            for row in 0 .. Array2D.length1 matrix - 1 do
+                for col in 0 .. Array2D.length2 matrix - 1 -> mapping matrix (Vec2(col, row)) matrix[row, col]
+        }
+
+    let mAt matrix (Vec2 (col, row)) = Array2D.get matrix row col
 
     let composition n f = List.replicate n f |> List.reduce (>>)
 

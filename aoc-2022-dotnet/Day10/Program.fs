@@ -20,11 +20,11 @@ type Instr =
     | NOOP
     | ADDX of int
 
-    static member parse str =
+    static member parse =
         let pnoop = pstring "noop" >>% NOOP
         let paddx = pstring "addx " >>. pint32 |>> ADDX
         let pinstr = pnoop <|> paddx
-        Util.parse pinstr str
+        Util.parse pinstr
 
 let solution actOnCpuStates =
     Seq.map Instr.parse

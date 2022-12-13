@@ -41,7 +41,7 @@ type Monkey =
             Inspections = m.Inspections + int64 (List.length throws) },
         throws
 
-    static member parseList input =
+    static member parseList =
         let pid =
             pstring "Monkey " >>. pint32
             .>> pchar ':'
@@ -88,7 +88,7 @@ type Monkey =
                       Inspections = 0 }
 
         let pmonkeys = sepBy1 pmonkey newline
-        Util.parse pmonkeys input
+        Util.parse pmonkeys
 
 let monkeyBusiness =
     List.map Monkey.inspections

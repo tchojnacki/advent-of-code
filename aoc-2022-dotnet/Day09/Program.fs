@@ -4,13 +4,12 @@ open System.IO
 open Common
 
 let directionToVec =
-    Vec2
-    << function
-        | 'U' -> (0, 1)
-        | 'R' -> (1, 0)
-        | 'D' -> (0, -1)
-        | 'L' -> (-1, 0)
-        | char -> failwithf "Invalid direction: %c" char
+    function
+    | 'U' -> Vec2.up
+    | 'R' -> Vec2.right
+    | 'D' -> Vec2.down
+    | 'L' -> Vec2.left
+    | char -> failwithf "Invalid direction: %c" char
 
 let parseHeadMoves =
     Seq.collect (fun (line: string) -> Seq.replicate (int line[2..]) (directionToVec line[0]))

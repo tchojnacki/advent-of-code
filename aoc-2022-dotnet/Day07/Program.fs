@@ -16,7 +16,7 @@ type Command =
     | CD of string // dest
     | LS of Node list // nodes in current dir
 
-let parseCommands input =
+let parseCommands =
     let pcd = pstring "$ cd " >>. restOfLine true |>> CD
     let pfile = pint32 .>> pchar ' ' .>> restOfLine true |>> File
     let pdir = pstring "dir " >>. restOfLine true |>> Dir
@@ -29,7 +29,7 @@ let parseCommands input =
     let pcmd = pcd <|> pls
     let pinput = many pcmd
 
-    Util.parse pinput input
+    Util.parse pinput
 
 let combine =
     function

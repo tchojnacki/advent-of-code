@@ -8,11 +8,11 @@ open Common
 type Move =
     | Move of int * int * int
 
-    static member parse str =
+    static member parse =
         let dec n = n - 1
         let pPart str = pstring str >>. pint32
         let pMove = tuple3 (pPart "move ") (pPart " from " |>> dec) (pPart " to " |>> dec)
-        Util.parse pMove str |> Move
+        Util.parse pMove >> Move
 
     static member execute order stacks (Move (n, fi, ti)) =
         List.mapi

@@ -4,10 +4,10 @@ open System.IO
 open FParsec
 open Common
 
-let parseLine line =
+let parseLine =
     let prange = pint32 .>> pstring "-" .>>. pint32
     let ppair = prange .>> pstring "," .>>. prange .>> eof
-    Util.parse ppair line
+    Util.parse ppair
 
 let fullyOverlap ((a, b), (c, d)) =
     (a <= c && d <= b) || (c <= a && b <= d)
