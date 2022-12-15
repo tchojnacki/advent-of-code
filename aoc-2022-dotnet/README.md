@@ -1,32 +1,31 @@
-# Advent of Code 2022 in .NET
-![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
+# Advent of Code 2022 in F#
+![F#](https://img.shields.io/badge/F%23-grey?logo=.NET)
 ![Stars](https://img.shields.io/badge/🌟%20stars-28/50-orange)
 
-## Progress
-| Day                             | Part 1 | Part 2 |
-| ------------------------------- | :----: | :----: |
-| Day 1: Calorie Counting         |   🌟   |   🌟   |
-| Day 2: Rock Paper Scissors      |   🌟   |   🌟   |
-| Day 3: Rucksack Reorganization  |   🌟   |   🌟   |
-| Day 4: Camp Cleanup             |   🌟   |   🌟   |
-| Day 5: Supply Stacks            |   🌟   |   🌟   |
-| Day 6: Tuning Trouble           |   🌟   |   🌟   |
-| Day 7: No Space Left On Device  |   🌟   |   🌟   |
-| Day 8: Treetop Tree House       |   🌟   |   🌟   |
-| Day 9: Rope Bridge              |   🌟   |   🌟   |
-| Day 10: Cathode-Ray Tube        |   🌟   |   🌟   |
-| Day 11: Monkey in the Middle    |   🌟   |   🌟   |
-| Day 12: Hill Climbing Algorithm |   🌟   |   🌟   |
-| Day 13: Distress Signal         |   🌟   |   🌟   |
-| Day 14: Regolith Reservoir      |   🌟   |   🌟   |
-| Day 15: ???                     |        |        |
-| Day 16: ???                     |        |        |
-| Day 17: ???                     |        |        |
-| Day 18: ???                     |        |        |
-| Day 19: ???                     |        |        |
-| Day 20: ???                     |        |        |
-| Day 21: ???                     |        |        |
-| Day 22: ???                     |        |        |
-| Day 23: ???                     |        |        |
-| Day 24: ???                     |        |        |
-| Day 25: ???                     |        |        |
+|  Day   | Problem Name                                                    | Part 1 | Part 2 | Practiced Concepts                                   |
+| :----: | --------------------------------------------------------------- | :----: | :----: | ---------------------------------------------------- |
+| **01** | [Calorie Counting](https://adventofcode.com/2022/day/1)         | :star: | :star: | `Seq`, `\|>` and `>>`, FSharpPlus                    |
+| **02** | [Rock Paper Scissors](https://adventofcode.com/2022/day/2)      | :star: | :star: | ADTs, type members, patterns                         |
+| **03** | [Rucksack Reorganization](https://adventofcode.com/2022/day/3)  | :star: | :star: | ASCII code, `Set`                                    |
+| **04** | [Camp Cleanup](https://adventofcode.com/2022/day/4)             | :star: | :star: | ranges, FParsec                                      |
+| **05** | [Supply Stacks](https://adventofcode.com/2022/day/5)            | :star: | :star: | functional stacks, `List.transpose`, `Seq.fold`      |
+| **06** | [Tuning Trouble](https://adventofcode.com/2022/day/6)           | :star: | :star: | `Seq.windowed`, `Set`                                |
+| **07** | [No Space Left On Device](https://adventofcode.com/2022/day/7)  | :star: | :star: | patterns, ADTs, FParsec                              |
+| **08** | [Treetop Tree House](https://adventofcode.com/2022/day/8)       | :star: | :star: | `Array2D`, slices                                    |
+| **09** | [Rope Bridge](https://adventofcode.com/2022/day/9)              | :star: | :star: | vectors, Chebyshev distance, `Seq.scan`              |
+| **10** | [Cathode-Ray Tube](https://adventofcode.com/2022/day/10)        | :star: | :star: | `Map`, `Seq.fold`                                    |
+| **11** | [Monkey in the Middle](https://adventofcode.com/2022/day/11)    | :star: | :star: | records, type abbrevs, `List.choose`, tail recursion |
+| **12** | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12) | :star: | :star: | functional graphs, functional BFS, `Array2D`         |
+| **13** | [Distress Signal](https://adventofcode.com/2022/day/13)         | :star: | :star: | `IComparable`, ADTs, patterns, FParsec               |
+| **14** | [Regolith Reservoir](https://adventofcode.com/2022/day/14)      | :star: | :star: | `Seq.unfold`, `Seq.pairwise`, functional DFS         |
+| **15** | [Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)   |        |        |                                                      |
+| **16** | ???                                                             |        |        |                                                      |
+| **17** | ???                                                             |        |        |                                                      |
+| **18** | ???                                                             |        |        |                                                      |
+| **19** | ???                                                             |        |        |                                                      |
+| **20** | ???                                                             |        |        |                                                      |
+| **21** | ???                                                             |        |        |                                                      |
+| **22** | ???                                                             |        |        |                                                      |
+| **23** | ???                                                             |        |        |                                                      |
+| **24** | ???                                                             |        |        |                                                      |
+| **25** | ???                                                             |        |        |                                                      |
