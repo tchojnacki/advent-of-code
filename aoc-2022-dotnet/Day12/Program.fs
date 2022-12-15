@@ -57,11 +57,8 @@ type Graph<'T> =
                      Some(depth)
                  else
                      bfsExplore
-                         (neighbours
-                          |> Seq.choose (fun n ->
-                              match Set.contains n explored with
-                              | true -> None
-                              | false -> Some(n, depth + 1))
+                         (neighbours - explored
+                          |> Seq.map (fun n -> (n, depth + 1))
                           |> Seq.append qt
                           |> List.ofSeq)
                          (explored + neighbours))

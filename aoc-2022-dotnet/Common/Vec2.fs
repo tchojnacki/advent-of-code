@@ -1,13 +1,20 @@
 ﻿namespace Common
 
+[<StructuralEquality; StructuralComparison>]
 type Vec2 =
     | Vec2 of int * int
+
+    static member x(Vec2 (x, _)) = x
+    static member y(Vec2 (_, y)) = y
 
     static member zero = Vec2(0, 0)
     static member up = Vec2(0, 1)
     static member right = Vec2(1, 0)
     static member down = Vec2(0, -1)
     static member left = Vec2(-1, 0)
+
+    static member downLeft = Vec2(-1, -1)
+    static member downRight = Vec2(1, -1)
 
     static member directions4 =
         [ Vec2.up
@@ -27,6 +34,16 @@ type Vec2 =
     static member mahattanDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
     static member chebyshevDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = max (abs <| x2 - x1) (abs <| y2 - y1)
     static member neighbours4 v = List.map ((+) v) Vec2.directions4
+
+    static member lineBetween(Vec2 (x1, y1), Vec2 (x2, y2)) =
+        if x1 = x2 then
+            seq { min y1 y2 .. max y1 y2 }
+            |> Seq.map (fun y -> Vec2(x1, y))
+        elif y1 = y2 then
+            seq { min x1 x2 .. max x1 x2 }
+            |> Seq.map (fun x -> Vec2(x, y1))
+        else
+            failwith "Points must be in a vertical or horizontal line!"
 
     static member inMatrix matrix (Vec2 (col, row)) =
         col >= 0

@@ -1,6 +1,6 @@
 # Advent of Code 2022 in .NET
 ![.NET](https://img.shields.io/badge/.NET-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-26/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-28/50-orange)
 
 ## Progress
 | Day                             | Part 1 | Part 2 |
@@ -18,7 +18,7 @@
 | Day 11: Monkey in the Middle    |   🌟   |   🌟   |
 | Day 12: Hill Climbing Algorithm |   🌟   |   🌟   |
 | Day 13: Distress Signal         |   🌟   |   🌟   |
-| Day 14: ???                     |        |        |
+| Day 14: Regolith Reservoir      |   🌟   |   🌟   |
 | Day 15: ???                     |        |        |
 | Day 16: ???                     |        |        |
 | Day 17: ???                     |        |        |
