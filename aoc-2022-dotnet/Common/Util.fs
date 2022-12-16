@@ -40,12 +40,12 @@ module Util =
 
     let composition n f = List.replicate n f |> List.reduce (>>)
 
-    let topN n xs =
-        let rec insertSorted x =
-            function
-            | h :: t -> min h x :: (insertSorted (max h x) t)
-            | _ -> [ x ]
+    let rec insertSorted x =
+        function
+        | h :: t -> min h x :: (insertSorted (max h x) t)
+        | [] -> [ x ]
 
+    let topN n xs =
         Seq.fold
             (fun acc x ->
                 if List.length acc < n then
