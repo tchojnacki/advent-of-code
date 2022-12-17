@@ -42,11 +42,9 @@ module Util =
 
     let notIn set element = not <| Set.contains element set
 
-    let maxOrZero seq =
-        if Seq.isEmpty seq then
-            0
-        else
-            Seq.max seq
+    let updateMax key newValue map =
+        map
+        |> Map.add key (max newValue (map |> Map.tryFind key |> Option.defaultValue 0))
 
     let rec insertSorted x =
         function
