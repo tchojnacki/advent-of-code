@@ -47,24 +47,24 @@ type Graph<'T> =
         |> Graph.withNewEdges graph
 
     static member distance spred epred (Graph nodes: Graph<'T>) =
-        let rec bfsExplore queue explored =
-            match queue with
+        let rec bfsExplore explored =
+            function
             | [] -> None
-            | (vi, depth) :: qt ->
+            | (vi, depth) :: queue ->
                 (let (v, neighbours) = nodes[vi]
 
                  if epred v then
                      Some(depth)
                  else
                      bfsExplore
+                         (explored + neighbours)
                          (neighbours - explored
                           |> Seq.map (fun n -> (n, depth + 1))
-                          |> Seq.append qt
-                          |> List.ofSeq)
-                         (explored + neighbours))
+                          |> Seq.append queue
+                          |> List.ofSeq))
 
         let si = Map.findKey (fun _ (v, _) -> spred v) nodes
-        bfsExplore [ (si, 0) ] (Set.singleton si)
+        bfsExplore (Set.singleton si) [ (si, 0) ]
 
 let solution distanceCalculation =
     array2D

@@ -40,6 +40,14 @@ module Util =
 
     let composition n f = List.replicate n f |> List.reduce (>>)
 
+    let notIn set element = not <| Set.contains element set
+
+    let maxOrZero seq =
+        if Seq.isEmpty seq then
+            0
+        else
+            Seq.max seq
+
     let rec insertSorted x =
         function
         | h :: t -> min h x :: (insertSorted (max h x) t)

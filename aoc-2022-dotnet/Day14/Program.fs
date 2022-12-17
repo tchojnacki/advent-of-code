@@ -11,8 +11,6 @@ let sandMoveOffsets =
       Vec2.downLeft
       Vec2.downRight ]
 
-let notIn set element = not <| Set.contains element set
-
 let buildCaveScan =
     let parsePath =
         let py = pint32 |>> (~-) // mirror Y coordinate
@@ -39,7 +37,7 @@ let solution1 input =
             else
                 sandMoveOffsets
                 |> Seq.map ((+) pos)
-                |> Seq.tryFind (notIn caveScan)
+                |> Seq.tryFind (Util.notIn caveScan)
                 |> function
                     | Some (nextPos) -> fall nextPos
                     | None -> Some(pos)
@@ -62,14 +60,14 @@ let solution2 input =
     let neighbours pos =
         sandMoveOffsets
         |> List.map ((+) pos)
-        |> List.filter (fun pos -> notIn caveScan pos && Vec2.y pos <> floorY)
+        |> List.filter (fun pos -> Util.notIn caveScan pos && Vec2.y pos <> floorY)
 
-    let rec dfs stack visited =
-        match stack with
-        | h :: t -> dfs (List.filter (notIn visited) (neighbours h) @ t) (Set.add h visited)
-        | [] -> Set.count visited
+    let rec dfs vis =
+        function
+        | h :: t -> dfs (Set.add h vis) (List.filter (Util.notIn vis) (neighbours h) @ t)
+        | [] -> Set.count vis
 
-    dfs [ sandSpawnPos ] Set.empty
+    dfs Set.empty [ sandSpawnPos ]
 
 let test = File.ReadLines("test.txt")
 assert (solution1 test = 24)
