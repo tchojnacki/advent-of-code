@@ -38,7 +38,11 @@ module Util =
 
     let mAt matrix (Vec2 (col, row)) = Array2D.get matrix row col
 
-    let composition n f = List.replicate n f |> List.reduce (>>)
+    let rec composition n f x =
+        if n = 0 then
+            x
+        else
+            composition (n - 1) f (f x)
 
     let notIn set element = not <| Set.contains element set
 
@@ -50,6 +54,16 @@ module Util =
         function
         | h :: t -> min h x :: (insertSorted (max h x) t)
         | [] -> [ x ]
+
+    let liftList xs =
+        match List.forall Option.isSome xs with
+        | true -> Some(List.map Option.get xs)
+        | false -> None
+
+    let cycle =
+        function
+        | h :: t -> h, t @ [ h ]
+        | [] -> failwith "Empty list!"
 
     let topN n xs =
         Seq.fold

@@ -13,6 +13,8 @@ type Vec2 =
     static member down = Vec2(0, -1)
     static member left = Vec2(-1, 0)
 
+    static member upRight = Vec2(1, 1)
+    static member upLeft = Vec2(-1, 1)
     static member downLeft = Vec2(-1, -1)
     static member downRight = Vec2(1, -1)
 
@@ -21,6 +23,16 @@ type Vec2 =
           Vec2.right
           Vec2.down
           Vec2.left ]
+
+    static member directions8 =
+        [ Vec2.up
+          Vec2.upRight
+          Vec2.right
+          Vec2.downRight
+          Vec2.down
+          Vec2.downLeft
+          Vec2.left
+          Vec2.upLeft ]
 
     static member inline (~-) = Vec2.map (~-)
     static member inline (+)(Vec2 (x1, y1), Vec2 (x2, y2)) = Vec2(x1 + x2, y1 + y2)
@@ -34,6 +46,7 @@ type Vec2 =
     static member mahattanDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
     static member chebyshevDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = max (abs <| x2 - x1) (abs <| y2 - y1)
     static member neighbours4 v = List.map ((+) v) Vec2.directions4
+    static member neighbours8 v = List.map ((+) v) Vec2.directions8
 
     static member lineBetween(Vec2 (x1, y1), Vec2 (x2, y2)) =
         if x1 = x2 then
