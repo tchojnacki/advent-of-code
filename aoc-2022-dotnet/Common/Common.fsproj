@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Vec3.fs" />
     <Compile Include="Vec2.fs" />
     <Compile Include="Util.fs" />
   </ItemGroup>
