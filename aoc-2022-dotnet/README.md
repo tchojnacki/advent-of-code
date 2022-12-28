@@ -1,6 +1,6 @@
 # Advent of Code 2022 in F#
 ![F#](https://img.shields.io/badge/F%23-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-40/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-41/50-orange)
 
 |  Day   | Problem Name                                                     | Part 1 | Part 2 | Practiced Concepts                                   |
 | :----: | ---------------------------------------------------------------- | :----: | :----: | ---------------------------------------------------- |
@@ -28,4 +28,4 @@
 | **22** | [Monkey Map](https://adventofcode.com/2022/day/22)               |        |        |                                                      |
 | **23** | [Unstable Diffusion](https://adventofcode.com/2022/day/23)       |        |        |                                                      |
 | **24** | [Blizzard Basin](https://adventofcode.com/2022/day/24)           |        |        |                                                      |
-| **25** | [Full of Hot Air](https://adventofcode.com/2022/day/25)          |        |        |                                                      |
+| **25** | [Full of Hot Air](https://adventofcode.com/2022/day/25)          | :star: |        | positional numeral systems, recursion                |
