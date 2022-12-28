@@ -65,6 +65,21 @@ module Util =
         | h :: t -> h, t @ [ h ]
         | [] -> failwith "Empty list!"
 
+    let tsort graph =
+        let dfs =
+            let rec explore path result node =
+                if List.contains node path then
+                    failwith "Cycle found!"
+                elif List.contains node result then
+                    result
+                else
+                    node
+                    :: List.fold (explore (node :: path)) result (Map.find node graph)
+
+            explore []
+
+        graph |> Map.keys |> Seq.fold dfs [] |> List.rev
+
     let topN n xs =
         Seq.fold
             (fun acc x ->
