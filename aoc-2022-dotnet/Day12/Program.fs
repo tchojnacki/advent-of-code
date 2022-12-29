@@ -72,11 +72,10 @@ let solution distanceCalculation =
     >> Util.mapEachToSeq (fun matrix pos square ->
         (square,
          Vec2.neighbours4 pos
-         |> Seq.filter (fun np ->
+         |> Set.filter (fun np ->
              Vec2.inMatrix matrix np
              && Square.canTraverse square (Util.mAt matrix np))
-         |> Seq.map (Vec2.toIndexOf matrix)
-         |> Set))
+         |> Set.map (Vec2.toIndexOf matrix)))
     >> Seq.indexed
     >> Map.ofSeq
     >> Graph
