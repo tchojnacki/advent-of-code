@@ -4,10 +4,14 @@
 type Vec2 =
     | Vec2 of int * int
 
-    static member inline x(Vec2 (x, _)) = x
-    static member inline y(Vec2 (_, y)) = y
+    static member inline getX(Vec2 (x, _)) = x
+    static member inline getY(Vec2 (_, y)) = y
+    member inline this.x = Vec2.getX this
+    member inline this.y = Vec2.getY this
 
     static member zero = Vec2(0, 0)
+    static member ones = Vec2(1, 1)
+
     static member up = Vec2(0, 1)
     static member right = Vec2(1, 0)
     static member down = Vec2(0, -1)
@@ -44,6 +48,8 @@ type Vec2 =
               Vec2.down
               Vec2.left ]
 
+    static member directions5 = Vec2.directions4 |> Set.add Vec2.zero
+
     static member directions8 =
         Set [ Vec2.up
               Vec2.upRight
@@ -54,19 +60,20 @@ type Vec2 =
               Vec2.left
               Vec2.upLeft ]
 
-    static member inline private _map f (Vec2 (x, y)) = Vec2(f x, f y)
+    static member inline mapX f (Vec2 (x, y)) = Vec2(f x, y)
+    static member inline mapY f (Vec2 (x, y)) = Vec2(x, f y)
+    static member inline private _map f = Vec2.mapX f >> Vec2.mapY f
     static member inline private _combine fn (Vec2 (x1, y1)) (Vec2 (x2, y2)) = Vec2(fn x1 x2, fn y1 y2)
 
     static member inline (~-)(v) = Vec2._map (~-) v
     static member inline (+)(v1, v2) = Vec2._combine (+) v1 v2
     static member inline (-)(v1, v2) = Vec2._combine (-) v1 v2
     static member inline (*)(v1, k) = Vec2._map ((*) k) v1
-
     static member inline dot (Vec2 (x1, y1)) (Vec2 (x2, y2)) = x1 * x2 + y1 * y2
     static member inline cross (Vec2 (x1, y1)) (Vec2 (x2, y2)) = x1 * y2 - y1 * x2
     static member inline sign = Vec2._map sign
-    static member inline lengthSquared(Vec2 (x, y)) = x * x + y * y
-    static member mahattanDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
+    static member inline lengthSquared v = Vec2.dot v v
+    static member manhattanDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
     static member chebyshevDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = max (abs <| x2 - x1) (abs <| y2 - y1)
 
     static member inline private _nb d v = Set.map ((+) v) d
@@ -75,7 +82,16 @@ type Vec2 =
     static member neighboursDown = Vec2._nb Vec2.directionsDown
     static member neighboursLeft = Vec2._nb Vec2.directionsLeft
     static member neighbours4 = Vec2._nb Vec2.directions4
+    static member neighbours5 = Vec2._nb Vec2.directions5
     static member neighbours8 = Vec2._nb Vec2.directions8
+
+    static member dirFromChar =
+        function
+        | '^' -> Vec2.up
+        | '>' -> Vec2.right
+        | 'v' -> Vec2.down
+        | '<' -> Vec2.left
+        | c -> failwithf "Invalid direction: %c" c
 
     static member boundingRectangle vs =
         (Seq.reduce (Vec2._combine min) vs, Seq.reduce (Vec2._combine max) vs)

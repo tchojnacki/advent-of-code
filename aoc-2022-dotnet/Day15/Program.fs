@@ -53,15 +53,15 @@ let sensorList =
         let (sensorPos, beaconPos) = Util.parse pline line
 
         { Pos = sensorPos
-          Radius = Vec2.mahattanDist sensorPos beaconPos
+          Radius = Vec2.manhattanDist sensorPos beaconPos
           NearestBeacon = beaconPos }
 
     Seq.map parseSensor >> List.ofSeq
 
 let rowCoverages y sensors =
     let coverage ({ Radius = radius; Pos = pos }) =
-        let offset = radius - abs (Vec2.y pos - y)
-        (Vec2.x pos - offset, Vec2.x pos + offset)
+        let offset = radius - abs (pos.y - y)
+        (pos.x - offset, pos.x + offset)
 
     sensors
     |> Seq.map coverage
@@ -72,11 +72,7 @@ let solution1 y input =
 
     let beaconsInRow =
         sensors
-        |> Seq.choose (fun ({ NearestBeacon = b }) ->
-            if Vec2.y b = y then
-                Some(Vec2.x b)
-            else
-                None)
+        |> Seq.choose (fun ({ NearestBeacon = b }) -> if b.y = y then Some(b.x) else None)
         |> Util.countDistinct
 
     sensors

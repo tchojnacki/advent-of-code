@@ -4,6 +4,7 @@ module Util =
     open System.Globalization
     open FParsec
     open FSharpPlus
+    open FSharpPlus.Math.Generic
 
     let parse parser input =
         match run parser input with
@@ -15,6 +16,9 @@ module Util =
     let countWhere pred = Seq.filter pred >> Seq.length
 
     let charToInt = CharUnicodeInfo.GetDigitValue
+
+    let wrapInRangeInc lower upper x =
+        lower + remE (x - lower) (upper - lower + 1)
 
     let cutInHalf xs =
         let half = Seq.length xs / 2

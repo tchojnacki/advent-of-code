@@ -28,11 +28,11 @@ let buildCaveScan =
 
 let solution1 input =
     let initialCaveScan = buildCaveScan input
-    let voidY = initialCaveScan |> Seq.map Vec2.y |> Seq.min
+    let voidY = initialCaveScan |> Seq.map Vec2.getY |> Seq.min
 
     let settleNewUnit caveScan =
         let rec fall pos =
-            if Vec2.y pos <= voidY then
+            if Vec2.getY pos <= voidY then
                 None
             else
                 sandMoveOffsets
@@ -55,12 +55,12 @@ let solution1 input =
 
 let solution2 input =
     let caveScan = buildCaveScan input
-    let floorY = caveScan |> Seq.map Vec2.y |> Seq.min |> (+) -2
+    let floorY = caveScan |> Seq.map Vec2.getY |> Seq.min |> (+) -2
 
     let neighbours pos =
         sandMoveOffsets
         |> List.map ((+) pos)
-        |> List.filter (fun pos -> Util.notIn caveScan pos && Vec2.y pos <> floorY)
+        |> List.filter (fun pos -> Util.notIn caveScan pos && Vec2.getY pos <> floorY)
 
     let rec dfs vis =
         function
