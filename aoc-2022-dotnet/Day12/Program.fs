@@ -77,7 +77,7 @@ let solution distanceCalculation =
              && Square.canTraverse square (Util.mAt matrix np))
          |> Set.map (Vec2.toIndexOf matrix)))
     >> Seq.indexed
-    >> Map.ofSeq
+    >> Map
     >> Graph
     >> distanceCalculation
     >> Option.get

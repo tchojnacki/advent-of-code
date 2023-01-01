@@ -65,7 +65,7 @@ let solution modification input =
     let monkeys =
         input
         |> Seq.map Monkey.parse
-        |> Map.ofSeq
+        |> Map
         |> modification
 
     let nodeValues =

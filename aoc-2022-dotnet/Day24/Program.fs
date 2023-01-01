@@ -19,7 +19,7 @@ type Valley =
           Blizzards =
             Vec2.directions4
             |> Set.map (fun d -> d, Set.empty)
-            |> Map.ofSeq }
+            |> Map }
 
     static member private withExpeditionAt target valley =
         { valley with ExpeditionSuperposition = Set.singleton <| target valley }

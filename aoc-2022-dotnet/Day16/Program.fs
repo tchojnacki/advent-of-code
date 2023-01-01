@@ -48,7 +48,7 @@ let buildGraph input =
 
         bfsExplore Set.empty [] [ (start, 0) ]
 
-    let valveMap = input |> Seq.map parseValve |> Map.ofSeq
+    let valveMap = input |> Seq.map parseValve |> Map
 
     let flows =
         valveMap
@@ -59,7 +59,7 @@ let buildGraph input =
         valveMap
         |> Map.keys
         |> Seq.collect (distancesFrom valveMap)
-        |> Map.ofSeq
+        |> Map
         |> Map.filter (fun (f, t) _ ->
             f <> t
             && Map.containsKey f flows
