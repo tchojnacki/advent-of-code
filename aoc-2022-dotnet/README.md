@@ -1,6 +1,6 @@
 # Advent of Code 2022 in F#
 ![F#](https://img.shields.io/badge/F%23-grey?logo=.NET)
-![Stars](https://img.shields.io/badge/🌟%20stars-47/50-orange)
+![Stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
 
 |  Day   | Problem Name                                                     | Part 1 | Part 2 | Practiced Concepts                                    |
 | :----: | ---------------------------------------------------------------- | :----: | :----: | ----------------------------------------------------- |
@@ -25,7 +25,7 @@
 | **19** | [Not Enough Minerals](https://adventofcode.com/2022/day/19)      | :star: | :star: | `List.fold`, records, `Map`, mutability, optimization |
 | **20** | [Grove Positioning System](https://adventofcode.com/2022/day/20) | :star: | :star: | linked lists, remainder                               |
 | **21** | [Monkey Math](https://adventofcode.com/2022/day/21)              | :star: | :star: | topological sort, ADTs, complex numbers               |
-| **22** | [Monkey Map](https://adventofcode.com/2022/day/22)               |        |        |                                                       |
+| **22** | [Monkey Map](https://adventofcode.com/2022/day/22)               | :star: | :star: | 2D vectors, rotations, `Array2D`, 3D geometry         |
 | **23** | [Unstable Diffusion](https://adventofcode.com/2022/day/23)       | :star: | :star: | `Set`, 2D vectors, `Seq.unfold`, composition          |
 | **24** | [Blizzard Basin](https://adventofcode.com/2022/day/24)           | :star: | :star: | `Set`, 2D vectors, remainder, records                 |
-| **25** | [Full of Hot Air](https://adventofcode.com/2022/day/25)          | :star: |        | positional numeral systems, recursion                 |
+| **25** | [Full of Hot Air](https://adventofcode.com/2022/day/25)          | :star: | :star: | positional numeral systems, recursion                 |

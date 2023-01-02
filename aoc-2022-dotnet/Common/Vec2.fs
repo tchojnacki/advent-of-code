@@ -73,6 +73,10 @@ type Vec2 =
     static member inline cross (Vec2 (x1, y1)) (Vec2 (x2, y2)) = x1 * y2 - y1 * x2
     static member inline sign = Vec2._map sign
     static member inline lengthSquared v = Vec2.dot v v
+    static member inline rotateLeft(Vec2 (x, y)) = Vec2(-y, x)
+    static member inline rotateRight(Vec2 (x, y)) = Vec2(y, -x)
+    static member inline flip = Vec2.op_UnaryNegation
+
     static member manhattanDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
     static member chebyshevDist (Vec2 (x1, y1)) (Vec2 (x2, y2)) = max (abs <| x2 - x1) (abs <| y2 - y1)
 
