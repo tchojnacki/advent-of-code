@@ -90,5 +90,5 @@ let wrap2 (Vec2 (x, y), d) =
     Vec2(x, y), t d
 
 let input = File.ReadAllText("input.txt")
-printfn "%b" (solution wrap1 input = 103224)
-printfn "%b" (solution wrap2 input = 189097)
+printfn "%d" <| solution wrap1 input
+printfn "%d" <| solution wrap2 input
