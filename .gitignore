@@ -1,10 +1,27 @@
+# Inputs
 *.txt
+
+# 2019
+_build/
+cover/
+deps/
+doc/
+.fetch
+erl_crash.dump
+*.ez
+aoc_2019_elixir-*.tar
+tmp/
+
+
+# 2020
+*.beam
+build/
+erl_crash.dump
 
 # 2021
 .idea
 *.iml
 .gradle
-build
 
 # 2022
 .vs/
