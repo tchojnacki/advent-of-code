@@ -37,12 +37,12 @@ fn is_line_valid2(line: Line) -> Bool {
 
 fn parse_policy() -> p.Parser(Policy) {
   p.int()
-  |> p.then_skip(p.grapheme("-"))
-  |> p.and_then(p.int())
-  |> p.then_skip(p.grapheme(" "))
-  |> p.and_then(p.any_grapheme())
-  |> p.then_skip(p.grapheme(":"))
-  |> p.then_skip(p.grapheme(" "))
+  |> p.then_skip(p.grapheme_literal("-"))
+  |> p.then(p.int())
+  |> p.then_skip(p.grapheme_literal(" "))
+  |> p.then(p.any_grapheme())
+  |> p.then_skip(p.grapheme_literal(":"))
+  |> p.then_skip(p.grapheme_literal(" "))
   |> p.map(with: fn(x) {
     let #(#(min, max), grapheme) = x
     Policy(min, max, grapheme)
@@ -52,10 +52,10 @@ fn parse_policy() -> p.Parser(Policy) {
 fn parse_line(string: String) -> Line {
   let line_parser =
     parse_policy()
-    |> p.and_then(p.all_remaining())
+    |> p.then(p.any_string())
     |> p.map(fn(t) { Line(pair.first(t), pair.second(t)) })
 
-  assert Ok(#(policy, _)) = p.run(line_parser, on: string)
+  assert Ok(policy) = p.parse_entire(string, with: line_parser)
   policy
 }
 
