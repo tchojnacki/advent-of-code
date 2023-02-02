@@ -43,13 +43,15 @@ fn parse_line(string: String) -> Line {
     |> p.then_third(p.any_grapheme())
     |> p.then_skip(p.string_literal(": "))
     |> p.map3(with: fn(min, max, grapheme) { Policy(min, max, grapheme) })
+    |> p.labeled(with: "policy")
 
-  let password_parser = p.any_string()
+  let password_parser = p.labeled(p.any_string(), with: "password")
 
   let line_parser =
     policy_parser
     |> p.then(password_parser)
     |> p.map2(fn(policy, password) { Line(policy, password) })
+    |> p.labeled(with: "line")
 
   assert Ok(policy) = p.parse_entire(string, with: line_parser)
   policy

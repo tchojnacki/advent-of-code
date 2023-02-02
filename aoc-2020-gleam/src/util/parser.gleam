@@ -9,10 +9,6 @@ import ext/intx
 
 const eof: String = "end of input"
 
-fn quot(grapheme: String) -> String {
-  "'" <> grapheme <> "'"
-}
-
 pub type ParseError {
   InvalidInput(expected: String, found: String)
   InvalidParser
@@ -22,11 +18,30 @@ type ParseResult(a) =
   Result(#(a, String), ParseError)
 
 pub opaque type Parser(a) {
-  Parser(function: fn(String) -> ParseResult(a))
+  Parser(function: fn(String) -> ParseResult(a), label: String)
+}
+
+fn create(function: fn(String) -> ParseResult(a)) {
+  Parser(function, "unknown")
 }
 
 fn run(parser: Parser(a), on input: String) -> ParseResult(a) {
   parser.function(input)
+}
+
+pub fn labeled(parser: Parser(a), with label: String) -> Parser(a) {
+  Parser(
+    fn(input) {
+      run(parser, on: input)
+      |> result.map_error(with: fn(error) {
+        case error {
+          InvalidInput(_, found) -> InvalidInput(label, found)
+          other -> other
+        }
+      })
+    },
+    label: label,
+  )
 }
 
 pub fn parse_partial(
@@ -40,33 +55,37 @@ pub fn parse_entire(
   input: String,
   with parser: Parser(a),
 ) -> Result(a, ParseError) {
+  let quot = fn(string) { "\"" <> string <> "\"" }
   case parse_partial(input, with: parser) {
     Ok(#(value, "")) -> Ok(value)
-    Ok(#(_, rest)) -> Error(InvalidInput(expected: eof, found: rest))
+    Ok(#(_, rest)) -> Error(InvalidInput(expected: eof, found: quot(rest)))
     Error(error) -> Error(error)
   }
 }
 
 pub fn any_grapheme() -> Parser(String) {
-  Parser(fn(input) {
+  create(fn(input) {
     input
     |> string.pop_grapheme
-    |> result.replace_error(InvalidInput(expected: "any grapheme", found: eof))
+    |> result.replace_error(InvalidInput("", found: eof))
   })
+  |> labeled(with: "any grapheme")
 }
 
 pub fn grapheme_literal(expected: String) -> Parser(String) {
-  Parser(fn(input) {
+  let quot = fn(grapheme) { "'" <> grapheme <> "'" }
+  create(fn(input) {
     case run(any_grapheme(), on: input) {
       Ok(#(value, _)) as ok if value == expected -> ok
-      Ok(#(value, _)) -> Error(InvalidInput(quot(expected), found: quot(value)))
-      Error(_) -> Error(InvalidInput(quot(expected), found: eof))
+      Ok(#(value, _)) -> Error(InvalidInput("", found: quot(value)))
+      Error(_) -> Error(InvalidInput("", found: eof))
     }
   })
+  |> labeled(with: quot(expected))
 }
 
 pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
-  Parser(fn(input) {
+  create(fn(input) {
     use parsed1 <- result.then(run(first, on: input))
     let #(value1, remaining1) = parsed1
 
@@ -75,6 +94,7 @@ pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
 
     Ok(#(#(value1, value2), remaining2))
   })
+  |> labeled(with: first.label <> " then " <> second.label)
 }
 
 pub fn then_skip(first: Parser(a), second: Parser(b)) -> Parser(a) {
@@ -93,17 +113,25 @@ pub fn then_third(two: Parser(#(a, b)), third: Parser(c)) -> Parser(#(a, b, c)) 
 }
 
 pub fn or(first: Parser(a), else second: Parser(a)) -> Parser(a) {
-  Parser(fn(input) {
+  create(fn(input) {
     first
     |> run(on: input)
     |> result.or(run(second, on: input))
   })
+  |> labeled(with: "(" <> first.label <> " or " <> second.label <> ")")
 }
 
 pub fn any(of parsers: List(Parser(a))) -> Parser(a) {
   parsers
   |> list.reduce(with: or)
   |> result.unwrap(or: failing(with: InvalidParser))
+  |> labeled(
+    "(any of [" <> {
+      parsers
+      |> list.map(with: fn(p) { p.label })
+      |> string.join(with: ", ")
+    } <> "])",
+  )
 }
 
 pub fn digit() -> Parser(String) {
@@ -111,15 +139,16 @@ pub fn digit() -> Parser(String) {
   |> string.to_graphemes
   |> list.map(with: grapheme_literal)
   |> any
-  // TODO: replace error
+  |> labeled(with: "digit")
 }
 
 pub fn map(parser: Parser(a), with mapper: fn(a) -> b) -> Parser(b) {
-  Parser(fn(input) {
+  create(fn(input) {
     use parsed <- result.then(run(parser, on: input))
     let #(value, remaining) = parsed
     Ok(#(mapper(value), remaining))
   })
+  |> labeled(with: parser.label)
 }
 
 pub fn map2(parser: Parser(#(a, b)), with mapper: fn(a, b) -> c) -> Parser(c) {
@@ -136,11 +165,11 @@ pub fn map3(
 }
 
 fn succeeding(with value: a) -> Parser(a) {
-  Parser(fn(input) { Ok(#(value, input)) })
+  create(fn(input) { Ok(#(value, input)) })
 }
 
 fn failing(with error: ParseError) -> Parser(a) {
-  Parser(fn(_) { Error(error) })
+  create(fn(_) { Error(error) })
 }
 
 fn lift2(function: fn(a, b) -> c) -> fn(Parser(a), Parser(b)) -> Parser(c) {
@@ -162,6 +191,13 @@ pub fn sequence(of parsers: List(Parser(a))) -> Parser(List(a)) {
       |> sequence
       |> prepend_parser(head, _)
   }
+  |> labeled(
+    with: "(sequence of [" <> {
+      parsers
+      |> list.map(with: fn(p) { p.label })
+      |> string.join(", ")
+    } <> "])",
+  )
 }
 
 fn do_zero_or_more(input: String, with parser: Parser(a)) -> #(List(a), String) {
@@ -175,28 +211,32 @@ fn do_zero_or_more(input: String, with parser: Parser(a)) -> #(List(a), String) 
 }
 
 pub fn many(of parser: Parser(a)) -> Parser(List(a)) {
-  Parser(fn(input) { Ok(do_zero_or_more(input, with: parser)) })
+  create(fn(input) { Ok(do_zero_or_more(input, with: parser)) })
+  |> labeled(with: "(at least zero of " <> parser.label <> ")")
 }
 
 pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
-  Parser(fn(input) {
+  create(fn(input) {
     use parsed <- result.then(run(parser, on: input))
     let #(value, rest) = parsed
     let #(previous, rest) = do_zero_or_more(rest, with: parser)
     Ok(#([value, ..previous], rest))
   })
+  |> labeled(with: "(at least one of " <> parser.label <> ")")
 }
 
 pub fn int() -> Parser(Int) {
   digit()
   |> many1
   |> map(with: function.compose(string.concat, intx.force_parse))
+  |> labeled(with: "int")
 }
 
 pub fn any_string() -> Parser(String) {
   any_grapheme()
   |> many
   |> map(with: string.concat)
+  |> labeled(with: "any string")
 }
 
 pub fn string_literal(expected: String) -> Parser(String) {
@@ -205,4 +245,5 @@ pub fn string_literal(expected: String) -> Parser(String) {
   |> list.map(with: grapheme_literal)
   |> sequence
   |> map(with: string.concat)
+  |> labeled(with: "\"" <> expected <> "\"")
 }
