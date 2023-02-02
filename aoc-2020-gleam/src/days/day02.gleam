@@ -3,6 +3,7 @@ import gleam/list
 import gleam/string
 import gleam/bool
 import ext/resultx
+import ext/listx
 import util/input_util
 import util/parser as p
 
@@ -12,26 +13,6 @@ type Policy {
 
 type Line {
   Line(policy: Policy, password: String)
-}
-
-fn is_line_valid1(line: Line) -> Bool {
-  line.password
-  |> string.to_graphemes
-  |> list.filter(for: fn(g) { g == line.policy.grapheme })
-  |> list.length
-  |> fn(l) { line.policy.min <= l && l <= line.policy.max }
-}
-
-fn is_line_valid2(line: Line) -> Bool {
-  let graphemes = string.to_graphemes(line.password)
-  let grapheme_matches = fn(idx) {
-    list.at(in: graphemes, get: idx - 1)
-    |> resultx.force_unwrap == line.policy.grapheme
-  }
-  bool.exclusive_or(
-    grapheme_matches(line.policy.min),
-    grapheme_matches(line.policy.max),
-  )
 }
 
 fn parse_line(string: String) -> Line {
@@ -57,18 +38,39 @@ fn parse_line(string: String) -> Line {
   policy
 }
 
-fn part1(lines: List(String)) -> Int {
+fn solve(lines: List(String), predicate: fn(Line) -> Bool) -> Int {
   lines
   |> list.map(with: parse_line)
-  |> list.filter(for: is_line_valid1)
-  |> list.length
+  |> listx.count(satisfying: predicate)
+}
+
+fn part1(lines: List(String)) -> Int {
+  solve(
+    lines,
+    fn(line) {
+      line.password
+      |> string.to_graphemes
+      |> listx.count(satisfying: fn(g) { g == line.policy.grapheme })
+      |> fn(l) { line.policy.min <= l && l <= line.policy.max }
+    },
+  )
 }
 
 fn part2(lines: List(String)) -> Int {
-  lines
-  |> list.map(with: parse_line)
-  |> list.filter(for: is_line_valid2)
-  |> list.length
+  solve(
+    lines,
+    fn(line) {
+      let graphemes = string.to_graphemes(line.password)
+      let grapheme_matches = fn(idx) {
+        list.at(in: graphemes, get: idx - 1)
+        |> resultx.force_unwrap == line.policy.grapheme
+      }
+      bool.exclusive_or(
+        grapheme_matches(line.policy.min),
+        grapheme_matches(line.policy.max),
+      )
+    },
+  )
 }
 
 pub fn run() -> Nil {
