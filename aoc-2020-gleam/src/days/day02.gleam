@@ -1,7 +1,6 @@
 import gleam/io
 import gleam/list
 import gleam/string
-import gleam/pair
 import gleam/bool
 import ext/resultx
 import util/input_util
@@ -35,25 +34,22 @@ fn is_line_valid2(line: Line) -> Bool {
   )
 }
 
-fn parse_policy() -> p.Parser(Policy) {
-  p.int()
-  |> p.then_skip(p.grapheme_literal("-"))
-  |> p.then(p.int())
-  |> p.then_skip(p.grapheme_literal(" "))
-  |> p.then(p.any_grapheme())
-  |> p.then_skip(p.grapheme_literal(":"))
-  |> p.then_skip(p.grapheme_literal(" "))
-  |> p.map(with: fn(x) {
-    let #(#(min, max), grapheme) = x
-    Policy(min, max, grapheme)
-  })
-}
-
 fn parse_line(string: String) -> Line {
+  let policy_parser =
+    p.int()
+    |> p.then_skip(p.grapheme_literal("-"))
+    |> p.then(p.int())
+    |> p.then_skip(p.grapheme_literal(" "))
+    |> p.then_third(p.any_grapheme())
+    |> p.then_skip(p.string_literal(": "))
+    |> p.map3(with: fn(min, max, grapheme) { Policy(min, max, grapheme) })
+
+  let password_parser = p.any_string()
+
   let line_parser =
-    parse_policy()
-    |> p.then(p.any_string())
-    |> p.map(fn(t) { Line(pair.first(t), pair.second(t)) })
+    policy_parser
+    |> p.then(password_parser)
+    |> p.map2(fn(policy, password) { Line(policy, password) })
 
   assert Ok(policy) = p.parse_entire(string, with: line_parser)
   policy
