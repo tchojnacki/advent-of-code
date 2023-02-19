@@ -1,0 +1,99 @@
+import gleam/string
+import gleam/list
+import gleam/function
+import gleam/io
+import gleam/iterator as iter
+import gleam/int
+import gleam/set.{Set}
+import ext/resultx
+import ext/iteratorx as iterx
+import util/input_util
+
+type Pos =
+  #(Int, Int)
+
+const starting_pos = #(0, 0)
+
+const base_slope = #(3, 1)
+
+const all_slopes = [#(1, 1), base_slope, #(5, 1), #(7, 1), #(1, 2)]
+
+fn add(p1: Pos, p2: Pos) -> Pos {
+  #(p1.0 + p2.0, p1.1 + p2.1)
+}
+
+type Area {
+  Area(trees: Set(Pos), cycle: Int, height: Int)
+}
+
+fn parse_area(from text: String) -> Area {
+  let lines = string.split(text, on: "\n")
+
+  let trees =
+    list.index_fold(
+      over: lines,
+      from: set.new(),
+      with: fn(prev, line, y) {
+        line
+        |> string.to_graphemes
+        |> list.index_map(with: fn(x, grapheme) {
+          case grapheme {
+            "#" -> Ok(#(x, y))
+            _ -> Error(Nil)
+          }
+        })
+        |> list.filter_map(with: function.identity)
+        |> set.from_list
+        |> set.union(prev)
+      },
+    )
+  let cycle =
+    lines
+    |> list.first
+    |> resultx.force_unwrap
+    |> string.length
+  let height = list.length(lines)
+
+  Area(trees, cycle, height)
+}
+
+fn has_tree(in area: Area, at pos: Pos) -> Bool {
+  set.contains(area.trees, #(pos.0 % area.cycle, pos.1))
+}
+
+fn is_valid(pos: Pos, in area: Area) -> Bool {
+  0 <= pos.1 && pos.1 < area.height
+}
+
+fn tree_count(in area: Area, with slope: Pos) -> Int {
+  starting_pos
+  |> iter.iterate(with: add(_, slope))
+  |> iter.take_while(satisfying: is_valid(_, in: area))
+  |> iterx.count(satisfying: has_tree(in: area, at: _))
+}
+
+fn part1(text: String) -> Int {
+  text
+  |> parse_area
+  |> tree_count(with: base_slope)
+}
+
+fn part2(text: String) -> Int {
+  let area = parse_area(from: text)
+
+  all_slopes
+  |> list.map(with: tree_count(in: area, with: _))
+  |> int.product
+}
+
+pub fn run() -> Nil {
+  let test = input_util.read_text("test03")
+  assert 7 = part1(test)
+  assert 336 = part2(test)
+
+  let input = input_util.read_text("day03")
+  io.debug(part1(input))
+  io.debug(part2(input))
+
+  Nil
+}

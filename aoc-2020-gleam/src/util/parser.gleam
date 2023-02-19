@@ -7,7 +7,7 @@ import ext/intx
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
-const eof: String = "end of input"
+const eof = "end of input"
 
 pub type ParseError {
   InvalidInput(expected: String, found: String)
