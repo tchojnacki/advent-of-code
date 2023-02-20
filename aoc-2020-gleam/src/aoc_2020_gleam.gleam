@@ -5,6 +5,7 @@ import days/day02
 import days/day03
 import days/day04
 import days/day05
+import days/day06
 
 pub fn main() -> Nil {
   use day <- runner.with_day()
@@ -14,6 +15,7 @@ pub fn main() -> Nil {
     3 -> day03.run()
     4 -> day04.run()
     5 -> day05.run()
+    6 -> day06.run()
     _ -> io.println("Day not found!")
   }
 }
