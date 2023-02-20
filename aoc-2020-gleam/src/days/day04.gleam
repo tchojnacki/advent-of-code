@@ -1,0 +1,141 @@
+import gleam/io
+import gleam/function
+import gleam/list
+import gleam/result
+import gleam/map.{Map}
+import ext/resultx
+import ext/listx
+import util/parser as p
+import util/input_util
+
+const allowed_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"]
+
+const required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
+
+const eye_colors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+
+type Passport {
+  Passport(fields: Map(String, String))
+}
+
+fn parse_passports(from text: String) -> List(Passport) {
+  let key_parser =
+    p.any_string_of_exactly(length: 3)
+    |> p.labeled(with: "key")
+  let value_parser =
+    p.string1_until_whitespace()
+    |> p.labeled(with: "value")
+  let field_parser =
+    key_parser
+    |> p.then_skip(p.grapheme_literal(":"))
+    |> p.then(value_parser)
+    |> p.labeled(with: "field")
+  let passport_parser =
+    field_parser
+    |> p.separated1(by: p.whitespace_grapheme())
+    |> p.map(with: function.compose(map.from_list, Passport))
+    |> p.labeled(with: "passport")
+  let input_parser =
+    passport_parser
+    |> p.separated1(by: p.string_literal("\n\n"))
+    |> p.then_skip(p.optional(p.whitespace_grapheme()))
+    |> p.labeled(with: "input")
+
+  text
+  |> p.parse_entire(with: input_parser)
+  |> resultx.force_unwrap
+}
+
+fn is_valid1(passport: Passport) -> Bool {
+  let has_only_allowed_keys =
+    map.keys(passport.fields)
+    |> list.all(satisfying: list.contains(allowed_fields, _))
+
+  let has_all_required_keys =
+    required_fields
+    |> list.all(satisfying: list.contains(map.keys(passport.fields), _))
+
+  has_only_allowed_keys && has_all_required_keys
+}
+
+fn is_valid2(passport: Passport) -> Bool {
+  let int_between = fn(min, max) {
+    p.int()
+    |> p.matching(rule: fn(number) { min <= number && number <= max })
+    |> p.ignore
+  }
+
+  let validators = [
+    #("byr", int_between(1920, 2002)),
+    #("iyr", int_between(2010, 2020)),
+    #("eyr", int_between(2020, 2030)),
+    #(
+      "hgt",
+      p.or(
+        int_between(150, 193)
+        |> p.then(p.string_literal("cm")),
+        int_between(59, 76)
+        |> p.then(p.string_literal("in")),
+      )
+      |> p.ignore,
+    ),
+    #(
+      "hcl",
+      p.then(
+        p.grapheme_literal("#"),
+        p.grapheme_in(range: "0123456789abcdef")
+        |> p.repeated(times: 6),
+      )
+      |> p.ignore,
+    ),
+    #(
+      "ecl",
+      eye_colors
+      |> list.map(with: p.string_literal)
+      |> p.any
+      |> p.ignore,
+    ),
+    #(
+      "pid",
+      p.digit()
+      |> p.string_of_exactly(length: 9)
+      |> p.ignore,
+    ),
+  ]
+
+  is_valid1(passport) && list.all(
+    validators,
+    satisfying: fn(validator) {
+      let #(key, parser) = validator
+      passport.fields
+      |> map.get(key)
+      |> resultx.force_unwrap
+      |> p.parse_entire(with: parser)
+      |> result.is_ok
+    },
+  )
+}
+
+fn part1(text: String) -> Int {
+  text
+  |> parse_passports
+  |> listx.count(satisfying: is_valid1)
+}
+
+fn part2(text: String) -> Int {
+  text
+  |> parse_passports
+  |> listx.count(satisfying: is_valid2)
+}
+
+pub fn run() -> Nil {
+  let test = input_util.read_text("test04")
+  assert 2 = part1(test)
+  assert 2 = part2(test)
+
+  let input = input_util.read_text("day04")
+  io.debug(part1(input))
+  io.debug(part2(input))
+
+  Nil
+}

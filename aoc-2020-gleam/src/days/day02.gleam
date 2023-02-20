@@ -26,7 +26,7 @@ fn parse_line(string: String) -> Line {
     |> p.map3(with: fn(min, max, grapheme) { Policy(min, max, grapheme) })
     |> p.labeled(with: "policy")
 
-  let password_parser = p.labeled(p.any_string(), with: "password")
+  let password_parser = p.labeled(p.any_string_greedy(), with: "password")
 
   let line_parser =
     policy_parser

@@ -3,14 +3,27 @@ import gleam/list
 import gleam/function
 import gleam/pair
 import gleam/result
-import ext/intx
+import gleam/int
+import gleam/bool
+import gleam/option.{None, Option, Some}
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
 const eof = "end of input"
 
+const whitespace_range = " \t\n"
+
+fn q_s(string: String) -> String {
+  "'" <> string <> "'"
+}
+
+fn q_d(string: String) -> String {
+  "\"" <> string <> "\""
+}
+
 pub type ParseError {
   InvalidInput(expected: String, found: String)
+  InvalidOperation(at: String)
   InvalidParser
 }
 
@@ -55,33 +68,75 @@ pub fn parse_entire(
   input: String,
   with parser: Parser(a),
 ) -> Result(a, ParseError) {
-  let quot = fn(string) { "\"" <> string <> "\"" }
   case parse_partial(input, with: parser) {
     Ok(#(value, "")) -> Ok(value)
-    Ok(#(_, rest)) -> Error(InvalidInput(expected: eof, found: quot(rest)))
+    Ok(#(_, rest)) -> Error(InvalidInput(expected: eof, found: q_d(rest)))
     Error(error) -> Error(error)
   }
 }
 
-pub fn any_grapheme() -> Parser(String) {
+pub fn grapheme_satisfying(predicate) {
   create(fn(input) {
-    input
-    |> string.pop_grapheme
-    |> result.replace_error(InvalidInput("", found: eof))
+    case string.pop_grapheme(input) {
+      Ok(#(value, remaining)) ->
+        case predicate(value) {
+          True -> Ok(#(value, remaining))
+          False -> Error(InvalidInput("", found: q_s(value)))
+        }
+      Error(_) -> Error(InvalidInput("", found: eof))
+    }
   })
+}
+
+pub fn any_grapheme() -> Parser(String) {
+  grapheme_satisfying(function.constant(True))
   |> labeled(with: "any grapheme")
 }
 
 pub fn grapheme_literal(expected: String) -> Parser(String) {
-  let quot = fn(grapheme) { "'" <> grapheme <> "'" }
-  create(fn(input) {
-    case run(any_grapheme(), on: input) {
-      Ok(#(value, _)) as ok if value == expected -> ok
-      Ok(#(value, _)) -> Error(InvalidInput("", found: quot(value)))
-      Error(_) -> Error(InvalidInput("", found: eof))
-    }
-  })
-  |> labeled(with: quot(expected))
+  grapheme_satisfying(fn(g) { g == expected })
+  |> labeled(with: q_s(expected))
+}
+
+pub fn grapheme_in(range allowed: String) -> Parser(String) {
+  grapheme_satisfying(string.contains(allowed, _))
+  |> labeled(with: "grapheme from set " <> q_d(allowed))
+}
+
+pub fn grapheme_not_in(range denied: String) -> Parser(String) {
+  grapheme_satisfying(function.compose(string.contains(denied, _), bool.negate))
+  |> labeled(with: "grapheme NOT from set " <> q_d(denied))
+}
+
+pub fn whitespace_grapheme() -> Parser(String) {
+  grapheme_in(range: whitespace_range)
+  |> labeled(with: "whitespace grapheme")
+}
+
+pub fn whitespaces() -> Parser(String) {
+  string_of_many(of: whitespace_grapheme())
+}
+
+pub fn whitespaces1() -> Parser(String) {
+  string_of_many1(of: whitespace_grapheme())
+}
+
+pub fn nonwhitespace_grapheme() -> Parser(String) {
+  grapheme_not_in(range: whitespace_range)
+  |> labeled(with: "nonwhitespace grapheme")
+}
+
+pub fn string_until_whitespace() -> Parser(String) {
+  string_of_many(of: nonwhitespace_grapheme())
+}
+
+pub fn string1_until_whitespace() -> Parser(String) {
+  string_of_many1(of: nonwhitespace_grapheme())
+}
+
+pub fn ignore(parser: Parser(a)) -> Parser(Nil) {
+  parser
+  |> map(function.constant(Nil))
 }
 
 pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
@@ -103,6 +158,12 @@ pub fn then_skip(first: Parser(a), second: Parser(b)) -> Parser(a) {
   |> map(with: pair.first)
 }
 
+pub fn ignore_and_then(first: Parser(a), second: Parser(b)) -> Parser(b) {
+  first
+  |> then(second)
+  |> map(with: pair.second)
+}
+
 pub fn then_third(two: Parser(#(a, b)), third: Parser(c)) -> Parser(#(a, b, c)) {
   two
   |> then(third)
@@ -121,6 +182,13 @@ pub fn or(first: Parser(a), else second: Parser(a)) -> Parser(a) {
   |> labeled(with: "(" <> first.label <> " or " <> second.label <> ")")
 }
 
+pub fn optional(parser: Parser(a)) -> Parser(Option(a)) {
+  parser
+  |> map(with: Some)
+  |> or(else: succeeding(with: None))
+  |> labeled(with: "optional " <> parser.label)
+}
+
 pub fn any(of parsers: List(Parser(a))) -> Parser(a) {
   parsers
   |> list.reduce(with: or)
@@ -135,10 +203,7 @@ pub fn any(of parsers: List(Parser(a))) -> Parser(a) {
 }
 
 pub fn digit() -> Parser(String) {
-  "0123456789"
-  |> string.to_graphemes
-  |> list.map(with: grapheme_literal)
-  |> any
+  grapheme_in(range: "0123456789")
   |> labeled(with: "digit")
 }
 
@@ -200,6 +265,12 @@ pub fn sequence(of parsers: List(Parser(a))) -> Parser(List(a)) {
   )
 }
 
+pub fn string_of_sequence(of parsers: List(Parser(String))) -> Parser(String) {
+  parsers
+  |> sequence
+  |> map(with: string.concat)
+}
+
 fn do_zero_or_more(input: String, with parser: Parser(a)) -> #(List(a), String) {
   case run(parser, on: input) {
     Ok(#(value, rest)) -> {
@@ -215,6 +286,12 @@ pub fn many(of parser: Parser(a)) -> Parser(List(a)) {
   |> labeled(with: "(at least zero of " <> parser.label <> ")")
 }
 
+pub fn string_of_many(of parser: Parser(String)) -> Parser(String) {
+  parser
+  |> many
+  |> map(with: string.concat)
+}
+
 pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
   create(fn(input) {
     use parsed <- result.then(run(parser, on: input))
@@ -225,17 +302,49 @@ pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
   |> labeled(with: "(at least one of " <> parser.label <> ")")
 }
 
-pub fn int() -> Parser(Int) {
-  digit()
+pub fn string_of_many1(of parser: Parser(String)) -> Parser(String) {
+  parser
   |> many1
-  |> map(with: function.compose(string.concat, intx.force_parse))
+  |> map(with: string.concat)
+}
+
+pub fn separated(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
+  parser
+  |> then(many(of: ignore_and_then(separator, parser)))
+  |> map2(with: fn(p, ps) { [p, ..ps] })
+  |> labeled(
+    with: "(at least zero of " <> parser.label <> " separated by " <> separator.label <> ")",
+  )
+}
+
+pub fn separated1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
+  parser
+  |> separated(by: separator)
+  |> or(else: succeeding(with: []))
+  |> labeled(
+    with: "(at least one of " <> parser.label <> " separated by " <> separator.label <> ")",
+  )
+}
+
+pub fn int() -> Parser(Int) {
+  let int_string_parser = string_of_many1(digit())
+  create(fn(input) {
+    use parsed <- result.then(run(int_string_parser, on: input))
+    let #(int_string, remaining) = parsed
+
+    int_string
+    |> int.parse
+    |> result.map(with: fn(int) { #(int, remaining) })
+    |> result.replace_error(InvalidOperation(
+      at: "int.parse(" <> int_string <> ")",
+    ))
+  })
   |> labeled(with: "int")
 }
 
-pub fn any_string() -> Parser(String) {
+pub fn any_string_greedy() -> Parser(String) {
   any_grapheme()
-  |> many
-  |> map(with: string.concat)
+  |> string_of_many
   |> labeled(with: "any string")
 }
 
@@ -243,7 +352,38 @@ pub fn string_literal(expected: String) -> Parser(String) {
   expected
   |> string.to_graphemes()
   |> list.map(with: grapheme_literal)
+  |> string_of_sequence
+  |> labeled(with: q_d(expected))
+}
+
+pub fn string_of_exactly(
+  parser: Parser(String),
+  length length: Int,
+) -> Parser(String) {
+  parser
+  |> list.repeat(times: length)
+  |> string_of_sequence
+  |> labeled(with: "string of length " <> int.to_string(length))
+}
+
+pub fn any_string_of_exactly(length length: Int) -> Parser(String) {
+  string_of_exactly(any_grapheme(), length: length)
+}
+
+pub fn repeated(parser: Parser(a), times times: Int) -> Parser(List(a)) {
+  parser
+  |> list.repeat(times: times)
   |> sequence
-  |> map(with: string.concat)
-  |> labeled(with: "\"" <> expected <> "\"")
+  |> labeled(with: "exactly " <> int.to_string(times) <> " of " <> parser.label)
+}
+
+pub fn matching(parser: Parser(a), rule predicate: fn(a) -> Bool) -> Parser(a) {
+  create(fn(input) {
+    use parsed <- result.then(run(parser, on: input))
+    let #(value, remaining) = parsed
+    case predicate(value) {
+      True -> Ok(parsed)
+      False -> Error(InvalidOperation(at: string.inspect(predicate)))
+    }
+  })
 }
