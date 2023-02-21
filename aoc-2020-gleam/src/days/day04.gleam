@@ -109,8 +109,11 @@ fn is_valid2(passport: Passport) -> Bool {
       let #(key, parser) = validator
       passport.fields
       |> map.get(key)
-      |> resultx.force_unwrap
-      |> p.parse_entire(with: parser)
+      |> result.then(apply: fn(value) {
+        value
+        |> p.parse_entire(with: parser)
+        |> result.replace_error(Nil)
+      })
       |> result.is_ok
     },
   )

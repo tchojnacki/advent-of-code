@@ -10,7 +10,7 @@ fn solve(numbers: List(Int), n: Int) -> Int {
   |> list.combinations(by: n)
   |> list.find(one_that: fn(p) { int.sum(p) == 2020 })
   |> result.map(with: int.product)
-  |> resultx.force_unwrap()
+  |> resultx.force_unwrap
 }
 
 fn part1(numbers: List(Int)) -> Int {
