@@ -22,7 +22,7 @@ fn alphabet() -> Set(String) {
 
 fn parse_input(text: String) -> Input {
   let answers_parser =
-    p.string1_until_whitespace()
+    p.str1_until_ws()
     |> p.map(fn(answer_string) {
       answer_string
       |> string.to_graphemes
@@ -32,13 +32,13 @@ fn parse_input(text: String) -> Input {
 
   let group_parser =
     answers_parser
-    |> p.separated1(by: p.whitespace_grapheme())
+    |> p.sep1(by: p.ws_gc())
     |> p.labeled(with: "group")
 
   let input_parser =
     group_parser
-    |> p.separated1(by: p.string_literal("\n\n"))
-    |> p.then_skip(p.optional(p.whitespace_grapheme()))
+    |> p.sep1(by: p.literal("\n\n"))
+    |> p.then_skip(p.opt(p.ws_gc()))
     |> p.labeled(with: "input")
 
   text

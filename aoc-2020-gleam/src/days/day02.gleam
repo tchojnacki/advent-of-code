@@ -18,15 +18,15 @@ type Line {
 fn parse_line(string: String) -> Line {
   let policy_parser =
     p.int()
-    |> p.then_skip(p.grapheme_literal("-"))
+    |> p.then_skip(p.literal("-"))
     |> p.then(p.int())
-    |> p.then_skip(p.grapheme_literal(" "))
-    |> p.then_third(p.any_grapheme())
-    |> p.then_skip(p.string_literal(": "))
+    |> p.then_skip(p.literal(" "))
+    |> p.then_3rd(p.any_gc())
+    |> p.then_skip(p.literal(": "))
     |> p.map3(with: fn(min, max, grapheme) { Policy(min, max, grapheme) })
     |> p.labeled(with: "policy")
 
-  let password_parser = p.labeled(p.any_string_greedy(), with: "password")
+  let password_parser = p.labeled(p.any_str_greedy(), with: "password")
 
   let line_parser =
     policy_parser

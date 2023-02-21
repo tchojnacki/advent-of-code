@@ -1,8 +1,9 @@
 import gleam/list
 import gleam/string
+import gleam/function
+import gleam/bool
 import gleam/erlang/file
 import ext/intx
-import ext/stringx
 import ext/resultx
 
 pub fn read_text(filename: String) -> String {
@@ -16,7 +17,7 @@ pub fn read_lines(filename: String) -> List(String) {
   |> read_text()
   |> string.split(on: "\n")
   |> list.map(with: string.trim)
-  |> list.filter(for: stringx.is_not_empty)
+  |> list.filter(for: function.compose(string.is_empty, bool.negate))
 }
 
 pub fn read_numbers(filename: String) -> List(Int) {

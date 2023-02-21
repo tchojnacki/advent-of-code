@@ -20,25 +20,25 @@ type Passport {
 
 fn parse_passports(from text: String) -> List(Passport) {
   let key_parser =
-    p.any_string_of_exactly(length: 3)
+    p.any_str_of_len(3)
     |> p.labeled(with: "key")
   let value_parser =
-    p.string1_until_whitespace()
+    p.str1_until_ws()
     |> p.labeled(with: "value")
   let field_parser =
     key_parser
-    |> p.then_skip(p.grapheme_literal(":"))
+    |> p.then_skip(p.literal(":"))
     |> p.then(value_parser)
     |> p.labeled(with: "field")
   let passport_parser =
     field_parser
-    |> p.separated1(by: p.whitespace_grapheme())
+    |> p.sep1(by: p.ws_gc())
     |> p.map(with: function.compose(map.from_list, Passport))
     |> p.labeled(with: "passport")
   let input_parser =
     passport_parser
-    |> p.separated1(by: p.string_literal("\n\n"))
-    |> p.then_skip(p.optional(p.whitespace_grapheme()))
+    |> p.sep1(by: p.literal("\n\n"))
+    |> p.then_skip(p.opt(p.ws_gc()))
     |> p.labeled(with: "input")
 
   text
@@ -61,7 +61,7 @@ fn is_valid1(passport: Passport) -> Bool {
 fn is_valid2(passport: Passport) -> Bool {
   let int_between = fn(min, max) {
     p.int()
-    |> p.matching(rule: fn(number) { min <= number && number <= max })
+    |> p.satisfying(rule: fn(number) { min <= number && number <= max })
     |> p.ignore
   }
 
@@ -73,32 +73,32 @@ fn is_valid2(passport: Passport) -> Bool {
       "hgt",
       p.or(
         int_between(150, 193)
-        |> p.then(p.string_literal("cm")),
+        |> p.then(p.literal("cm")),
         int_between(59, 76)
-        |> p.then(p.string_literal("in")),
+        |> p.then(p.literal("in")),
       )
       |> p.ignore,
     ),
     #(
       "hcl",
-      p.then(
-        p.grapheme_literal("#"),
-        p.grapheme_in(range: "0123456789abcdef")
-        |> p.repeated(times: 6),
+      p.literal("#")
+      |> p.then(
+        p.gc_in(range: "0123456789abcdef")
+        |> p.repeat(times: 6),
       )
       |> p.ignore,
     ),
     #(
       "ecl",
       eye_colors
-      |> list.map(with: p.string_literal)
+      |> list.map(with: p.literal)
       |> p.any
       |> p.ignore,
     ),
     #(
       "pid",
       p.digit()
-      |> p.string_of_exactly(length: 9)
+      |> p.str_of_len(9)
       |> p.ignore,
     ),
   ]
