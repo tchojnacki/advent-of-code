@@ -140,9 +140,12 @@ pub fn skip_ws(after parser: Parser(a)) -> Parser(a) {
   |> skip(ws0())
 }
 
+pub fn replace(parser: Parser(a), with value: b) -> Parser(b) {
+  map(parser, with: fun.constant(value))
+}
+
 pub fn ignore(parser: Parser(a)) -> Parser(Nil) {
-  parser
-  |> map(fun.constant(Nil))
+  replace(parser, with: Nil)
 }
 
 pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
@@ -162,7 +165,7 @@ pub fn skip(first: Parser(a), second: Parser(b)) -> Parser(a) {
   |> map(with: pair.first)
 }
 
-pub fn proceed(first: Parser(a), second: Parser(b)) -> Parser(b) {
+pub fn proceed(first: Parser(a), with second: Parser(b)) -> Parser(b) {
   first
   |> then(second)
   |> map(with: pair.second)

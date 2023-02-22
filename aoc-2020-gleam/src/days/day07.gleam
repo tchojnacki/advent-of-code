@@ -43,7 +43,7 @@ fn parse_graph(lines: List(String)) -> BagGraph {
       |> p.skip(p.then(p.literal("bag"), p.opt(p.literal("s"))))
       |> p.sep1(by: p.literal(", ")),
       else: p.literal("no other bags")
-      |> p.map(fun.constant([])),
+      |> p.replace(with: []),
     ))
     |> p.skip(p.literal("."))
 
