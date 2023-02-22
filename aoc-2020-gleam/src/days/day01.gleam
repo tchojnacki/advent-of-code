@@ -1,24 +1,23 @@
 import gleam/io
 import gleam/int
 import gleam/list
-import gleam/result as res
 import ext/resultx as resx
 import util/input_util
 
-fn solve(numbers: List(Int), n: Int) -> Int {
+fn solve(numbers: List(Int), n n: Int) -> Int {
   numbers
   |> list.combinations(by: n)
   |> list.find(one_that: fn(p) { int.sum(p) == 2020 })
-  |> res.map(with: int.product)
   |> resx.assert_unwrap
+  |> int.product
 }
 
 fn part1(numbers: List(Int)) -> Int {
-  solve(numbers, 2)
+  solve(numbers, n: 2)
 }
 
 fn part2(numbers: List(Int)) -> Int {
-  solve(numbers, 3)
+  solve(numbers, n: 3)
 }
 
 pub fn run() -> Nil {

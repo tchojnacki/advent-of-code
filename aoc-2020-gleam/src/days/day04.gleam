@@ -27,7 +27,7 @@ fn parse_passports(from text: String) -> List(Passport) {
     |> p.labeled(with: "value")
   let field_parser =
     key_parser
-    |> p.then_skip(p.literal(":"))
+    |> p.skip(p.literal(":"))
     |> p.then(value_parser)
     |> p.labeled(with: "field")
   let passport_parser =
@@ -38,7 +38,7 @@ fn parse_passports(from text: String) -> List(Passport) {
   let input_parser =
     passport_parser
     |> p.sep1(by: p.literal("\n\n"))
-    |> p.then_skip(p.opt(p.ws_gc()))
+    |> p.skip_ws
     |> p.labeled(with: "input")
 
   text
@@ -61,7 +61,7 @@ fn is_valid1(passport: Passport) -> Bool {
 fn is_valid2(passport: Passport) -> Bool {
   let int_between = fn(min, max) {
     p.int()
-    |> p.satisfying(rule: fn(number) { min <= number && number <= max })
+    |> p.satisfying(rule: fn(num) { min <= num && num <= max })
     |> p.ignore
   }
 

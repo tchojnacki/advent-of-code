@@ -135,6 +135,11 @@ pub fn str1_until_ws() -> Parser(String) {
   str_of_many1(of: non_ws_gc())
 }
 
+pub fn skip_ws(after parser: Parser(a)) -> Parser(a) {
+  parser
+  |> skip(ws0())
+}
+
 pub fn ignore(parser: Parser(a)) -> Parser(Nil) {
   parser
   |> map(fun.constant(Nil))
@@ -151,13 +156,13 @@ pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
   |> labeled(with: first.label <> " |> then(" <> second.label <> ")")
 }
 
-pub fn then_skip(first: Parser(a), second: Parser(b)) -> Parser(a) {
+pub fn skip(first: Parser(a), second: Parser(b)) -> Parser(a) {
   first
   |> then(second)
   |> map(with: pair.first)
 }
 
-pub fn drop_then(first: Parser(a), second: Parser(b)) -> Parser(b) {
+pub fn proceed(first: Parser(a), second: Parser(b)) -> Parser(b) {
   first
   |> then(second)
   |> map(with: pair.second)
@@ -316,7 +321,7 @@ pub fn str_of_many1(of parser: Parser(String)) -> Parser(String) {
 
 pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
-  |> then(many0(of: drop_then(separator, parser)))
+  |> then(many0(of: proceed(separator, parser)))
   |> map2(with: fn(p, ps) { [p, ..ps] })
   |> labeled(
     with: "sep1(" <> parser.label <> ", by: " <> separator.label <> ")",

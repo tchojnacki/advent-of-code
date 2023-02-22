@@ -18,12 +18,12 @@ type Line {
 fn parse_line(string: String) -> Line {
   let policy_parser =
     p.int()
-    |> p.then_skip(p.literal("-"))
+    |> p.skip(p.literal("-"))
     |> p.then(p.int())
-    |> p.then_skip(p.literal(" "))
+    |> p.skip(p.literal(" "))
     |> p.then_3rd(p.any_gc())
-    |> p.then_skip(p.literal(": "))
-    |> p.map3(with: fn(min, max, grapheme) { Policy(min, max, grapheme) })
+    |> p.skip(p.literal(": "))
+    |> p.map3(with: Policy)
     |> p.labeled(with: "policy")
 
   let password_parser = p.labeled(p.any_str_greedy(), with: "password")
@@ -31,7 +31,7 @@ fn parse_line(string: String) -> Line {
   let line_parser =
     policy_parser
     |> p.then(password_parser)
-    |> p.map2(fn(policy, password) { Line(policy, password) })
+    |> p.map2(with: Line)
     |> p.labeled(with: "line")
 
   assert Ok(policy) = p.parse_entire(string, with: line_parser)
@@ -60,10 +60,10 @@ fn part2(lines: List(String)) -> Int {
   solve(
     lines,
     fn(line) {
-      let grapheme_matches = fn(idx) {
+      let grapheme_matches = fn(index) {
         line.password
         |> str.to_graphemes
-        |> list.at(idx - 1)
+        |> list.at(index - 1)
         |> resx.assert_unwrap == line.policy.grapheme
       }
       bool.exclusive_or(

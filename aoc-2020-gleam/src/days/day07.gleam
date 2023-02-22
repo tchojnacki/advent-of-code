@@ -33,19 +33,19 @@ fn parse_graph(lines: List(String)) -> BagGraph {
 
   let line_parser =
     bag_type_parser
-    |> p.then_skip(p.literal(" bags contain "))
+    |> p.skip(p.literal(" bags contain "))
     |> p.then(p.or(
       p.int()
-      |> p.then_skip(p.ws_gc())
+      |> p.skip_ws
       |> p.then(bag_type_parser)
       |> p.map(with: pair.swap)
-      |> p.then_skip(p.ws_gc())
-      |> p.then_skip(p.then(p.literal("bag"), p.opt(p.literal("s"))))
+      |> p.skip_ws
+      |> p.skip(p.then(p.literal("bag"), p.opt(p.literal("s"))))
       |> p.sep1(by: p.literal(", ")),
       else: p.literal("no other bags")
       |> p.map(fun.constant([])),
     ))
-    |> p.then_skip(p.literal("."))
+    |> p.skip(p.literal("."))
 
   lines
   |> list.map(with: fun.compose(
