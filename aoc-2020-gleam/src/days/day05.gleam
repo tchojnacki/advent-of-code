@@ -1,31 +1,31 @@
 import gleam/io
 import gleam/int
-import gleam/string
 import gleam/list
 import gleam/set
+import gleam/string as str
 import gleam/iterator as iter
-import ext/resultx
+import ext/resultx as resx
 import util/input_util
 
 fn get_seat_id(pass: String) -> Int {
   pass
-  |> string.to_graphemes
+  |> str.to_graphemes
   |> list.map(with: fn(grapheme) {
     case grapheme {
       "F" | "L" -> "0"
       "B" | "R" -> "1"
     }
   })
-  |> string.concat
+  |> str.concat
   |> int.base_parse(2)
-  |> resultx.force_unwrap
+  |> resx.assert_unwrap
 }
 
 fn part1(lines: List(String)) -> Int {
   lines
   |> list.map(with: get_seat_id)
   |> list.reduce(with: int.max)
-  |> resultx.force_unwrap
+  |> resx.assert_unwrap
 }
 
 fn part2(lines: List(String)) -> Int {
@@ -40,7 +40,7 @@ fn part2(lines: List(String)) -> Int {
     in: iter.range(from: 1, to: 1023),
     one_that: fn(id) { occupied(id - 1) && !occupied(id) && occupied(id + 1) },
   )
-  |> resultx.force_unwrap
+  |> resx.assert_unwrap
 }
 
 pub fn run() -> Nil {

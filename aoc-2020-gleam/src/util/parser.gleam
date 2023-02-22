@@ -1,11 +1,11 @@
-import gleam/string
 import gleam/list
-import gleam/function
 import gleam/pair
-import gleam/result
 import gleam/int
 import gleam/bool
-import gleam/option.{None, Option, Some}
+import gleam/string as str
+import gleam/result as res
+import gleam/function as fun
+import gleam/option.{None, Option, Some} as opt
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
@@ -52,7 +52,7 @@ pub fn labeled(parser: Parser(a), with label: String) -> Parser(a) {
   Parser(
     fn(input) {
       run(parser, on: input)
-      |> result.map_error(with: fn(error) {
+      |> res.map_error(with: fn(error) {
         case error {
           InvalidInput(_, found) -> InvalidInput(label, found)
           other -> other
@@ -83,7 +83,7 @@ pub fn parse_entire(
 
 fn gc_satisfying(rule predicate: fn(String) -> Bool) -> Parser(String) {
   create(fn(input) {
-    case string.pop_grapheme(input) {
+    case str.pop_grapheme(input) {
       Ok(#(value, remaining)) ->
         case predicate(value) {
           True -> Ok(#(value, remaining))
@@ -95,17 +95,17 @@ fn gc_satisfying(rule predicate: fn(String) -> Bool) -> Parser(String) {
 }
 
 pub fn any_gc() -> Parser(String) {
-  gc_satisfying(rule: function.constant(True))
+  gc_satisfying(rule: fun.constant(True))
   |> labeled(with: "any_gc")
 }
 
 pub fn gc_in(range allowed: String) -> Parser(String) {
-  gc_satisfying(rule: string.contains(allowed, _))
+  gc_satisfying(rule: str.contains(allowed, _))
   |> labeled(with: "gc_in(range: " <> q_d(allowed) <> ")")
 }
 
 pub fn gc_not_in(range denied: String) -> Parser(String) {
-  gc_satisfying(rule: function.compose(string.contains(denied, _), bool.negate))
+  gc_satisfying(rule: fun.compose(str.contains(denied, _), bool.negate))
   |> labeled(with: "gc_not_in(range: " <> q_d(denied) <> ")")
 }
 
@@ -137,14 +137,14 @@ pub fn str1_until_ws() -> Parser(String) {
 
 pub fn ignore(parser: Parser(a)) -> Parser(Nil) {
   parser
-  |> map(function.constant(Nil))
+  |> map(fun.constant(Nil))
 }
 
 pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
   create(fn(input) {
-    use parsed1 <- result.then(run(first, on: input))
+    use parsed1 <- res.then(run(first, on: input))
     let #(value1, remaining1) = parsed1
-    use parsed2 <- result.then(run(second, on: remaining1))
+    use parsed2 <- res.then(run(second, on: remaining1))
     let #(value2, remaining2) = parsed2
     Ok(#(#(value1, value2), remaining2))
   })
@@ -176,7 +176,7 @@ pub fn or(first: Parser(a), else second: Parser(a)) -> Parser(a) {
   create(fn(input) {
     first
     |> run(on: input)
-    |> result.or(run(second, on: input))
+    |> res.or(run(second, on: input))
   })
   |> labeled(with: first.label <> " |> or(else: " <> second.label <> ")")
 }
@@ -191,12 +191,12 @@ pub fn opt(parser: Parser(a)) -> Parser(Option(a)) {
 pub fn any(of parsers: List(Parser(a))) -> Parser(a) {
   parsers
   |> list.reduce(with: or)
-  |> result.unwrap(or: failing(with: InvalidParser))
+  |> res.unwrap(or: failing(with: InvalidParser))
   |> labeled(
     "any(of: [" <> {
       parsers
       |> list.map(with: fn(p) { p.label })
-      |> string.join(with: ", ")
+      |> str.join(with: ", ")
     } <> "])",
   )
 }
@@ -211,11 +211,11 @@ fn flat_map(
   with mapper: fn(a) -> Result(b, ParseError),
 ) -> Parser(b) {
   create(fn(input) {
-    use parsed <- result.then(run(parser, on: input))
+    use parsed <- res.then(run(parser, on: input))
     let #(value, remaining) = parsed
     value
     |> mapper
-    |> result.map(with: fn(new_value) { #(new_value, remaining) })
+    |> res.map(with: fn(new_value) { #(new_value, remaining) })
   })
   |> labeled(with: parser.label)
 }
@@ -266,7 +266,7 @@ pub fn seq(of parsers: List(Parser(a))) -> Parser(List(a)) {
     with: "seq(of: [" <> {
       parsers
       |> list.map(with: fn(p) { p.label })
-      |> string.join(", ")
+      |> str.join(", ")
     } <> "])",
   )
 }
@@ -274,7 +274,7 @@ pub fn seq(of parsers: List(Parser(a))) -> Parser(List(a)) {
 pub fn str_of_seq(of parsers: List(Parser(String))) -> Parser(String) {
   parsers
   |> seq
-  |> map(with: string.concat)
+  |> map(with: str.concat)
 }
 
 fn do_zero_or_more(input: String, with parser: Parser(a)) -> #(List(a), String) {
@@ -295,12 +295,12 @@ pub fn many0(of parser: Parser(a)) -> Parser(List(a)) {
 pub fn str_of_many0(of parser: Parser(String)) -> Parser(String) {
   parser
   |> many0
-  |> map(with: string.concat)
+  |> map(with: str.concat)
 }
 
 pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
   create(fn(input) {
-    use parsed <- result.then(run(parser, on: input))
+    use parsed <- res.then(run(parser, on: input))
     let #(value, rest) = parsed
     let #(previous, rest) = do_zero_or_more(rest, with: parser)
     Ok(#([value, ..previous], rest))
@@ -311,7 +311,7 @@ pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
 pub fn str_of_many1(of parser: Parser(String)) -> Parser(String) {
   parser
   |> many1
-  |> map(with: string.concat)
+  |> map(with: str.concat)
 }
 
 pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
@@ -338,7 +338,7 @@ pub fn int() -> Parser(Int) {
   |> flat_map(with: fn(int_string) {
     int_string
     |> int.parse
-    |> result.replace_error(InvalidOperation(ran: "int.parse", with: int_string))
+    |> res.replace_error(InvalidOperation(ran: "int.parse", with: int_string))
   })
   |> labeled(with: "int")
 }
@@ -351,7 +351,7 @@ pub fn any_str_greedy() -> Parser(String) {
 
 pub fn literal(expected: String) -> Parser(String) {
   expected
-  |> string.to_graphemes
+  |> str.to_graphemes
   |> list.map(with: fn(eg) { gc_satisfying(fn(g) { g == eg }) })
   |> str_of_seq
   |> labeled(with: q_d(expected))
@@ -381,14 +381,14 @@ pub fn repeat(parser: Parser(a), times times: Int) -> Parser(List(a)) {
 
 pub fn satisfying(parser: Parser(a), rule predicate: fn(a) -> Bool) -> Parser(a) {
   create(fn(input) {
-    use parsed <- result.then(run(parser, on: input))
+    use parsed <- res.then(run(parser, on: input))
     let #(value, _) = parsed
     case predicate(value) {
       True -> Ok(parsed)
       False ->
         Error(InvalidOperation(
-          ran: string.inspect(predicate),
-          with: string.inspect(value),
+          ran: str.inspect(predicate),
+          with: str.inspect(value),
         ))
     }
   })

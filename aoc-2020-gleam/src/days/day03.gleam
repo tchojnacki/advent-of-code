@@ -1,11 +1,11 @@
-import gleam/string
 import gleam/list
-import gleam/function
 import gleam/io
-import gleam/iterator as iter
 import gleam/int
+import gleam/string as str
+import gleam/function as fun
+import gleam/iterator as iter
 import gleam/set.{Set}
-import ext/resultx
+import ext/resultx as resx
 import ext/iteratorx as iterx
 import util/input_util
 
@@ -27,7 +27,7 @@ type Area {
 }
 
 fn parse_area(from text: String) -> Area {
-  let lines = string.split(text, on: "\n")
+  let lines = str.split(text, on: "\n")
 
   let trees =
     list.index_fold(
@@ -35,14 +35,14 @@ fn parse_area(from text: String) -> Area {
       from: set.new(),
       with: fn(prev, line, y) {
         line
-        |> string.to_graphemes
+        |> str.to_graphemes
         |> list.index_map(with: fn(x, grapheme) {
           case grapheme {
             "#" -> Ok(#(x, y))
             _ -> Error(Nil)
           }
         })
-        |> list.filter_map(with: function.identity)
+        |> list.filter_map(with: fun.identity)
         |> set.from_list
         |> set.union(prev)
       },
@@ -50,8 +50,8 @@ fn parse_area(from text: String) -> Area {
   let cycle =
     lines
     |> list.first
-    |> resultx.force_unwrap
-    |> string.length
+    |> resx.assert_unwrap
+    |> str.length
   let height = list.length(lines)
 
   Area(trees, cycle, height)

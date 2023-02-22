@@ -1,11 +1,11 @@
 import gleam/io
 import gleam/int
-import gleam/string
 import gleam/list
+import gleam/string as str
 import gleam/set.{Set}
-import ext/resultx
-import util/parser as p
+import ext/resultx as resx
 import util/input_util
+import util/parser as p
 
 type Answers =
   Set(String)
@@ -17,7 +17,7 @@ type Input =
   List(Group)
 
 fn alphabet() -> Set(String) {
-  set.from_list(string.to_graphemes("abcdefghijklmnopqrstuvwxyz"))
+  set.from_list(str.to_graphemes("abcdefghijklmnopqrstuvwxyz"))
 }
 
 fn parse_input(text: String) -> Input {
@@ -25,7 +25,7 @@ fn parse_input(text: String) -> Input {
     p.str1_until_ws()
     |> p.map(fn(answer_string) {
       answer_string
-      |> string.to_graphemes
+      |> str.to_graphemes
       |> set.from_list
     })
     |> p.labeled(with: "answers")
@@ -43,7 +43,7 @@ fn parse_input(text: String) -> Input {
 
   text
   |> p.parse_entire(with: input_parser)
-  |> resultx.force_unwrap
+  |> resx.assert_unwrap
 }
 
 fn fold_group(

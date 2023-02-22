@@ -1,10 +1,10 @@
 import gleam/io
 import gleam/list
-import gleam/function as fun
 import gleam/pair
 import gleam/result as res
-import gleam/iterator.{Iterator} as iter
+import gleam/function as fun
 import gleam/map.{Map}
+import gleam/iterator.{Iterator} as iter
 import ext/resultx as resx
 import ext/iteratorx as iterx
 import util/graph
@@ -50,7 +50,7 @@ fn parse_graph(lines: List(String)) -> BagGraph {
   lines
   |> list.map(with: fun.compose(
     p.parse_entire(_, with: line_parser),
-    resx.force_unwrap,
+    resx.assert_unwrap,
   ))
   |> map.from_list
 }
@@ -59,7 +59,7 @@ fn neighbour_fun(graph: BagGraph) -> BagNeighbourFun {
   fn(bag) {
     graph
     |> map.get(bag)
-    |> resx.force_unwrap
+    |> resx.assert_unwrap
     |> list.map(with: pair.first)
     |> iter.from_list
   }

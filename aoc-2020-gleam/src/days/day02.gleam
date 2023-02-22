@@ -1,9 +1,9 @@
 import gleam/io
 import gleam/list
-import gleam/string
 import gleam/bool
-import ext/resultx
+import gleam/string as str
 import ext/listx
+import ext/resultx as resx
 import util/input_util
 import util/parser as p
 
@@ -49,7 +49,7 @@ fn part1(lines: List(String)) -> Int {
     lines,
     fn(line) {
       line.password
-      |> string.to_graphemes
+      |> str.to_graphemes
       |> listx.count(satisfying: fn(g) { g == line.policy.grapheme })
       |> fn(l) { line.policy.min <= l && l <= line.policy.max }
     },
@@ -60,10 +60,11 @@ fn part2(lines: List(String)) -> Int {
   solve(
     lines,
     fn(line) {
-      let graphemes = string.to_graphemes(line.password)
       let grapheme_matches = fn(idx) {
-        list.at(in: graphemes, get: idx - 1)
-        |> resultx.force_unwrap == line.policy.grapheme
+        line.password
+        |> str.to_graphemes
+        |> list.at(idx - 1)
+        |> resx.assert_unwrap == line.policy.grapheme
       }
       bool.exclusive_or(
         grapheme_matches(line.policy.min),

@@ -1,16 +1,16 @@
 import gleam/io
 import gleam/int
 import gleam/list
-import gleam/result
-import ext/resultx
+import gleam/result as res
+import ext/resultx as resx
 import util/input_util
 
 fn solve(numbers: List(Int), n: Int) -> Int {
   numbers
   |> list.combinations(by: n)
   |> list.find(one_that: fn(p) { int.sum(p) == 2020 })
-  |> result.map(with: int.product)
-  |> resultx.force_unwrap
+  |> res.map(with: int.product)
+  |> resx.assert_unwrap
 }
 
 fn part1(numbers: List(Int)) -> Int {

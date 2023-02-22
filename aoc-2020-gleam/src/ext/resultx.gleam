@@ -1,4 +1,4 @@
-pub fn force_unwrap(result: Result(t, _)) -> t {
+pub fn assert_unwrap(result: Result(t, _)) -> t {
   assert Ok(value) = result
   value
 }

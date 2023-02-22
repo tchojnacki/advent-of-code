@@ -1,12 +1,12 @@
 import gleam/io
-import gleam/function
 import gleam/list
-import gleam/result
+import gleam/function as fun
+import gleam/result as res
 import gleam/map.{Map}
-import ext/resultx
 import ext/listx
-import util/parser as p
+import ext/resultx as resx
 import util/input_util
+import util/parser as p
 
 const allowed_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"]
 
@@ -33,7 +33,7 @@ fn parse_passports(from text: String) -> List(Passport) {
   let passport_parser =
     field_parser
     |> p.sep1(by: p.ws_gc())
-    |> p.map(with: function.compose(map.from_list, Passport))
+    |> p.map(with: fun.compose(map.from_list, Passport))
     |> p.labeled(with: "passport")
   let input_parser =
     passport_parser
@@ -43,7 +43,7 @@ fn parse_passports(from text: String) -> List(Passport) {
 
   text
   |> p.parse_entire(with: input_parser)
-  |> resultx.force_unwrap
+  |> resx.assert_unwrap
 }
 
 fn is_valid1(passport: Passport) -> Bool {
@@ -109,12 +109,12 @@ fn is_valid2(passport: Passport) -> Bool {
       let #(key, parser) = validator
       passport.fields
       |> map.get(key)
-      |> result.then(apply: fn(value) {
+      |> res.then(apply: fn(value) {
         value
         |> p.parse_entire(with: parser)
-        |> result.replace_error(Nil)
+        |> res.replace_error(Nil)
       })
-      |> result.is_ok
+      |> res.is_ok
     },
   )
 }
