@@ -3,8 +3,7 @@ import gleam/list
 
 pub fn length(iterator: Iterator(a)) -> Int {
   iterator
-  |> iter.to_list
-  |> list.length
+  |> iter.fold(from: 0, with: fn(c, _) { c + 1 })
 }
 
 pub fn count(iterator: Iterator(a), satisfying predicate: fn(a) -> Bool) -> Int {

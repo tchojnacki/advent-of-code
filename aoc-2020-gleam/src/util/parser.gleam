@@ -9,7 +9,7 @@ import gleam/option.{None, Option, Some}
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
-// TODO: - make distinction between atomic (int, string literal) and non-atomic (then, sequence)
+// TODO: - make distinction between atomic (int, string literal) and non-atomic (then, seq)
 //         parsers and only override error sources for atomic parsers
 //       - report where the error occured in the error struct
 
@@ -253,17 +253,17 @@ fn lift2(function: fn(a, b) -> c) -> fn(Parser(a), Parser(b)) -> Parser(c) {
   }
 }
 
-pub fn sequence(of parsers: List(Parser(a))) -> Parser(List(a)) {
+pub fn seq(of parsers: List(Parser(a))) -> Parser(List(a)) {
   let prepend_parser = lift2(fn(x, xs) { [x, ..xs] })
   case parsers {
     [] -> succeeding(with: [])
     [head, ..tail] ->
       tail
-      |> sequence
+      |> seq
       |> prepend_parser(head, _)
   }
   |> labeled(
-    with: "sequence(of: [" <> {
+    with: "seq(of: [" <> {
       parsers
       |> list.map(with: fn(p) { p.label })
       |> string.join(", ")
@@ -271,9 +271,9 @@ pub fn sequence(of parsers: List(Parser(a))) -> Parser(List(a)) {
   )
 }
 
-pub fn str_of_sequence(of parsers: List(Parser(String))) -> Parser(String) {
+pub fn str_of_seq(of parsers: List(Parser(String))) -> Parser(String) {
   parsers
-  |> sequence
+  |> seq
   |> map(with: string.concat)
 }
 
@@ -314,21 +314,21 @@ pub fn str_of_many1(of parser: Parser(String)) -> Parser(String) {
   |> map(with: string.concat)
 }
 
-pub fn sep0(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
+pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
   |> then(many0(of: drop_then(separator, parser)))
   |> map2(with: fn(p, ps) { [p, ..ps] })
   |> labeled(
-    with: "sep0(" <> parser.label <> ", by: " <> separator.label <> ")",
+    with: "sep1(" <> parser.label <> ", by: " <> separator.label <> ")",
   )
 }
 
-pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
+pub fn sep0(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
-  |> sep0(by: separator)
+  |> sep1(by: separator)
   |> or(else: succeeding(with: []))
   |> labeled(
-    with: "sep1(" <> parser.label <> ", by: " <> separator.label <> ")",
+    with: "sep0(" <> parser.label <> ", by: " <> separator.label <> ")",
   )
 }
 
@@ -353,14 +353,14 @@ pub fn literal(expected: String) -> Parser(String) {
   expected
   |> string.to_graphemes
   |> list.map(with: fn(eg) { gc_satisfying(fn(g) { g == eg }) })
-  |> str_of_sequence
+  |> str_of_seq
   |> labeled(with: q_d(expected))
 }
 
 pub fn str_of_len(parser: Parser(String), length: Int) -> Parser(String) {
   parser
   |> list.repeat(times: length)
-  |> str_of_sequence
+  |> str_of_seq
   |> labeled(
     with: "str_of_len(" <> parser.label <> "," <> int.to_string(length) <> ")",
   )
@@ -373,7 +373,7 @@ pub fn any_str_of_len(length: Int) -> Parser(String) {
 pub fn repeat(parser: Parser(a), times times: Int) -> Parser(List(a)) {
   parser
   |> list.repeat(times: times)
-  |> sequence
+  |> seq
   |> labeled(
     with: parser.label <> " |> repeat(times: " <> int.to_string(times) <> ")",
   )
