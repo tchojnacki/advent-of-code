@@ -88,8 +88,8 @@ fn part2(text: String) -> Int {
 
 pub fn run() -> Nil {
   let test = input_util.read_text("test03")
-  assert 7 = part1(test)
-  assert 336 = part2(test)
+  let assert 7 = part1(test)
+  let assert 336 = part2(test)
 
   let input = input_util.read_text("day03")
   io.debug(part1(input))

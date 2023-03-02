@@ -99,8 +99,8 @@ fn part2(lines: List(String)) -> Int {
 
 pub fn run() -> Nil {
   let test = input_util.read_lines("test07")
-  assert 4 = part1(test)
-  assert 32 = part2(test)
+  let assert 4 = part1(test)
+  let assert 32 = part2(test)
 
   let input = input_util.read_lines("day07")
   io.debug(part1(input))

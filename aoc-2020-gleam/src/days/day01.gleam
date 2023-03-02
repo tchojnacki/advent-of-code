@@ -22,8 +22,8 @@ fn part2(numbers: List(Int)) -> Int {
 
 pub fn run() -> Nil {
   let test = input_util.read_numbers("test01")
-  assert 514_579 = part1(test)
-  assert 241_861_950 = part2(test)
+  let assert 514_579 = part1(test)
+  let assert 241_861_950 = part2(test)
 
   let input = input_util.read_numbers("day01")
   io.debug(part1(input))

@@ -34,7 +34,7 @@ fn parse_line(string: String) -> Line {
     |> p.map2(with: Line)
     |> p.labeled(with: "line")
 
-  assert Ok(policy) = p.parse_entire(string, with: line_parser)
+  let assert Ok(policy) = p.parse_entire(string, with: line_parser)
   policy
 }
 
@@ -76,8 +76,8 @@ fn part2(lines: List(String)) -> Int {
 
 pub fn run() -> Nil {
   let test = input_util.read_lines("test02")
-  assert 2 = part1(test)
-  assert 1 = part2(test)
+  let assert 2 = part1(test)
+  let assert 1 = part2(test)
 
   let input = input_util.read_lines("day02")
   io.debug(part1(input))

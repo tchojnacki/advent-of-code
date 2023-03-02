@@ -1,5 +1,4 @@
 import gleam/iterator.{Iterator} as iter
-import gleam/list
 
 pub fn length(iterator: Iterator(a)) -> Int {
   iterator

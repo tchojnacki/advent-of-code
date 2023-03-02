@@ -125,7 +125,7 @@ fn all_program_mutations(of program: Program) -> Iterator(Program) {
 }
 
 fn part1(lines: List(String)) -> Int {
-  assert InfiniteLoop(acc) =
+  let assert InfiniteLoop(acc) =
     lines
     |> parse_program
     |> execution_result
@@ -134,7 +134,7 @@ fn part1(lines: List(String)) -> Int {
 }
 
 fn part2(lines: List(String)) -> Int {
-  assert Termination(acc) =
+  let assert Termination(acc) =
     lines
     |> parse_program
     |> all_program_mutations
@@ -147,8 +147,8 @@ fn part2(lines: List(String)) -> Int {
 
 pub fn run() -> Nil {
   let test = input_util.read_lines("test08")
-  assert 5 = part1(test)
-  assert 8 = part2(test)
+  let assert 5 = part1(test)
+  let assert 8 = part2(test)
 
   let input = input_util.read_lines("day08")
   io.debug(part1(input))
