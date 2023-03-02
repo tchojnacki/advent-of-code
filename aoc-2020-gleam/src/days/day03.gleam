@@ -5,6 +5,7 @@ import gleam/string as str
 import gleam/function as fun
 import gleam/iterator as iter
 import gleam/set.{Set}
+import ext/intx
 import ext/resultx as resx
 import ext/iteratorx as iterx
 import util/input_util
@@ -62,7 +63,7 @@ fn has_tree(in area: Area, at pos: Pos) -> Bool {
 }
 
 fn is_valid(pos: Pos, in area: Area) -> Bool {
-  0 <= pos.1 && pos.1 < area.height
+  intx.is_between(pos.1, 0, and: area.height - 1)
 }
 
 fn tree_count(in area: Area, with slope: Pos) -> Int {

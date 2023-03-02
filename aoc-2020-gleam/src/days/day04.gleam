@@ -4,6 +4,7 @@ import gleam/function as fun
 import gleam/result as res
 import gleam/map.{Map}
 import ext/listx
+import ext/intx
 import ext/resultx as resx
 import util/input_util
 import util/parser as p
@@ -61,7 +62,7 @@ fn is_valid1(passport: Passport) -> Bool {
 fn is_valid2(passport: Passport) -> Bool {
   let int_between = fn(min, max) {
     p.int()
-    |> p.satisfying(rule: fn(num) { min <= num && num <= max })
+    |> p.satisfying(rule: intx.is_between(_, min, and: max))
     |> p.ignore
   }
 

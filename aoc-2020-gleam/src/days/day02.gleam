@@ -3,6 +3,8 @@ import gleam/list
 import gleam/bool
 import gleam/string as str
 import ext/listx
+import ext/intx
+import ext/genericx as genx
 import ext/resultx as resx
 import util/input_util
 import util/parser as p
@@ -50,8 +52,8 @@ fn part1(lines: List(String)) -> Int {
     fn(line) {
       line.password
       |> str.to_graphemes
-      |> listx.count(satisfying: fn(g) { g == line.policy.grapheme })
-      |> fn(l) { line.policy.min <= l && l <= line.policy.max }
+      |> listx.count(satisfying: genx.equals(_, line.policy.grapheme))
+      |> intx.is_between(line.policy.min, and: line.policy.max)
     },
   )
 }
@@ -64,7 +66,8 @@ fn part2(lines: List(String)) -> Int {
         line.password
         |> str.to_graphemes
         |> list.at(index - 1)
-        |> resx.assert_unwrap == line.policy.grapheme
+        |> resx.assert_unwrap
+        |> genx.equals(line.policy.grapheme)
       }
       bool.exclusive_or(
         grapheme_matches(line.policy.min),

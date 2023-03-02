@@ -34,7 +34,7 @@ fn part2(lines: List(String)) -> Int {
     |> list.map(with: get_seat_id)
     |> set.from_list
 
-  let occupied = fn(id) { set.contains(in: seat_ids, this: id) }
+  let occupied = set.contains(in: seat_ids, this: _)
 
   iter.find(
     in: iter.range(from: 1, to: 1023),

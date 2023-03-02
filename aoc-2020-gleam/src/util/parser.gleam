@@ -150,10 +150,8 @@ pub fn ignore(parser: Parser(a)) -> Parser(Nil) {
 
 pub fn then(first: Parser(a), second: Parser(b)) -> Parser(#(a, b)) {
   create(fn(input) {
-    use parsed1 <- res.then(run(first, on: input))
-    let #(value1, remaining1) = parsed1
-    use parsed2 <- res.then(run(second, on: remaining1))
-    let #(value2, remaining2) = parsed2
+    use #(value1, remaining1) <- res.then(run(first, on: input))
+    use #(value2, remaining2) <- res.then(run(second, on: remaining1))
     Ok(#(#(value1, value2), remaining2))
   })
   |> labeled(with: first.label <> " |> then(" <> second.label <> ")")
@@ -219,8 +217,7 @@ fn flat_map(
   with mapper: fn(a) -> Result(b, ParseError),
 ) -> Parser(b) {
   create(fn(input) {
-    use parsed <- res.then(run(parser, on: input))
-    let #(value, remaining) = parsed
+    use #(value, remaining) <- res.then(run(parser, on: input))
     value
     |> mapper
     |> res.map(with: fn(new_value) { #(new_value, remaining) })
@@ -248,7 +245,7 @@ fn succeeding(with value: a) -> Parser(a) {
 }
 
 fn failing(with error: ParseError) -> Parser(a) {
-  create(fn(_) { Error(error) })
+  create(fun.constant(Error(error)))
 }
 
 fn lift2(function: fn(a, b) -> c) -> fn(Parser(a), Parser(b)) -> Parser(c) {
@@ -308,8 +305,7 @@ pub fn str_of_many0(of parser: Parser(String)) -> Parser(String) {
 
 pub fn many1(of parser: Parser(a)) -> Parser(List(a)) {
   create(fn(input) {
-    use parsed <- res.then(run(parser, on: input))
-    let #(value, rest) = parsed
+    use #(value, rest) <- res.then(run(parser, on: input))
     let #(previous, rest) = do_zero_or_more(rest, with: parser)
     Ok(#([value, ..previous], rest))
   })

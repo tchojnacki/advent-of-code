@@ -1,5 +1,7 @@
 import gleam/io
+import gleam/int
 import gleam/list
+import gleam/bool
 import gleam/set.{Set}
 import gleam/iterator.{Iterator} as iter
 import gleam/option.{None, Option, Some} as opt
@@ -35,7 +37,7 @@ fn parse_program(lines: List(String)) -> Program {
       p.replace(p.literal("-"), with: -1),
     ])
     |> p.then(p.int())
-    |> p.map2(with: fn(sign, magnitude) { sign * magnitude })
+    |> p.map2(with: int.multiply)
 
   let instr_parser =
     p.any(of: [
@@ -77,10 +79,14 @@ fn execution_result_helper(
   cpu: Cpu,
   visited: Set(Int),
 ) -> ExecutionResult {
-  case set.contains(visited, cpu.pc), fetch(from: program, with: cpu) {
-    True, _ -> InfiniteLoop(acc_before_second: cpu.acc)
-    _, None -> Termination(acc_after: cpu.acc)
-    _, Some(instr) ->
+  use <- bool.guard(
+    when: set.contains(visited, cpu.pc),
+    return: InfiniteLoop(acc_before_second: cpu.acc),
+  )
+
+  case fetch(from: program, with: cpu) {
+    None -> Termination(acc_after: cpu.acc)
+    Some(instr) ->
       execution_result_helper(
         program,
         execute(instr, on: cpu),

@@ -1,10 +1,12 @@
 import gleam/io
+import gleam/int
 import gleam/list
 import gleam/pair
 import gleam/result as res
 import gleam/function as fun
 import gleam/map.{Map}
 import gleam/iterator.{Iterator} as iter
+import ext/genericx as genx
 import ext/resultx as resx
 import ext/iteratorx as iterx
 import util/graph
@@ -85,16 +87,18 @@ fn part1(lines: List(String)) -> Int {
   graph
   |> map.keys
   |> iter.from_list
-  |> iter.filter(for: fn(bag) { bag != special_bag })
+  |> iter.filter(for: genx.different(_, than: special_bag))
   |> iterx.count(satisfying: fn(start) {
     start
     |> graph.dfs(with: neighbours)
-    |> iter.any(fn(bag) { bag == special_bag })
+    |> iter.any(satisfying: genx.equals(_, special_bag))
   })
 }
 
 fn part2(lines: List(String)) -> Int {
-  bag_count(of: special_bag, in: parse_graph(lines)) - 1
+  special_bag
+  |> bag_count(in: parse_graph(lines))
+  |> int.subtract(1)
 }
 
 pub fn run() -> Nil {
