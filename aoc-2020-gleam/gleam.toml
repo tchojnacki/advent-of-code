@@ -5,3 +5,4 @@ description = "A Gleam project"
 [dependencies]
 gleam_stdlib = "~> 0.26"
 gleam_erlang = "~> 0.17"
+gleam_otp = "~> 0.5"
