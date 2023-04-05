@@ -55,7 +55,7 @@ fn part2(numbers: List(Int), preamble_length: Int) -> Int {
   }
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_numbers("test09")
   let assert 127 = part1(test, 5)
   let assert 62 = part2(test, 5)

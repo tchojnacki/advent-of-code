@@ -79,7 +79,7 @@ fn part2(text: String) -> Int {
   solve(text, with: answered_by_everyone)
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_text("test06")
   let assert 11 = part1(test)
   let assert 6 = part2(test)

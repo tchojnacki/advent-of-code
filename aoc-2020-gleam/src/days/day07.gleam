@@ -101,7 +101,7 @@ fn part2(lines: List(String)) -> Int {
   |> int.subtract(1)
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_lines("test07")
   let assert 4 = part1(test)
   let assert 32 = part2(test)

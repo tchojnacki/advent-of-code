@@ -20,7 +20,7 @@ fn part2(numbers: List(Int)) -> Int {
   solve(numbers, n: 3)
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_numbers("test01")
   let assert 514_579 = part1(test)
   let assert 241_861_950 = part2(test)

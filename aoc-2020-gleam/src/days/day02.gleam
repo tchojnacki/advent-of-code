@@ -77,7 +77,7 @@ fn part2(lines: List(String)) -> Int {
   )
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_lines("test02")
   let assert 2 = part1(test)
   let assert 1 = part2(test)

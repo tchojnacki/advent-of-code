@@ -54,7 +54,7 @@ fn part2(numbers: List(Int)) -> Int {
   arrangements(device_joltage, adapters, cache)
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_numbers("test10")
   let assert 220 = part1(test)
   let assert 19_208 = part2(test)

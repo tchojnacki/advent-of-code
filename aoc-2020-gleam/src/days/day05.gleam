@@ -43,7 +43,7 @@ fn part2(lines: List(String)) -> Int {
   |> resx.assert_unwrap
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_lines("test05")
   let assert 820 = part1(test)
 

@@ -87,7 +87,7 @@ fn part2(text: String) -> Int {
   |> int.product
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_text("test03")
   let assert 7 = part1(test)
   let assert 336 = part2(test)

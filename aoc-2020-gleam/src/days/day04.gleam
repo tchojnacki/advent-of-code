@@ -132,7 +132,7 @@ fn part2(text: String) -> Int {
   |> listx.count(satisfying: is_valid2)
 }
 
-pub fn run() -> Nil {
+pub fn main() -> Nil {
   let test = input_util.read_text("test04")
   let assert 2 = part1(test)
   let assert 2 = part2(test)
