@@ -9,19 +9,13 @@ import ext/intx
 import ext/resultx as resx
 import ext/iteratorx as iterx
 import util/input_util
-
-type Pos =
-  #(Int, Int)
+import util/pos.{Pos}
 
 const starting_pos = #(0, 0)
 
 const base_slope = #(3, 1)
 
 const all_slopes = [#(1, 1), base_slope, #(5, 1), #(7, 1), #(1, 2)]
-
-fn add(p1: Pos, p2: Pos) -> Pos {
-  #(p1.0 + p2.0, p1.1 + p2.1)
-}
 
 type Area {
   Area(trees: Set(Pos), cycle: Int, height: Int)
@@ -68,7 +62,7 @@ fn is_valid(pos: Pos, in area: Area) -> Bool {
 
 fn tree_count(in area: Area, with slope: Pos) -> Int {
   starting_pos
-  |> iter.iterate(with: add(_, slope))
+  |> iter.iterate(with: pos.add(_, slope))
   |> iter.take_while(satisfying: is_valid(_, in: area))
   |> iterx.count(satisfying: has_tree(in: area, at: _))
 }
