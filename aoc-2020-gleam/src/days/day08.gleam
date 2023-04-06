@@ -2,6 +2,7 @@ import gleam/io
 import gleam/int
 import gleam/list
 import gleam/bool
+import gleam/result as res
 import gleam/set.{Set}
 import gleam/iterator.{Iterator} as iter
 import gleam/option.{None, Option, Some} as opt
@@ -140,13 +141,12 @@ fn part1(lines: List(String)) -> Int {
 }
 
 fn part2(lines: List(String)) -> Int {
-  let assert Termination(acc) =
+  let assert Ok(Termination(acc)) =
     lines
     |> parse_program
     |> all_program_mutations
     |> iter.find(one_that: halts)
-    |> resx.assert_unwrap
-    |> execution_result
+    |> res.map(with: execution_result)
 
   acc
 }

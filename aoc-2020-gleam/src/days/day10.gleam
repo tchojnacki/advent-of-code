@@ -2,10 +2,10 @@ import gleam/io
 import gleam/int
 import gleam/list
 import gleam/bool
+import gleam/result as res
 import ext/listx
 import ext/pairx
 import ext/genericx as genx
-import ext/resultx as resx
 import util/input_util
 import util/cache.{Cache}
 
@@ -16,11 +16,10 @@ const max_increase = 3
 fn process_adapters(numbers: List(Int)) -> List(Int) {
   let numbers = list.sort(numbers, by: int.compare)
 
-  let device_joltage =
+  let assert Ok(device_joltage) =
     numbers
     |> list.last
-    |> resx.assert_unwrap
-    |> int.add(max_increase)
+    |> res.map(with: int.add(_, max_increase))
 
   list.flatten([[outlet_joltage], numbers, [device_joltage]])
 }

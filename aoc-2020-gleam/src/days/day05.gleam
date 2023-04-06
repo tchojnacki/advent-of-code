@@ -36,10 +36,10 @@ fn part2(lines: List(String)) -> Int {
 
   let occupied = set.contains(in: seat_ids, this: _)
 
-  iter.find(
-    in: iter.range(from: 1, to: 1023),
-    one_that: fn(id) { occupied(id - 1) && !occupied(id) && occupied(id + 1) },
-  )
+  iter.range(from: 1, to: 1023)
+  |> iter.find(one_that: fn(id) {
+    occupied(id - 1) && !occupied(id) && occupied(id + 1)
+  })
   |> resx.assert_unwrap
 }
 
