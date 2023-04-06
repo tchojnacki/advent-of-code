@@ -1,6 +1,6 @@
 import gleam/io
 import gleam/string as str
-import gleam/iterator.{Next} as iter
+import gleam/iterator as iter
 import gleam/map.{Map}
 import ext/mapx
 import ext/setx
@@ -48,8 +48,8 @@ fn build_grid(from input: String) -> Grid {
   |> Grid
 }
 
-fn count_near_adjacent(grid: Grid, pos: Pos) -> Int {
-  pos
+fn count_near_adjacent(grid: Grid, from start: Pos) -> Int {
+  start
   |> pos.neighbours8
   |> setx.count(satisfying: fn(n) {
     case map.get(grid.data, n) {
@@ -59,14 +59,12 @@ fn count_near_adjacent(grid: Grid, pos: Pos) -> Int {
   })
 }
 
-fn count_far_adjacent(grid: Grid, pos: Pos) -> Int {
+fn count_far_adjacent(grid: Grid, from start: Pos) -> Int {
   pos.directions8
   |> listx.count(satisfying: fn(d) {
-    iter.unfold(
-      from: pos.add(pos, d),
-      with: fn(p) { Next(element: p, accumulator: pos.add(p, d)) },
-    )
-    // Bigger than the largest map size
+    start
+    |> pos.add(d)
+    |> iterx.unfold_infinitely(pos.add(_, d))
     |> iter.take(up_to: 1000)
     |> iterx.filter_map(with: map.get(grid.data, _))
     |> iter.first
@@ -111,9 +109,7 @@ fn is_stable(grid: Grid, settings: Settings) -> Bool {
 fn stabilized_occupied(input: String, settings: Settings) -> Int {
   input
   |> build_grid
-  |> iter.unfold(with: fn(g) {
-    Next(element: g, accumulator: step_grid(g, settings))
-  })
+  |> iterx.unfold_infinitely(with: step_grid(_, settings))
   |> iter.find(one_that: is_stable(_, settings))
   |> resx.assert_unwrap
   |> count_occupied

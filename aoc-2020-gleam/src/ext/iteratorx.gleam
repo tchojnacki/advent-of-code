@@ -1,4 +1,4 @@
-import gleam/iterator.{Iterator} as iter
+import gleam/iterator.{Iterator, Next} as iter
 
 pub fn length(iterator: Iterator(a)) -> Int {
   iterator
@@ -22,4 +22,11 @@ pub fn filter_map(
       Error(_) -> iter.empty()
     }
   })
+}
+
+pub fn unfold_infinitely(from state: a, with fun: fn(a) -> a) -> Iterator(a) {
+  iter.unfold(
+    from: state,
+    with: fn(s) { Next(element: s, accumulator: fun(s)) },
+  )
 }
