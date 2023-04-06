@@ -49,7 +49,7 @@ fn arrangements(number: Int, adapters: List(Int), cache: Cache(Int, Int)) -> Int
 
 fn part2(numbers: List(Int)) -> Int {
   let adapters = process_adapters(numbers)
-  let device_joltage = resx.assert_unwrap(list.last(adapters))
+  let assert Ok(device_joltage) = list.last(adapters)
   use cache <- cache.create()
   arrangements(device_joltage, adapters, cache)
 }
