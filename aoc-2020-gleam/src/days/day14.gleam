@@ -14,7 +14,7 @@ import util/parser as p
 const bits: Int = 36
 
 type Instr {
-  SetMem(address: Int, value: Int)
+  SetMem(address: String, value: Int)
   ChangeMask(mask: String)
 }
 
@@ -22,13 +22,10 @@ type Program =
   List(Instr)
 
 type Memory =
-  Map(Int, Int)
-
-type Mask =
-  String
+  Map(String, Int)
 
 type State =
-  #(Memory, Mask)
+  #(Memory, String)
 
 fn parse_program(input: List(String)) -> Program {
   let instr_parser =
@@ -38,6 +35,11 @@ fn parse_program(input: List(String)) -> Program {
       |> p.map(with: ChangeMask),
       p.literal("mem[")
       |> p.proceed(with: p.int())
+      |> p.map(with: fn(address) {
+        address
+        |> int.to_base_string(2)
+        |> resx.assert_unwrap
+      })
       |> p.skip(p.literal("] = "))
       |> p.then(p.int())
       |> p.map2(with: SetMem),
@@ -51,7 +53,7 @@ fn parse_program(input: List(String)) -> Program {
   })
 }
 
-fn apply_mask(value: Int, mask: Mask) -> Int {
+fn apply_mask(value: Int, mask: String) -> Int {
   let or_mask =
     mask
     |> str.replace(each: "X", with: "0")
@@ -83,11 +85,9 @@ fn execute_program(
   |> int.sum
 }
 
-fn memory_locations(from address: Int, with mask: String) -> List(Int) {
+fn memory_locations(from address: String, with mask: String) -> List(String) {
   let address =
     address
-    |> int.to_base_string(2)
-    |> resx.assert_unwrap
     |> str.pad_left(to: bits, with: "0")
     |> str.to_graphemes
     |> list.zip(str.to_graphemes(mask))
@@ -115,11 +115,6 @@ fn memory_locations(from address: Int, with mask: String) -> List(Int) {
   })
   |> iter.map(with: pair.first)
   |> iter.filter(for: fn(res) { str.length(res) == bits })
-  |> iter.map(with: fn(res) {
-    res
-    |> int.base_parse(2)
-    |> resx.assert_unwrap
-  })
   |> iter.to_list
 }
 
