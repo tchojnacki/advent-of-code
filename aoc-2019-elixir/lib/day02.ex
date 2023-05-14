@@ -6,9 +6,7 @@ defmodule Day02 do
   @verb_address 2
 
   @spec part1(binary) :: list
-  def part1(input) do
-    run(input, 12, 2)
-  end
+  def part1(input), do: run(input, 12, 2)
 
   @spec part2(binary) :: integer
   def part2(input) do

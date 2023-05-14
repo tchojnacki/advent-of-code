@@ -13,9 +13,7 @@ defmodule Day01 do
     |> Enum.sum()
   end
 
-  defp naive_fuel_requirement(mass) do
-    div(mass, 3) - 2
-  end
+  defp naive_fuel_requirement(mass), do: div(mass, 3) - 2
 
   defp recursive_fuel_requirement(mass) do
     fuel_mass = div(mass, 3) - 2
