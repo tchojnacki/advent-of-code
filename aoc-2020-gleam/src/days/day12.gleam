@@ -3,7 +3,7 @@ import gleam/int
 import gleam/list
 import gleam/string as str
 import util/input_util
-import util/pos.{Pos}
+import util/pos2.{Pos2}
 import util/dir.{Dir, East, North, South, West}
 
 type Instr {
@@ -30,19 +30,19 @@ fn process_moves(
   lines: List(String),
   initial: a,
   execute: fn(a, Instr) -> a,
-  locator: fn(a) -> Pos,
+  locator: fn(a) -> Pos2,
 ) -> Int {
   lines
   |> list.map(with: parse_instr)
   |> list.fold(from: initial, with: execute)
-  |> fn(s: a) { pos.manhattan_dist(from: pos.zero, to: locator(s)) }
+  |> fn(s: a) { pos2.manhattan_dist(from: pos2.zero, to: locator(s)) }
 }
 
 type State1 {
-  State1(pos: Pos, dir: Dir)
+  State1(pos: Pos2, dir: Dir)
 }
 
-const initial_state1 = State1(pos: pos.zero, dir: East)
+const initial_state1 = State1(pos: pos2.zero, dir: East)
 
 fn execute_instr1(prev: State1, instr: Instr) -> State1 {
   case instr {
@@ -51,8 +51,8 @@ fn execute_instr1(prev: State1, instr: Instr) -> State1 {
         ..prev,
         pos: target
         |> dir.offset
-        |> pos.mul(by: times)
-        |> pos.add(prev.pos),
+        |> pos2.mul(by: times)
+        |> pos2.add(prev.pos),
       )
     Turn(times) ->
       State1(
@@ -65,8 +65,8 @@ fn execute_instr1(prev: State1, instr: Instr) -> State1 {
         ..prev,
         pos: prev.dir
         |> dir.offset
-        |> pos.mul(by: times)
-        |> pos.add(prev.pos),
+        |> pos2.mul(by: times)
+        |> pos2.add(prev.pos),
       )
   }
 }
@@ -76,10 +76,10 @@ fn part1(lines: List(String)) -> Int {
 }
 
 type State2 {
-  State2(ship_pos: Pos, anchor_pos: Pos)
+  State2(ship_pos: Pos2, anchor_pos: Pos2)
 }
 
-const initial_state2 = State2(ship_pos: pos.zero, anchor_pos: #(10, 1))
+const initial_state2 = State2(ship_pos: pos2.zero, anchor_pos: #(10, 1))
 
 fn execute_instr2(prev: State2, instr: Instr) -> State2 {
   case instr {
@@ -88,20 +88,20 @@ fn execute_instr2(prev: State2, instr: Instr) -> State2 {
         ..prev,
         anchor_pos: target
         |> dir.offset
-        |> pos.mul(by: times)
-        |> pos.add(prev.anchor_pos),
+        |> pos2.mul(by: times)
+        |> pos2.add(prev.anchor_pos),
       )
     Turn(times) ->
       State2(
         ..prev,
-        anchor_pos: pos.rotate_around_origin(this: prev.anchor_pos, by: times),
+        anchor_pos: pos2.rotate_around_origin(this: prev.anchor_pos, by: times),
       )
     MoveForward(times) ->
       State2(
         ..prev,
         ship_pos: prev.anchor_pos
-        |> pos.mul(by: times)
-        |> pos.add(prev.ship_pos),
+        |> pos2.mul(by: times)
+        |> pos2.add(prev.ship_pos),
       )
   }
 }

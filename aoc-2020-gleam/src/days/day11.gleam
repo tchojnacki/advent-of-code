@@ -9,7 +9,7 @@ import ext/resultx as resx
 import ext/genericx as genx
 import ext/iteratorx as iterx
 import util/input_util
-import util/pos.{Pos}
+import util/pos2.{Pos2}
 
 type Seat {
   Empty
@@ -17,11 +17,11 @@ type Seat {
 }
 
 type Grid {
-  Grid(data: Map(Pos, Seat))
+  Grid(data: Map(Pos2, Seat))
 }
 
 type Settings {
-  Settings(threshold: Int, adjacent_counter: fn(Grid, Pos) -> Int)
+  Settings(threshold: Int, adjacent_counter: fn(Grid, Pos2) -> Int)
 }
 
 fn build_grid(from input: String) -> Grid {
@@ -48,9 +48,9 @@ fn build_grid(from input: String) -> Grid {
   |> Grid
 }
 
-fn count_near_adjacent(grid: Grid, from start: Pos) -> Int {
+fn count_near_adjacent(grid: Grid, from start: Pos2) -> Int {
   start
-  |> pos.neighbours8
+  |> pos2.neighbours8
   |> setx.count(satisfying: fn(n) {
     case map.get(grid.data, n) {
       Ok(seat) -> seat == Occupied
@@ -59,12 +59,12 @@ fn count_near_adjacent(grid: Grid, from start: Pos) -> Int {
   })
 }
 
-fn count_far_adjacent(grid: Grid, from start: Pos) -> Int {
-  pos.directions8
-  |> listx.count(satisfying: fn(d) {
+fn count_far_adjacent(grid: Grid, from start: Pos2) -> Int {
+  pos2.directions8()
+  |> setx.count(satisfying: fn(d) {
     start
-    |> pos.add(d)
-    |> iterx.unfold_infinitely(pos.add(_, d))
+    |> pos2.add(d)
+    |> iterx.unfold_infinitely(pos2.add(_, d))
     |> iter.take(up_to: 1000)
     |> iterx.filter_map(with: map.get(grid.data, _))
     |> iter.first

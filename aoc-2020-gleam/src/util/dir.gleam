@@ -2,7 +2,7 @@ import gleam/int
 import gleam/iterator as iter
 import ext/resultx as resx
 import ext/iteratorx as iterx
-import util/pos.{Pos}
+import util/pos2.{Pos2}
 
 pub type Dir {
   North
@@ -11,7 +11,7 @@ pub type Dir {
   West
 }
 
-pub fn offset(direction: Dir) -> Pos {
+pub fn offset(direction: Dir) -> Pos2 {
   case direction {
     North -> #(0, 1)
     East -> #(1, 0)

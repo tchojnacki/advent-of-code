@@ -9,7 +9,7 @@ import gleam/set.{Set}
 import ext/intx
 import ext/iteratorx as iterx
 import util/input_util
-import util/pos.{Pos}
+import util/pos2.{Pos2}
 
 const starting_pos = #(0, 0)
 
@@ -18,7 +18,7 @@ const base_slope = #(3, 1)
 const all_slopes = [#(1, 1), base_slope, #(5, 1), #(7, 1), #(1, 2)]
 
 type Area {
-  Area(trees: Set(Pos), cycle: Int, height: Int)
+  Area(trees: Set(Pos2), cycle: Int, height: Int)
 }
 
 fn parse_area(from text: String) -> Area {
@@ -51,17 +51,17 @@ fn parse_area(from text: String) -> Area {
   Area(trees, cycle, height)
 }
 
-fn has_tree(in area: Area, at pos: Pos) -> Bool {
+fn has_tree(in area: Area, at pos: Pos2) -> Bool {
   set.contains(area.trees, #(pos.0 % area.cycle, pos.1))
 }
 
-fn is_valid(pos: Pos, in area: Area) -> Bool {
+fn is_valid(pos: Pos2, in area: Area) -> Bool {
   intx.is_between(pos.1, 0, and: area.height - 1)
 }
 
-fn tree_count(in area: Area, with slope: Pos) -> Int {
+fn tree_count(in area: Area, with slope: Pos2) -> Int {
   starting_pos
-  |> iter.iterate(with: pos.add(_, slope))
+  |> iter.iterate(with: pos2.add(_, slope))
   |> iter.take_while(satisfying: is_valid(_, in: area))
   |> iterx.count(satisfying: has_tree(in: area, at: _))
 }
