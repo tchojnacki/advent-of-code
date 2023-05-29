@@ -54,12 +54,16 @@ fn parse_notes(input: String) -> Notes {
 
   let notes_parser =
     field_parser
-    |> p.sep1(by: p.literal("\n"))
+    |> p.sep1(by: p.nl())
     |> p.map(with: map.from_list)
-    |> p.skip(p.literal("\n\nyour ticket:\n"))
+    |> p.skip(p.nlnl())
+    |> p.skip(p.literal("your ticket:"))
+    |> p.skip(p.nl())
     |> p.then(ticket_parser)
-    |> p.skip(p.literal("\n\nnearby tickets:\n"))
-    |> p.then_3rd(p.sep1(ticket_parser, by: p.literal("\n")))
+    |> p.skip(p.nlnl())
+    |> p.skip(p.literal("nearby tickets:"))
+    |> p.skip(p.nl())
+    |> p.then_3rd(p.sep1(ticket_parser, by: p.nl()))
     |> p.skip_ws()
     |> p.map3(with: Notes)
     |> p.labeled(with: "notes")

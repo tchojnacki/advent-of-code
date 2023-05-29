@@ -127,6 +127,16 @@ pub fn ws1() -> Parser(String) {
   str_of_many1(of: ws_gc())
 }
 
+pub fn nl() -> Parser(String) {
+  gc_in("\n")
+  |> labeled(with: "nl")
+}
+
+pub fn nlnl() -> Parser(String) {
+  literal("\n\n")
+  |> labeled(with: "nlnl")
+}
+
 pub fn str0_until_ws() -> Parser(String) {
   str_of_many0(of: non_ws_gc())
 }

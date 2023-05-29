@@ -38,7 +38,7 @@ fn parse_passports(from text: String) -> List(Passport) {
     |> p.labeled(with: "passport")
   let input_parser =
     passport_parser
-    |> p.sep1(by: p.literal("\n\n"))
+    |> p.sep1(by: p.nlnl())
     |> p.skip_ws
     |> p.labeled(with: "input")
 

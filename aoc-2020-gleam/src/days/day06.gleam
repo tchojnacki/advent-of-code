@@ -37,7 +37,7 @@ fn parse_input(text: String) -> Input {
 
   let input_parser =
     group_parser
-    |> p.sep1(by: p.literal("\n\n"))
+    |> p.sep1(by: p.nlnl())
     |> p.skip_ws
     |> p.labeled(with: "input")
 
