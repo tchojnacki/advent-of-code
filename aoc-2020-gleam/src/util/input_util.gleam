@@ -7,7 +7,7 @@ import gleam/erlang/file
 import ext/resultx as resx
 
 pub fn read_text(filename: String) -> String {
-  "data/" <> filename <> ".txt"
+  { "data/" <> filename <> ".txt" }
   |> file.read
   |> resx.assert_unwrap
 }

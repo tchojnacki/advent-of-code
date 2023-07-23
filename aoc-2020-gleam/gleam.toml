@@ -3,7 +3,7 @@ version = "0.1.0"
 description = "A Gleam project"
 
 [dependencies]
-gleam_stdlib = "~> 0.26"
-gleam_erlang = "~> 0.17"
+gleam_stdlib = "~> 0.30"
+gleam_erlang = "~> 0.18"
 gleam_otp = "~> 0.5"
 gleam_bitwise = "~> 1.2"
