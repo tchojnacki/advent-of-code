@@ -1,4 +1,4 @@
-import gleam/set.{Set}
+import gleam/set.{type Set}
 import gleam/iterator as iter
 import ext/iteratorx as iterx
 

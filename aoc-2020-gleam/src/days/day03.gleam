@@ -5,11 +5,11 @@ import gleam/result as res
 import gleam/string as str
 import gleam/function as fun
 import gleam/iterator as iter
-import gleam/set.{Set}
+import gleam/set.{type Set}
 import ext/intx
 import ext/iteratorx as iterx
 import util/input_util
-import util/pos2.{Pos2}
+import util/pos2.{type Pos2}
 
 const starting_pos = #(0, 0)
 
@@ -25,23 +25,19 @@ fn parse_area(from text: String) -> Area {
   let lines = str.split(text, on: "\n")
 
   let trees =
-    list.index_fold(
-      over: lines,
-      from: set.new(),
-      with: fn(prev, line, y) {
-        line
-        |> str.to_graphemes
-        |> list.index_map(with: fn(x, grapheme) {
-          case grapheme {
-            "#" -> Ok(#(x, y))
-            _ -> Error(Nil)
-          }
-        })
-        |> list.filter_map(with: fun.identity)
-        |> set.from_list
-        |> set.union(prev)
-      },
-    )
+    list.index_fold(over: lines, from: set.new(), with: fn(prev, line, y) {
+      line
+      |> str.to_graphemes
+      |> list.index_map(with: fn(grapheme, x) {
+        case grapheme {
+          "#" -> Ok(#(x, y))
+          _ -> Error(Nil)
+        }
+      })
+      |> list.filter_map(with: fun.identity)
+      |> set.from_list
+      |> set.union(prev)
+    })
   let assert Ok(cycle) =
     lines
     |> list.first
@@ -81,9 +77,9 @@ fn part2(text: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test03")
-  let assert 7 = part1(test)
-  let assert 336 = part2(test)
+  let testing = input_util.read_text("test03")
+  let assert 7 = part1(testing)
+  let assert 336 = part2(testing)
 
   let input = input_util.read_text("day03")
   io.debug(part1(input))

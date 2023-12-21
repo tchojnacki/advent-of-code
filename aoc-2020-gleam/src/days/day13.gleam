@@ -71,7 +71,7 @@ fn part2(input: String) -> Int {
     |> iter.from_list
     |> iter.index
     |> iter.flat_map(fn(entry) {
-      let #(i, b) = entry
+      let #(b, i) = entry
       case b {
         Line(line) -> iter.single(#(line, i))
         Any -> iter.empty()
@@ -82,28 +82,25 @@ fn part2(input: String) -> Int {
   let assert [#(timestamp, _), ..] = buses
 
   buses
-  |> list.fold(
-    from: #(timestamp, timestamp),
-    with: fn(prev, entry) {
-      let #(timestamp, period) = prev
-      let #(id, i) = entry
+  |> list.fold(from: #(timestamp, timestamp), with: fn(prev, entry) {
+    let #(timestamp, period) = prev
+    let #(id, i) = entry
 
-      let assert Ok(timestamp) =
-        timestamp
-        |> iterx.unfold_infinitely(with: int.add(_, period))
-        |> iter.find(one_that: fn(t) { { t + i } % id == 0 })
-      let period = intx.lcm(period, id)
+    let assert Ok(timestamp) =
+      timestamp
+      |> iterx.unfold_infinitely(with: int.add(_, period))
+      |> iter.find(one_that: fn(t) { { t + i } % id == 0 })
+    let period = intx.lcm(period, id)
 
-      #(timestamp, period)
-    },
-  )
+    #(timestamp, period)
+  })
   |> pair.first
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test13")
-  let assert 295 = part1(test)
-  let assert 1_068_781 = part2(test)
+  let testing = input_util.read_text("test13")
+  let assert 295 = part1(testing)
+  let assert 1_068_781 = part2(testing)
 
   let input = input_util.read_text("day13")
   io.debug(part1(input))

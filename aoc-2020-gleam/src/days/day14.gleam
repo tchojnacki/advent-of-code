@@ -1,11 +1,10 @@
 import gleam/io
 import gleam/int
-import gleam/map.{Map}
+import gleam/dict.{type Dict}
 import gleam/list
 import gleam/pair
 import gleam/string as str
 import gleam/iterator as iter
-import gleam/bitwise as bit
 import ext/resultx as resx
 import util/input_util
 import util/graph
@@ -22,7 +21,7 @@ type Program =
   List(Instr)
 
 type Memory =
-  Map(String, Int)
+  Dict(String, Int)
 
 type State =
   #(Memory, String)
@@ -67,8 +66,8 @@ fn apply_mask(value: Int, mask: String) -> Int {
     |> resx.assert_unwrap
 
   value
-  |> bit.or(or_mask)
-  |> bit.and(and_mask)
+  |> int.bitwise_or(or_mask)
+  |> int.bitwise_and(and_mask)
 }
 
 fn execute_program(
@@ -77,11 +76,11 @@ fn execute_program(
 ) -> Int {
   list.fold(
     over: program,
-    from: #(map.new(), "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"),
+    from: #(dict.new(), "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"),
     with: interpreter,
   )
   |> pair.first
-  |> map.values
+  |> dict.values
   |> int.sum
 }
 
@@ -97,6 +96,7 @@ fn memory_locations(from address: String, with mask: String) -> List(String) {
         "0" -> a
         "1" -> "1"
         "X" -> "X"
+        _ -> panic
       }
     })
     |> str.concat
@@ -110,11 +110,12 @@ fn memory_locations(from address: String, with mask: String) -> List(String) {
         case head {
           "0" | "1" -> iter.single(#(done <> head, rest))
           "X" -> iter.from_list([#(done <> "0", rest), #(done <> "1", rest)])
+          _ -> panic
         }
     }
   })
   |> iter.map(with: pair.first)
-  |> iter.filter(for: fn(res) { str.length(res) == bits })
+  |> iter.filter(keeping: fn(res) { str.length(res) == bits })
   |> iter.to_list
 }
 
@@ -126,11 +127,8 @@ fn part1(input: List(String)) -> Int {
     case instr {
       SetMem(address, value) -> {
         #(
-          map.insert(
-            into: memory,
-            for: address,
-            insert: apply_mask(value, mask),
-          ),
+          memory
+          |> dict.insert(for: address, insert: apply_mask(value, mask)),
           mask,
         )
       }
@@ -148,12 +146,9 @@ fn part2(input: List(String)) -> Int {
       SetMem(address, value) -> {
         #(
           memory_locations(from: address, with: mask)
-          |> list.fold(
-            from: memory,
-            with: fn(memory, address) {
-              map.insert(into: memory, for: address, insert: value)
-            },
-          ),
+          |> list.fold(from: memory, with: fn(memory, address) {
+            dict.insert(into: memory, for: address, insert: value)
+          }),
           mask,
         )
       }
@@ -163,9 +158,9 @@ fn part2(input: List(String)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_lines("test14")
-  let assert 51 = part1(test)
-  let assert 208 = part2(test)
+  let testing = input_util.read_lines("test14")
+  let assert 51 = part1(testing)
+  let assert 208 = part2(testing)
 
   let input = input_util.read_lines("day14")
   io.debug(part1(input))

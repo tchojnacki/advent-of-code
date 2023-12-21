@@ -1,4 +1,4 @@
-import gleam/iterator.{Iterator, Next} as iter
+import gleam/iterator.{type Iterator, Next} as iter
 
 pub fn length(iterator: Iterator(a)) -> Int {
   iterator
@@ -7,7 +7,7 @@ pub fn length(iterator: Iterator(a)) -> Int {
 
 pub fn count(iterator: Iterator(a), satisfying predicate: fn(a) -> Bool) -> Int {
   iterator
-  |> iter.filter(for: predicate)
+  |> iter.filter(keeping: predicate)
   |> length
 }
 

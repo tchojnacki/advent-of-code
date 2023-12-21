@@ -2,7 +2,7 @@ import gleam/int
 import gleam/iterator as iter
 import ext/resultx as resx
 import ext/iteratorx as iterx
-import util/pos2.{Pos2}
+import util/pos2.{type Pos2}
 
 pub type Dir {
   North

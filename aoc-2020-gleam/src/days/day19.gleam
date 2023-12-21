@@ -2,7 +2,7 @@ import gleam/io
 import gleam/list
 import gleam/bool
 import gleam/string as str
-import gleam/map.{Map}
+import gleam/dict.{type Dict}
 import ext/listx
 import ext/resultx as resx
 import util/input_util
@@ -14,7 +14,7 @@ type Rule {
 }
 
 type Ruleset =
-  Map(Int, Rule)
+  Dict(Int, Rule)
 
 fn parse_input(input: String) -> #(Ruleset, List(String)) {
   let rule_parser =
@@ -26,7 +26,7 @@ fn parse_input(input: String) -> #(Ruleset, List(String)) {
       |> p.skip(p.literal("\""))
       |> p.map(with: Literal)
       |> p.or(
-        else: p.int()
+        otherwise: p.int()
         |> p.sep1(by: p.literal(" "))
         |> p.sep1(by: p.literal(" | "))
         |> p.map(with: Reference),
@@ -37,7 +37,7 @@ fn parse_input(input: String) -> #(Ruleset, List(String)) {
   let input_parser =
     rule_parser
     |> p.sep1(by: p.nl())
-    |> p.map(with: map.from_list)
+    |> p.map(with: dict.from_list)
     |> p.skip(p.nlnl())
     |> p.then(
       p.str1_until_ws()
@@ -57,7 +57,7 @@ fn matches(
 ) -> Bool {
   case #(gc_queue, rule_queue) {
     #([gc, ..rest], [rule_id, ..rule_queue]) -> {
-      let assert Ok(rule) = map.get(ruleset, rule_id)
+      let assert Ok(rule) = dict.get(ruleset, rule_id)
       case rule {
         Literal(expected) -> {
           use <- bool.guard(when: gc != expected, return: False)
@@ -92,16 +92,16 @@ fn part2(input: String) -> Int {
   let #(ruleset, messages) = parse_input(input)
   let ruleset =
     ruleset
-    |> map.insert(for: 8, insert: Reference([[42], [42, 8]]))
-    |> map.insert(for: 11, insert: Reference([[42, 31], [42, 11, 31]]))
+    |> dict.insert(for: 8, insert: Reference([[42], [42, 8]]))
+    |> dict.insert(for: 11, insert: Reference([[42, 31], [42, 11, 31]]))
 
   solve(for: messages, under: ruleset)
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test19")
-  let assert 3 = part1(test)
-  let assert 12 = part2(test)
+  let testing = input_util.read_text("test19")
+  let assert 3 = part1(testing)
+  let assert 12 = part2(testing)
 
   let input = input_util.read_text("day19")
   io.debug(part1(input))

@@ -78,9 +78,9 @@ fn part2(lines: List(String)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_lines("test02")
-  let assert 2 = part1(test)
-  let assert 1 = part2(test)
+  let testing = input_util.read_lines("test02")
+  let assert 2 = part1(testing)
+  let assert 1 = part2(testing)
 
   let input = input_util.read_lines("day02")
   io.debug(part1(input))

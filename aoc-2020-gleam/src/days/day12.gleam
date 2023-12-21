@@ -3,8 +3,8 @@ import gleam/int
 import gleam/list
 import gleam/string as str
 import util/input_util
-import util/pos2.{Pos2}
-import util/dir.{Dir, East, North, South, West}
+import util/pos2.{type Pos2}
+import util/dir.{type Dir, East, North, South, West}
 
 type Instr {
   MoveIn(dir: Dir, by: Int)
@@ -23,6 +23,7 @@ fn parse_instr(line: String) -> Instr {
     "L" -> Turn(by: dir.degree_to_turn(-value))
     "R" -> Turn(by: dir.degree_to_turn(value))
     "F" -> MoveForward(by: value)
+    _ -> panic
   }
 }
 
@@ -111,9 +112,9 @@ fn part2(lines: List(String)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_lines("test12")
-  let assert 25 = part1(test)
-  let assert 286 = part2(test)
+  let testing = input_util.read_lines("test12")
+  let assert 25 = part1(testing)
+  let assert 286 = part2(testing)
 
   let input = input_util.read_lines("day12")
   io.debug(part1(input))

@@ -14,6 +14,7 @@ fn get_seat_id(pass: String) -> Int {
     case grapheme {
       "F" | "L" -> "0"
       "B" | "R" -> "1"
+      _ -> panic
     }
   })
   |> str.concat
@@ -44,8 +45,8 @@ fn part2(lines: List(String)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_lines("test05")
-  let assert 820 = part1(test)
+  let testing = input_util.read_lines("test05")
+  let assert 820 = part1(testing)
 
   let input = input_util.read_lines("day05")
   io.debug(part1(input))

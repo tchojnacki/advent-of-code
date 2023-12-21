@@ -2,7 +2,7 @@ import gleam/io
 import gleam/list
 import gleam/function as fun
 import gleam/result as res
-import gleam/map.{Map}
+import gleam/dict.{type Dict}
 import ext/listx
 import ext/intx
 import ext/resultx as resx
@@ -16,7 +16,7 @@ const required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 const eye_colors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
 type Passport {
-  Passport(fields: Map(String, String))
+  Passport(fields: Dict(String, String))
 }
 
 fn parse_passports(from text: String) -> List(Passport) {
@@ -34,7 +34,7 @@ fn parse_passports(from text: String) -> List(Passport) {
   let passport_parser =
     field_parser
     |> p.sep1(by: p.ws_gc())
-    |> p.map(with: fun.compose(map.from_list, Passport))
+    |> p.map(with: fun.compose(dict.from_list, Passport))
     |> p.labeled(with: "passport")
   let input_parser =
     passport_parser
@@ -49,12 +49,13 @@ fn parse_passports(from text: String) -> List(Passport) {
 
 fn is_valid1(passport: Passport) -> Bool {
   let has_only_allowed_keys =
-    map.keys(passport.fields)
+    passport.fields
+    |> dict.keys
     |> list.all(satisfying: list.contains(allowed_fields, _))
 
   let has_all_required_keys =
     required_fields
-    |> list.all(satisfying: list.contains(map.keys(passport.fields), _))
+    |> list.all(satisfying: list.contains(dict.keys(passport.fields), _))
 
   has_only_allowed_keys && has_all_required_keys
 }
@@ -104,20 +105,18 @@ fn is_valid2(passport: Passport) -> Bool {
     ),
   ]
 
-  is_valid1(passport) && list.all(
-    validators,
-    satisfying: fn(validator) {
-      let #(key, parser) = validator
-      passport.fields
-      |> map.get(key)
-      |> res.then(apply: fn(value) {
-        value
-        |> p.parse_entire(with: parser)
-        |> res.replace_error(Nil)
-      })
-      |> res.is_ok
-    },
-  )
+  is_valid1(passport)
+  && list.all(validators, satisfying: fn(validator) {
+    let #(key, parser) = validator
+    passport.fields
+    |> dict.get(key)
+    |> res.then(apply: fn(value) {
+      value
+      |> p.parse_entire(with: parser)
+      |> res.replace_error(Nil)
+    })
+    |> res.is_ok
+  })
 }
 
 fn part1(text: String) -> Int {
@@ -133,9 +132,9 @@ fn part2(text: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test04")
-  let assert 2 = part1(test)
-  let assert 2 = part2(test)
+  let testing = input_util.read_text("test04")
+  let assert 2 = part1(testing)
+  let assert 2 = part2(testing)
 
   let input = input_util.read_text("day04")
   io.debug(part1(input))

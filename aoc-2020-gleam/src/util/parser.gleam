@@ -5,7 +5,7 @@ import gleam/bool
 import gleam/string as str
 import gleam/result as res
 import gleam/function as fun
-import gleam/option.{None, Option, Some} as opt
+import gleam/option.{None, type Option, Some}
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
@@ -188,19 +188,19 @@ pub fn then_3rd(two: Parser(#(a, b)), third: Parser(c)) -> Parser(#(a, b, c)) {
   })
 }
 
-pub fn or(first: Parser(a), else second: Parser(a)) -> Parser(a) {
+pub fn or(first: Parser(a), otherwise second: Parser(a)) -> Parser(a) {
   create(fn(input) {
     first
     |> run(on: input)
     |> res.or(run(second, on: input))
   })
-  |> labeled(with: first.label <> " |> or(else: " <> second.label <> ")")
+  |> labeled(with: first.label <> " |> or(otherwise: " <> second.label <> ")")
 }
 
 pub fn opt(parser: Parser(a)) -> Parser(Option(a)) {
   parser
   |> map(with: Some)
-  |> or(else: succeeding(with: None))
+  |> or(otherwise: succeeding(with: None))
   |> labeled(with: "opt(" <> parser.label <> ")")
 }
 
@@ -340,7 +340,7 @@ pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
 pub fn sep0(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
   |> sep1(by: separator)
-  |> or(else: succeeding(with: []))
+  |> or(otherwise: succeeding(with: []))
   |> labeled(
     with: "sep0(" <> parser.label <> ", by: " <> separator.label <> ")",
   )

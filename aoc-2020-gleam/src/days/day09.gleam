@@ -36,7 +36,7 @@ fn part2(numbers: List(Int), preamble_length: Int) -> Int {
   |> iter.from_list
   |> iter.index
   |> iterx.filter_map(with: fn(step) {
-    let #(index, _) = step
+    let #(_, index) = step
     let sublist = list.drop(from: numbers, up_to: index)
 
     sublist
@@ -56,9 +56,9 @@ fn part2(numbers: List(Int), preamble_length: Int) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_numbers("test09")
-  let assert 127 = part1(test, 5)
-  let assert 62 = part2(test, 5)
+  let testing = input_util.read_numbers("test09")
+  let assert 127 = part1(testing, 5)
+  let assert 62 = part2(testing, 5)
 
   let input = input_util.read_numbers("day09")
   io.debug(part1(input, 25))

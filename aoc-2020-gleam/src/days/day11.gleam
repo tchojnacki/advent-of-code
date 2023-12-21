@@ -1,15 +1,15 @@
 import gleam/io
 import gleam/string as str
 import gleam/iterator as iter
-import gleam/map.{Map}
-import ext/mapx
+import gleam/dict.{type Dict}
+import ext/dictx
 import ext/setx
 import ext/listx
 import ext/resultx as resx
 import ext/genericx as genx
 import ext/iteratorx as iterx
 import util/input_util
-import util/pos2.{Pos2}
+import util/pos2.{type Pos2}
 
 type Seat {
   Empty
@@ -17,7 +17,7 @@ type Seat {
 }
 
 type Grid {
-  Grid(data: Map(Pos2, Seat))
+  Grid(data: Dict(Pos2, Seat))
 }
 
 type Settings {
@@ -31,20 +31,20 @@ fn build_grid(from input: String) -> Grid {
   |> iter.map(with: str.trim)
   |> iter.index
   |> iter.flat_map(with: fn(line) {
-    let #(row_index, row) = line
+    let #(row, row_index) = line
     row
     |> str.to_graphemes
     |> iter.from_list
     |> iter.index
     |> iter.flat_map(with: fn(elem) {
-      let #(col_index, grapheme) = elem
+      let #(grapheme, col_index) = elem
       case grapheme == "L" {
         True -> iter.single(#(#(col_index, row_index), Empty))
         False -> iter.empty()
       }
     })
   })
-  |> mapx.from_iter
+  |> dictx.from_iter
   |> Grid
 }
 
@@ -52,7 +52,7 @@ fn count_near_adjacent(grid: Grid, from start: Pos2) -> Int {
   start
   |> pos2.neighbours8
   |> setx.count(satisfying: fn(n) {
-    case map.get(grid.data, n) {
+    case dict.get(grid.data, n) {
       Ok(seat) -> seat == Occupied
       Error(Nil) -> False
     }
@@ -66,7 +66,7 @@ fn count_far_adjacent(grid: Grid, from start: Pos2) -> Int {
     |> pos2.add(d)
     |> iterx.unfold_infinitely(pos2.add(_, d))
     |> iter.take(up_to: 1000)
-    |> iterx.filter_map(with: map.get(grid.data, _))
+    |> iterx.filter_map(with: dict.get(grid.data, _))
     |> iter.first
     |> genx.equals(Ok(Occupied))
   })
@@ -74,14 +74,14 @@ fn count_far_adjacent(grid: Grid, from start: Pos2) -> Int {
 
 fn count_occupied(grid: Grid) -> Int {
   grid.data
-  |> map.values
+  |> dict.values
   |> listx.count(satisfying: genx.equals(_, Occupied))
 }
 
 fn step_grid(prev: Grid, settings: Settings) -> Grid {
   let Settings(threshold, adjacent_counter) = settings
   prev.data
-  |> map.map_values(with: fn(pos, seat) {
+  |> dict.map_values(with: fn(pos, seat) {
     let adjacent = adjacent_counter(prev, pos)
     case seat {
       Empty if adjacent == 0 -> Occupied
@@ -95,7 +95,7 @@ fn step_grid(prev: Grid, settings: Settings) -> Grid {
 fn is_stable(grid: Grid, settings: Settings) -> Bool {
   let Settings(threshold, adjacent_counter) = settings
   grid.data
-  |> mapx.to_iter
+  |> dictx.to_iter
   |> iter.all(satisfying: fn(entry) {
     let #(pos, seat) = entry
     let adjacent = adjacent_counter(grid, pos)
@@ -124,9 +124,9 @@ fn part2(input: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test11")
-  let assert 37 = part1(test)
-  let assert 26 = part2(test)
+  let testing = input_util.read_text("test11")
+  let assert 37 = part1(testing)
+  let assert 26 = part2(testing)
 
   let input = input_util.read_text("day11")
   io.debug(part1(input))

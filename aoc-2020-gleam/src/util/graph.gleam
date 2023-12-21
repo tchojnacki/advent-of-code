@@ -1,6 +1,6 @@
 import gleam/list
-import gleam/iterator.{Iterator} as iter
-import gleam/set.{Set}
+import gleam/iterator.{type Iterator} as iter
+import gleam/set.{type Set}
 
 fn dfs_helper(
   neighbours: fn(a) -> Iterator(a),
@@ -14,7 +14,7 @@ fn dfs_helper(
         neighbours,
         stack: node
         |> neighbours
-        |> iter.filter(for: fn(n) { !set.contains(visited, n) })
+        |> iter.filter(keeping: fn(n) { !set.contains(visited, n) })
         |> iter.to_list
         |> list.append(stack),
         visited: visited
@@ -26,10 +26,7 @@ fn dfs_helper(
 }
 
 pub fn dfs(from start: a, with neighbours: fn(a) -> Iterator(a)) -> Iterator(a) {
-  iter.from_list(dfs_helper(
-    neighbours,
-    stack: [start],
-    visited: set.new(),
-    acc: [],
-  ))
+  iter.from_list(
+    dfs_helper(neighbours, stack: [start], visited: set.new(), acc: []),
+  )
 }

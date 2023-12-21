@@ -25,6 +25,6 @@ pub fn index_of(list: List(a), value: a) -> Result(Int, Nil) {
   list
   |> iter.from_list
   |> iter.index
-  |> iter.find(one_that: fn(elem) { pair.second(elem) == value })
-  |> res.map(with: pair.first)
+  |> iter.find(one_that: fn(elem) { pair.first(elem) == value })
+  |> res.map(with: pair.second)
 }

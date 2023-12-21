@@ -1,7 +1,7 @@
 import gleam/io
 import gleam/int
 import gleam/list
-import gleam/map
+import gleam/dict
 import gleam/string as str
 import gleam/function as fun
 import gleam/iterator as iter
@@ -16,25 +16,23 @@ fn solve(input: String, nth: Int) -> Int {
 
   let history =
     starting
-    |> list.index_map(fn(index, number) { #(number, index + 1) })
-    |> map.from_list
+    |> list.index_map(fn(number, index) { #(number, index + 1) })
+    |> dict.from_list
   let turn = list.length(starting)
   let assert Ok(last) = list.last(starting)
 
-  iterx.unfold_infinitely(
-    from: #(history, turn, last),
-    with: fn(state) {
-      let #(history, turn, last) = state
-      #(
-        map.insert(into: history, for: last, insert: turn),
-        turn + 1,
-        case map.get(history, last) {
-          Ok(previous) -> turn - previous
-          Error(Nil) -> 0
-        },
-      )
-    },
-  )
+  iterx.unfold_infinitely(from: #(history, turn, last), with: fn(state) {
+    let #(history, turn, last) = state
+    #(
+      dict.insert(into: history, for: last, insert: turn),
+      turn
+      + 1,
+      case dict.get(history, last) {
+        Ok(previous) -> turn - previous
+        Error(Nil) -> 0
+      },
+    )
+  })
   |> iter.filter(fn(state) { state.1 == nth })
   |> iter.map(fn(state) { state.2 })
   |> iter.first

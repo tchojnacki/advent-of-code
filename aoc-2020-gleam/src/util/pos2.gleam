@@ -1,7 +1,7 @@
 import gleam/int
 import gleam/bool
 import gleam/list
-import gleam/set.{Set}
+import gleam/set.{type Set}
 
 pub type Pos2 =
   #(Int, Int)

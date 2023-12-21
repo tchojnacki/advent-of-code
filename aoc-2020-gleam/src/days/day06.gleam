@@ -2,7 +2,7 @@ import gleam/io
 import gleam/int
 import gleam/list
 import gleam/string as str
-import gleam/set.{Set}
+import gleam/set.{type Set}
 import ext/resultx as resx
 import util/input_util
 import util/parser as p
@@ -80,9 +80,9 @@ fn part2(text: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test06")
-  let assert 11 = part1(test)
-  let assert 6 = part2(test)
+  let testing = input_util.read_text("test06")
+  let assert 11 = part1(testing)
+  let assert 6 = part2(testing)
 
   let input = input_util.read_text("day06")
   io.debug(part1(input))

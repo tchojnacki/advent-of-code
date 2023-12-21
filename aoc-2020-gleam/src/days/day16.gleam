@@ -4,7 +4,7 @@ import gleam/list
 import gleam/bool
 import gleam/pair
 import gleam/string as str
-import gleam/map.{Map}
+import gleam/dict.{type Dict}
 import ext/resultx as resx
 import ext/genericx as genx
 import util/input_util
@@ -22,7 +22,7 @@ type Ticket =
 
 type Notes {
   Notes(
-    fields: Map(String, Rule),
+    fields: Dict(String, Rule),
     your_ticket: Ticket,
     nearby_tickets: List(Ticket),
   )
@@ -55,7 +55,7 @@ fn parse_notes(input: String) -> Notes {
   let notes_parser =
     field_parser
     |> p.sep1(by: p.nl())
-    |> p.map(with: map.from_list)
+    |> p.map(with: dict.from_list)
     |> p.skip(p.nlnl())
     |> p.skip(p.literal("your ticket:"))
     |> p.skip(p.nl())
@@ -88,15 +88,12 @@ type Column {
 
 fn collapse_columns(columns: List(Column)) -> List(String) {
   case
-    list.find_map(
-      in: columns,
-      with: fn(column) {
-        case column {
-          Pending([name]) -> Ok(name)
-          _ -> Error(Nil)
-        }
-      },
-    )
+    list.find_map(in: columns, with: fn(column) {
+      case column {
+        Pending([name]) -> Ok(name)
+        _ -> Error(Nil)
+      }
+    })
   {
     Ok(target) ->
       columns
@@ -106,19 +103,17 @@ fn collapse_columns(columns: List(Column)) -> List(String) {
           Pending([_]) -> Collapsed(target)
           Pending(names) ->
             names
-            |> list.filter(for: genx.different(_, than: target))
+            |> list.filter(keeping: genx.different(_, than: target))
             |> Pending
         }
       })
       |> collapse_columns
     Error(Nil) ->
-      list.map(
-        columns,
-        with: fn(column) {
-          let assert Collapsed(name) = column
-          name
-        },
-      )
+      columns
+      |> list.map(with: fn(column) {
+        let assert Collapsed(name) = column
+        name
+      })
   }
 }
 
@@ -127,9 +122,9 @@ fn part1(input: String) -> Int {
 
   notes.nearby_tickets
   |> list.flatten
-  |> list.filter(for: fn(value) {
+  |> list.filter(keeping: fn(value) {
     notes.fields
-    |> map.values
+    |> dict.values
     |> list.any(satisfying: satisfies_rule(value, _))
     |> bool.negate
   })
@@ -140,20 +135,17 @@ fn part2(input: String) -> Int {
   let notes = parse_notes(input)
 
   [notes.your_ticket, ..notes.nearby_tickets]
-  |> list.filter(for: fn(ticket) {
-    list.all(
-      in: ticket,
-      satisfying: fn(value) {
-        notes.fields
-        |> map.values
-        |> list.any(satisfying: satisfies_rule(value, _))
-      },
-    )
+  |> list.filter(keeping: fn(ticket) {
+    list.all(in: ticket, satisfying: fn(value) {
+      notes.fields
+      |> dict.values
+      |> list.any(satisfying: satisfies_rule(value, _))
+    })
   })
   |> list.transpose
   |> list.map(with: fn(column) {
     notes.fields
-    |> map.to_list
+    |> dict.to_list
     |> list.filter_map(with: fn(entry) {
       let #(name, rule) = entry
       case list.all(in: column, satisfying: satisfies_rule(_, rule)) {
@@ -175,9 +167,9 @@ fn part2(input: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test16")
-  let assert 71 = part1(test)
-  let assert 1 = part2(test)
+  let testing = input_util.read_text("test16")
+  let assert 71 = part1(testing)
+  let assert 1 = part2(testing)
 
   let input = input_util.read_text("day16")
   io.debug(part1(input))

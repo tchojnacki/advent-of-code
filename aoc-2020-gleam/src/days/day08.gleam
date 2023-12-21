@@ -3,9 +3,9 @@ import gleam/int
 import gleam/list
 import gleam/bool
 import gleam/result as res
-import gleam/set.{Set}
-import gleam/iterator.{Iterator} as iter
-import gleam/option.{None, Option, Some} as opt
+import gleam/set.{type Set}
+import gleam/iterator.{type Iterator} as iter
+import gleam/option.{type Option, None, Some} as opt
 import ext/listx
 import ext/resultx as resx
 import util/input_util
@@ -120,7 +120,7 @@ fn all_program_mutations(of program: Program) -> Iterator(Program) {
   |> iter.from_list
   |> iter.index
   |> iter.flat_map(fn(elem) {
-    let #(index, instr) = elem
+    let #(instr, index) = elem
     case instr {
       Acc(_) -> iter.empty()
       _ ->
@@ -152,9 +152,9 @@ fn part2(lines: List(String)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_lines("test08")
-  let assert 5 = part1(test)
-  let assert 8 = part2(test)
+  let testing = input_util.read_lines("test08")
+  let assert 5 = part1(testing)
+  let assert 8 = part2(testing)
 
   let input = input_util.read_lines("day08")
   io.debug(part1(input))

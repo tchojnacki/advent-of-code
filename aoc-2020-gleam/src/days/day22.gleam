@@ -4,9 +4,9 @@ import gleam/list
 import gleam/bool
 import gleam/string as str
 import gleam/function as fun
-import gleam/set.{Set}
+import gleam/set.{type Set}
 import gleam/order.{Eq, Gt, Lt}
-import gleam/option.{None, Option, Some}
+import gleam/option.{type Option, None, Some}
 import ext/boolx
 import ext/resultx as resx
 import util/input_util
@@ -39,10 +39,9 @@ fn parse_game(input: String) -> Game {
 fn score(deck: List(Int)) -> Int {
   deck
   |> list.reverse
-  |> list.index_fold(
-    from: 0,
-    with: fn(sum, card, index) { sum + card * { index + 1 } },
-  )
+  |> list.index_fold(from: 0, with: fn(sum, card, index) {
+    sum + card * { index + 1 }
+  })
 }
 
 fn outcome(game: Game) -> Option(Int) {
@@ -87,7 +86,8 @@ fn play_recursive_combat(game: Game, seen: Set(Game)) -> Int {
 
   let winner = {
     use <- boolx.guard_lazy(
-      when: list.length(rest1) >= top1 && list.length(rest2) >= top2,
+      when: list.length(rest1) >= top1
+      && list.length(rest2) >= top2,
       return: fn() {
         Game(list.take(rest1, top1), list.take(rest2, top2))
         |> play_recursive_combat(set.new())
@@ -119,9 +119,9 @@ fn part2(input: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test22")
-  let assert 306 = part1(test)
-  let assert 291 = part2(test)
+  let testing = input_util.read_text("test22")
+  let assert 306 = part1(testing)
+  let assert 291 = part2(testing)
 
   let input = input_util.read_text("day22")
   io.debug(part1(input))

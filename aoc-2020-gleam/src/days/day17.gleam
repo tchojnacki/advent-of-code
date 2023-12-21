@@ -2,7 +2,7 @@ import gleam/io
 import gleam/list
 import gleam/bool
 import gleam/string as str
-import gleam/set.{Set}
+import gleam/set.{type Set}
 import util/input_util
 import util/pos3
 import util/pos4
@@ -10,10 +10,10 @@ import util/pos4
 fn parse_grid(input: String, with constructor: fn(Int, Int) -> a) -> Set(a) {
   input
   |> str.split(on: "\n")
-  |> list.index_map(with: fn(y, line) {
+  |> list.index_map(with: fn(line, y) {
     line
     |> str.to_graphemes
-    |> list.index_map(with: fn(x, grapheme) {
+    |> list.index_map(with: fn(grapheme, x) {
       case grapheme {
         "#" -> [constructor(x, y)]
         "." -> []
@@ -34,15 +34,12 @@ fn cycle(
   use <- bool.guard(when: times == 0, return: grid)
 
   grid
-  |> set.fold(
-    from: set.new(),
-    with: fn(acc, pos) {
-      acc
-      |> set.insert(pos)
-      |> set.union(neighbours(pos))
-    },
-  )
-  |> set.filter(for: fn(pos) {
+  |> set.fold(from: set.new(), with: fn(acc, pos) {
+    acc
+    |> set.insert(pos)
+    |> set.union(neighbours(pos))
+  })
+  |> set.filter(keeping: fn(pos) {
     let active = set.contains(in: grid, this: pos)
     let count =
       pos
@@ -76,9 +73,9 @@ fn part2(input: String) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_text("test17")
-  let assert 112 = part1(test)
-  let assert 848 = part2(test)
+  let testing = input_util.read_text("test17")
+  let assert 112 = part1(testing)
+  let assert 848 = part2(testing)
 
   let input = input_util.read_text("day17")
   io.debug(part1(input))

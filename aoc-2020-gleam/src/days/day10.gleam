@@ -7,7 +7,7 @@ import ext/listx
 import ext/pairx
 import ext/genericx as genx
 import util/input_util
-import util/cache.{Cache}
+import util/cache.{type Cache}
 
 const outlet_joltage = 0
 
@@ -54,9 +54,9 @@ fn part2(numbers: List(Int)) -> Int {
 }
 
 pub fn main() -> Nil {
-  let test = input_util.read_numbers("test10")
-  let assert 220 = part1(test)
-  let assert 19_208 = part2(test)
+  let testing = input_util.read_numbers("test10")
+  let assert 220 = part1(testing)
+  let assert 19_208 = part2(testing)
 
   let input = input_util.read_numbers("day10")
   io.debug(part1(input))

@@ -1,6 +1,6 @@
-import gleam/map.{Map}
-import gleam/otp/actor.{Continue, Next, Stop}
-import gleam/erlang/process.{Normal, Subject}
+import gleam/dict.{type Dict}
+import gleam/otp/actor.{type Next, Stop}
+import gleam/erlang/process.{type Subject, Normal}
 
 const timeout = 1000
 
@@ -13,14 +13,18 @@ type Message(k, v) {
 type Server(k, v) =
   Subject(Message(k, v))
 
-fn handle_message(message: Message(k, v), dict: Map(k, v)) -> Next(Map(k, v)) {
+fn handle_message(
+  message: Message(k, v),
+  map: Dict(k, v),
+) -> Next(Message(k, v), Dict(k, v)) {
   case message {
     Shutdown -> Stop(Normal)
     Get(key, client) -> {
-      process.send(client, map.get(dict, key))
-      Continue(dict)
+      process.send(client, dict.get(map, key))
+
+      actor.continue(map)
     }
-    Set(key, value) -> Continue(map.insert(dict, key, value))
+    Set(key, value) -> actor.continue(dict.insert(map, key, value))
   }
 }
 
@@ -29,7 +33,7 @@ pub opaque type Cache(k, v) {
 }
 
 pub fn create(apply fun: fn(Cache(k, v)) -> t) -> t {
-  let assert Ok(server) = actor.start(map.new(), handle_message)
+  let assert Ok(server) = actor.start(dict.new(), handle_message)
   let result = fun(Cache(server))
   process.send(server, Shutdown)
   result
