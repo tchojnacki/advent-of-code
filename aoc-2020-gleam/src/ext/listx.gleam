@@ -1,12 +1,19 @@
 import gleam/pair
 import gleam/iterator as iter
 import gleam/result as res
+import gleam/dict.{type Dict}
 import ext/iteratorx as iterx
 
 pub fn count(list: List(a), satisfying predicate: fn(a) -> Bool) -> Int {
   list
   |> iter.from_list
   |> iterx.count(satisfying: predicate)
+}
+
+pub fn counts(list: List(a)) -> Dict(a, Int) {
+  list
+  |> iter.from_list
+  |> iterx.counts
 }
 
 fn set_helper(list: List(a), value: a, index: Int, counter: Int) -> List(a) {

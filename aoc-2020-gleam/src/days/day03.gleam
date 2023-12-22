@@ -3,11 +3,11 @@ import gleam/io
 import gleam/int
 import gleam/result as res
 import gleam/string as str
-import gleam/function as fun
 import gleam/iterator as iter
 import gleam/set.{type Set}
 import ext/intx
 import ext/iteratorx as iterx
+import util/grid
 import util/input_util
 import util/pos2.{type Pos2}
 
@@ -24,20 +24,7 @@ type Area {
 fn parse_area(from text: String) -> Area {
   let lines = str.split(text, on: "\n")
 
-  let trees =
-    list.index_fold(over: lines, from: set.new(), with: fn(prev, line, y) {
-      line
-      |> str.to_graphemes
-      |> list.index_map(with: fn(grapheme, x) {
-        case grapheme {
-          "#" -> Ok(#(x, y))
-          _ -> Error(Nil)
-        }
-      })
-      |> list.filter_map(with: fun.identity)
-      |> set.from_list
-      |> set.union(prev)
-    })
+  let trees = grid.parse_grid(text, with: fn(x, y) { #(x, y) })
   let assert Ok(cycle) =
     lines
     |> list.first
@@ -47,12 +34,12 @@ fn parse_area(from text: String) -> Area {
   Area(trees, cycle, height)
 }
 
-fn has_tree(in area: Area, at pos: Pos2) -> Bool {
-  set.contains(area.trees, #(pos.0 % area.cycle, pos.1))
+fn has_tree(in area: Area, at t: Pos2) -> Bool {
+  set.contains(area.trees, #(pos2.x(t) % area.cycle, pos2.y(t)))
 }
 
-fn is_valid(pos: Pos2, in area: Area) -> Bool {
-  intx.is_between(pos.1, 0, and: area.height - 1)
+fn is_valid(p: Pos2, in area: Area) -> Bool {
+  intx.is_between(pos2.y(p), 0, and: area.height - 1)
 }
 
 fn tree_count(in area: Area, with slope: Pos2) -> Int {

@@ -1,30 +1,10 @@
 import gleam/io
-import gleam/list
 import gleam/bool
-import gleam/string as str
 import gleam/set.{type Set}
+import util/grid
 import util/input_util
 import util/pos3
 import util/pos4
-
-fn parse_grid(input: String, with constructor: fn(Int, Int) -> a) -> Set(a) {
-  input
-  |> str.split(on: "\n")
-  |> list.index_map(with: fn(line, y) {
-    line
-    |> str.to_graphemes
-    |> list.index_map(with: fn(grapheme, x) {
-      case grapheme {
-        "#" -> [constructor(x, y)]
-        "." -> []
-        _ -> panic
-      }
-    })
-    |> list.flatten
-  })
-  |> list.flatten
-  |> set.from_list
-}
 
 fn cycle(
   grid: Set(a),
@@ -60,14 +40,14 @@ fn cycle(
 
 fn part1(input: String) -> Int {
   input
-  |> parse_grid(with: fn(x, y) { #(x, y, 0) })
+  |> grid.parse_grid(with: fn(x, y) { #(x, y, 0) })
   |> cycle(with: pos3.neighbours26, by: 6)
   |> set.size
 }
 
 fn part2(input: String) -> Int {
   input
-  |> parse_grid(with: fn(x, y) { #(x, y, 0, 0) })
+  |> grid.parse_grid(with: fn(x, y) { #(x, y, 0, 0) })
   |> cycle(with: pos4.neighbours80, by: 6)
   |> set.size
 }

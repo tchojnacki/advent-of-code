@@ -8,6 +8,14 @@ pub type Pos2 =
 
 pub const zero = #(0, 0)
 
+pub fn x(pos: Pos2) -> Int {
+  pos.0
+}
+
+pub fn y(pos: Pos2) -> Int {
+  pos.1
+}
+
 pub fn directions8() -> Set(Pos2) {
   set.from_list({
     use x <- list.flat_map(over: [-1, 0, 1])
