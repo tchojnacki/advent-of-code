@@ -5,7 +5,7 @@ import gleam/bool
 import gleam/string as str
 import gleam/result as res
 import gleam/function as fun
-import gleam/option.{None, type Option, Some}
+import gleam/option.{type Option, None, Some}
 
 // Heavily inspired by https://fsharpforfunandprofit.com/posts/understanding-parser-combinators/
 
@@ -18,6 +18,8 @@ const eof = "EOF"
 const unknown = "UNKNOWN"
 
 const whitespace_range = " \t\n"
+
+const alpha_range = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 fn q_s(string: String) -> String {
   "'" <> string <> "'"
@@ -119,6 +121,20 @@ pub fn non_ws_gc() -> Parser(String) {
   |> labeled(with: "non_ws_gc")
 }
 
+pub fn alpha_gc() -> Parser(String) {
+  // gc_satisfying(rule: str.con)
+  gc_in(range: alpha_range)
+  |> labeled(with: "alpha_gc")
+}
+
+pub fn alpha0() -> Parser(String) {
+  str_of_many0(of: alpha_gc())
+}
+
+pub fn alpha1() -> Parser(String) {
+  str_of_many1(of: alpha_gc())
+}
+
 pub fn ws0() -> Parser(String) {
   str_of_many0(of: ws_gc())
 }
@@ -209,11 +225,13 @@ pub fn any(of parsers: List(Parser(a))) -> Parser(a) {
   |> list.reduce(with: or)
   |> res.unwrap(or: failing(with: InvalidParser))
   |> labeled(
-    "any(of: [" <> {
+    "any(of: ["
+    <> {
       parsers
       |> list.map(with: fn(p) { p.label })
       |> str.join(with: ", ")
-    } <> "])",
+    }
+    <> "])",
   )
 }
 
@@ -278,11 +296,13 @@ pub fn seq(of parsers: List(Parser(a))) -> Parser(List(a)) {
       |> prepend_parser(head, _)
   }
   |> labeled(
-    with: "seq(of: [" <> {
+    with: "seq(of: ["
+    <> {
       parsers
       |> list.map(with: fn(p) { p.label })
       |> str.join(", ")
-    } <> "])",
+    }
+    <> "])",
   )
 }
 
@@ -332,8 +352,7 @@ pub fn sep1(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
   |> then(many0(of: proceed(separator, parser)))
   |> map2(with: fn(p, ps) { [p, ..ps] })
-  |> labeled(
-    with: "sep1(" <> parser.label <> ", by: " <> separator.label <> ")",
+  |> labeled(with: "sep1(" <> parser.label <> ", by: " <> separator.label <> ")",
   )
 }
 
@@ -341,8 +360,7 @@ pub fn sep0(parser: Parser(a), by separator: Parser(b)) -> Parser(List(a)) {
   parser
   |> sep1(by: separator)
   |> or(otherwise: succeeding(with: []))
-  |> labeled(
-    with: "sep0(" <> parser.label <> ", by: " <> separator.label <> ")",
+  |> labeled(with: "sep0(" <> parser.label <> ", by: " <> separator.label <> ")",
   )
 }
 
@@ -376,7 +394,11 @@ pub fn str_of_len(parser: Parser(String), length: Int) -> Parser(String) {
   |> list.repeat(times: length)
   |> str_of_seq
   |> labeled(
-    with: "str_of_len(" <> parser.label <> "," <> int.to_string(length) <> ")",
+    with: "str_of_len("
+    <> parser.label
+    <> ","
+    <> int.to_string(length)
+    <> ")",
   )
 }
 
@@ -389,7 +411,10 @@ pub fn repeat(parser: Parser(a), times times: Int) -> Parser(List(a)) {
   |> list.repeat(times: times)
   |> seq
   |> labeled(
-    with: parser.label <> " |> repeat(times: " <> int.to_string(times) <> ")",
+    with: parser.label
+    <> " |> repeat(times: "
+    <> int.to_string(times)
+    <> ")",
   )
 }
 
