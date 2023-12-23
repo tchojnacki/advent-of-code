@@ -1,6 +1,7 @@
 import gleam/list
 import gleam/io
 import gleam/int
+import gleam/pair
 import gleam/result as res
 import gleam/string as str
 import gleam/iterator as iter
@@ -24,7 +25,7 @@ type Area {
 fn parse_area(from text: String) -> Area {
   let lines = str.split(text, on: "\n")
 
-  let trees = grid.parse_grid(text, with: fn(x, y) { #(x, y) })
+  let trees = grid.parse_grid(text, with: pair.new)
   let assert Ok(cycle) =
     lines
     |> list.first

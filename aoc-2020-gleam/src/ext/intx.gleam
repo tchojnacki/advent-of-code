@@ -1,6 +1,8 @@
 import gleam/int
 import gleam/bool
+import gleam/float
 import gleam/order.{Eq, Gt, Lt}
+import ext/resultx as resx
 
 pub fn is_between(number: Int, min: Int, and max: Int) {
   min <= number && number <= max
@@ -34,4 +36,11 @@ fn do_reverse_bits(val: Int, rev: Int, length: Int) -> Int {
 
 pub fn reverse_bits(val: Int, length: Int) -> Int {
   do_reverse_bits(val, 0, length)
+}
+
+pub fn sqrt(x: Int) {
+  x
+  |> int.square_root
+  |> resx.assert_unwrap
+  |> float.round
 }
