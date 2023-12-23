@@ -1,9 +1,7 @@
 # Advent of Code 2021 in Kotlin
+
 ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin)
 ![Stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
-
-Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] using the
-[Advent of Code Kotlin Template][template] delivered by JetBrains.
 
 |  Day   | Problem Name                                                    | Part 1 | Part 2 |
 | :----: | --------------------------------------------------------------- | :----: | :----: |
@@ -32,6 +30,3 @@ Welcome to the Advent of Code Kotlin project created by [tchojnacki][github] usi
 | **23** | [Amphipod](https://adventofcode.com/2021/day/23)                | :star: | :star: |
 | **24** | [Arithmetic Logic Unit](https://adventofcode.com/2021/day/24)   | :star: | :star: |
 | **25** | [Sea Cucumber](https://adventofcode.com/2021/day/25)            | :star: | :star: |
-
-[github]: https://github.com/tchojnacki
-[template]: https://github.com/kotlin-hands-on/advent-of-code-kotlin-template

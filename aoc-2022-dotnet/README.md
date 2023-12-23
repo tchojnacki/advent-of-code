@@ -1,4 +1,5 @@
 # Advent of Code 2022 in F#
+
 ![F#](https://img.shields.io/badge/F%23-grey?logo=.NET)
 ![Stars](https://img.shields.io/badge/🌟%20stars-50/50-orange)
 
@@ -18,7 +19,7 @@
 | **12** | [Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)  | :star: | :star: | functional graphs, functional BFS, `Array2D`          |
 | **13** | [Distress Signal](https://adventofcode.com/2022/day/13)          | :star: | :star: | `IComparable`, ADTs, patterns, FParsec                |
 | **14** | [Regolith Reservoir](https://adventofcode.com/2022/day/14)       | :star: | :star: | `Seq.unfold`, `Seq.pairwise`, functional DFS          |
-| **15** | [Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)    | :star: | :star: | ranges, mahattan distance, parallel computing         |
+| **15** | [Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)    | :star: | :star: | ranges, Manhattan distance, parallel computing         |
 | **16** | [Proboscidea Volcanium](https://adventofcode.com/2022/day/16)    | :star: | :star: | graphs, dynamic programming, `Seq`                    |
 | **17** | [Pyroclastic Flow](https://adventofcode.com/2022/day/17)         | :star: | :star: | cycle detection, bitwise operators, `hash`            |
 | **18** | [Boiling Boulders](https://adventofcode.com/2022/day/18)         | :star: | :star: | functional DFS, 3D vectors, position bound checking   |
