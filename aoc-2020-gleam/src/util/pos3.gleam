@@ -1,21 +1,23 @@
 import gleam/list
-import gleam/bool
 import gleam/set.{type Set}
+import ext/setx
 
 pub type Pos3 =
   #(Int, Int, Int)
 
 pub const zero = #(0, 0, 0)
 
-fn directions26() -> Set(Pos3) {
+fn directions27() -> Set(Pos3) {
   set.from_list({
-    use x <- list.flat_map(over: [-1, 0, 1])
-    use y <- list.flat_map(over: [-1, 0, 1])
-    use z <- list.flat_map(over: [-1, 0, 1])
-    let pos = #(x, y, z)
-    use <- bool.guard(when: pos == zero, return: [])
-    [pos]
+    use x <- list.flat_map([-1, 0, 1])
+    use y <- list.flat_map([-1, 0, 1])
+    use z <- list.map([-1, 0, 1])
+    #(x, y, z)
   })
+}
+
+fn directions26() -> Set(Pos3) {
+  set.delete(from: directions27(), this: zero)
 }
 
 pub fn add(p1: Pos3, p2: Pos3) -> Pos3 {
@@ -23,8 +25,5 @@ pub fn add(p1: Pos3, p2: Pos3) -> Pos3 {
 }
 
 pub fn neighbours26(p: Pos3) -> Set(Pos3) {
-  directions26()
-  |> set.to_list
-  |> list.map(with: add(p, _))
-  |> set.from_list
+  setx.map(directions26(), with: add(p, _))
 }

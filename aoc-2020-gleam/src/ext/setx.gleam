@@ -17,6 +17,13 @@ pub fn map(s: Set(a), with fun: fn(a) -> b) -> Set(b) {
   |> set.from_list
 }
 
+pub fn flat_map(s: Set(a), with fun: fn(a) -> Set(b)) -> Set(b) {
+  s
+  |> set.to_list
+  |> list.map(with: fun)
+  |> list.fold(from: set.new(), with: set.union)
+}
+
 pub fn toggle(in s: Set(a), this value: a) -> Set(a) {
   s
   |> case set.contains(in: s, this: value) {

@@ -1,7 +1,7 @@
 import gleam/int
-import gleam/bool
 import gleam/list
 import gleam/set.{type Set}
+import ext/setx
 
 pub type Pos2 =
   #(Int, Int)
@@ -16,14 +16,16 @@ pub fn y(pos: Pos2) -> Int {
   pos.1
 }
 
-pub fn directions8() -> Set(Pos2) {
+fn directions9() -> Set(Pos2) {
   set.from_list({
-    use x <- list.flat_map(over: [-1, 0, 1])
-    use y <- list.flat_map(over: [-1, 0, 1])
-    let pos = #(x, y)
-    use <- bool.guard(when: pos == zero, return: [])
-    [pos]
+    use x <- list.flat_map([-1, 0, 1])
+    use y <- list.map([-1, 0, 1])
+    #(x, y)
   })
+}
+
+pub fn directions8() -> Set(Pos2) {
+  set.delete(from: directions9(), this: zero)
 }
 
 pub fn add(p1: Pos2, p2: Pos2) -> Pos2 {
@@ -39,10 +41,7 @@ pub fn mul(p: Pos2, by scalar: Int) -> Pos2 {
 }
 
 pub fn neighbours8(p: Pos2) -> Set(Pos2) {
-  directions8()
-  |> set.to_list
-  |> list.map(with: add(p, _))
-  |> set.from_list
+  setx.map(directions8(), with: add(p, _))
 }
 
 pub fn manhattan_dist(from p1: Pos2, to p2: Pos2) -> Int {
