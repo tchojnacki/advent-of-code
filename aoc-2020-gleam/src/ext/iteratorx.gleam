@@ -3,15 +3,10 @@ import gleam/result as res
 import gleam/dict.{type Dict}
 import gleam/iterator.{type Iterator, Next} as iter
 
-pub fn length(iterator: Iterator(a)) -> Int {
-  iterator
-  |> iter.fold(from: 0, with: fn(c, _) { c + 1 })
-}
-
 pub fn count(iterator: Iterator(a), satisfying predicate: fn(a) -> Bool) -> Int {
   iterator
   |> iter.filter(keeping: predicate)
-  |> length
+  |> iter.length
 }
 
 pub fn counts(iterator: Iterator(a)) -> Dict(a, Int) {

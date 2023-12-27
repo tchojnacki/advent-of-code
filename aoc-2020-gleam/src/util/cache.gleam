@@ -44,7 +44,7 @@ pub fn set(in cache: Cache(k, v), for key: k, insert value: v) -> Nil {
 }
 
 pub fn get(from cache: Cache(k, v), fetch key: k) -> Result(v, Nil) {
-  process.call(cache.server, fn(c) { Get(key, c) }, timeout)
+  process.call(cache.server, Get(key, _), timeout)
 }
 
 pub fn memoize(with cache: Cache(k, v), this key: k, apply fun: fn() -> v) -> v {
